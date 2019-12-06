@@ -54,18 +54,18 @@ var yAxis = d3.svg.axis()
 var color = d3.scale.ordinal()
     .range(["#ead1dc", "#b4a7d6", "#c9daf8", "#d5a6bd", "#674ea7", "#bae4e5", "#2a8fbd", "#6cdfea", "#02779e", "#7f94b0", "#a1bee6", "#04c4bb", "#d4f3e9", "#a8c0a8"]);
 
-var svg = d3.select("body").append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-  .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
 // var svg = d3.select("body").append("svg")
 //     .attr("width", width + margin.left + margin.right)
-//     .attr("height", height + margin.top + margin.bottom);
-//
-// var inner = svg.append("g")
+//     .attr("height", height + margin.top + margin.bottom)
+//   .append("g")
 //     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom);
+
+var inner = svg.append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 var yBegin;
 
@@ -137,12 +137,14 @@ d3.csv("data.csv", function(error, data) {
     return d.total;
   })]);
 
-  svg.append("g")
+  // svg.append("g")
+  inner.append("g")
       .attr("class", "x axis")
       .attr("transform", "translate(0," + height + ")")
       .call(xAxis);
 
-  svg.append("g")
+  // svg.append("g")
+  inner.append("g")
       .attr("class", "y axis")
       .call(yAxis)
     .append("text")
@@ -152,7 +154,8 @@ d3.csv("data.csv", function(error, data) {
       .style("text-anchor", "end")
       .text("");
 
-  var project_stackedbar = svg.selectAll(".project_stackedbar")
+  // var project_stackedbar = svg.selectAll(".project_stackedbar")
+    var project_stackedbar = inner.selectAll(".project_stackedbar")
       .data(data)
     .enter().append("g")
       .attr("class", "g")
