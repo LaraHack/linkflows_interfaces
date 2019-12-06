@@ -27,7 +27,7 @@ body {
 <script src="https://d3js.org/d3.v3.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
 <script>
-var margin = {top: 20, right: 20, bottom: 30, left: 40},
+var margin = {top: 10, right: 100, bottom: 30, left: 40},
     width = 960 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
@@ -59,6 +59,13 @@ var svg = d3.select("body").append("svg")
     .attr("height", height + margin.top + margin.bottom)
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+// var svg = d3.select("body").append("svg")
+//     .attr("width", width + margin.left + margin.right)
+//     .attr("height", height + margin.top + margin.bottom);
+//
+// var inner = svg.append("g")
+//     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 var yBegin;
 
@@ -174,11 +181,11 @@ d3.csv("data.csv", function(error, data) {
       .attr("transform", position)
 
     function position(d,i) {
-      var c = 4;   // number of columns
+      var c = 3;   // number of columns
       var h = 20;  // height of each entry
-      var w = 80; // width of each entry (so you can position the next column)
-      var tx = -250; // tx/ty are essentially margin values
-      var ty = -10;
+      var w = 50; // width of each entry (so you can position the next column)
+      var tx = 50; // tx/ty are essentially margin values
+      var ty = 10;
       var x = i % c * w + tx;
       var y = Math.floor(i / c) * h + ty;
       return "translate(" + x + "," + y + ")";
