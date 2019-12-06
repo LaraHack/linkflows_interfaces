@@ -170,7 +170,19 @@ d3.csv("data.csv", function(error, data) {
       .data(columnHeaders.slice().reverse())
     .enter().append("g")
       .attr("class", "legend")
-      .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+      // .attr("transform", function(d, i) { return "translate(20," + i * 20 + ")"; });
+      .attr("transform", position)
+
+    function position(d,i) {
+      var c = 2;   // number of columns
+      var h = 20;  // height of each entry
+      var w = 150; // width of each entry (so you can position the next column)
+      var tx = 10; // tx/ty are essentially margin values
+      var ty = 10;
+      var x = i % c * w + tx;
+      var y = Math.floor(i / c) * h + ty;
+      return "translate(" + x + "," + y + ")";
+    }
 
   legend.append("rect")
       .attr("x", width - 18)
