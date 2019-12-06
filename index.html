@@ -52,7 +52,7 @@ var yAxis = d3.svg.axis()
 //     .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
 
 var color = d3.scale.ordinal()
-    .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00", "#99abc5", "#8b89a6", "#7c6888", "#6c486b", "#a15d56", "#d1743c", "#fa8c00"]);
+    .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00", "#99abd5", "#9b9ab7", "#8c7999", "#7c597d", "#b16e67", "#e1854d", "#1a9d11"]);
 
 var svg = d3.select("body").append("svg")
     .attr("width", width + margin.left + margin.right)
@@ -100,6 +100,7 @@ var innerColumns = {
 
 d3.csv("data.csv", function(error, data) {
   var columnHeaders = d3.keys(data[0]).filter(function(key) { return key !== "Reviewer"; });
+  console.log("column headers:" + columnHeaders);
   color.domain(d3.keys(data[0]).filter(function(key) { return key !== "Reviewer"; }));
   data.forEach(function(d) {
     var yColumn = new Array();
@@ -111,11 +112,13 @@ d3.csv("data.csv", function(error, data) {
           }
           yBegin = yColumn[ic];
           yColumn[ic] += +d[name];
+          console.log("innerColumn:" + ic);
           return {name: name, column: ic, yBegin: yBegin, yEnd: +d[name] + yBegin,};
         }
       }
     });
     d.total = d3.max(d.columnDetails, function(d) {
+      console.log(d.yEnd);
       return d.yEnd;
     });
   });
@@ -146,7 +149,7 @@ d3.csv("data.csv", function(error, data) {
       .data(data)
     .enter().append("g")
       .attr("class", "g")
-      .attr("transform", function(d) { return "translate(" + x0(d.State) + ",0)"; });
+      .attr("transform", function(d) { return "translate(" + x0(d.Reviewer) + ",0)"; });
 
   project_stackedbar.selectAll("rect")
       .data(function(d) { return d.columnDetails; })
