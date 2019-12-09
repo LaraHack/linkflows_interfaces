@@ -31,21 +31,21 @@ var margin = {top: 10, right: 100, bottom: 30, left: 40},
     width = 960 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
-var x0 = d3.scale.ordinal()
+var y0 = d3.scale.ordinal()
+    .range([height, 0]); // change here
+
+var y1 = d3.scale.ordinal();
+
+var x = d3.scale.linear()
     .rangeRoundBands([0, width], 0.1);
 
-var x1 = d3.scale.ordinal();
-
-var y = d3.scale.linear()
-    .range([height, 0]);
+var yAxis = d3.svg.axis()
+    .scale(y0)
+    .orient("left");
 
 var xAxis = d3.svg.axis()
-    .scale(x0)
-    .orient("bottom");
-
-var yAxis = d3.svg.axis()
-    .scale(y)
-    .orient("left")
+    .scale(x)
+    .orient("bottom")
     .tickFormat(d3.format(".2s"));
 
 // var color = d3.scale.ordinal()
@@ -67,7 +67,7 @@ var svg = d3.select("body").append("svg")
 var inner = svg.append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-var yBegin;
+var xBegin;
 
 // var innerColumns = {
 //   "column1" : ["Under 5 Years","5 to 13 Years","14 to 17 Years"],
@@ -110,23 +110,23 @@ d3.csv("data.csv", function(error, data) {
   console.log("column headers:" + columnHeaders);
   color.domain(d3.keys(data[0]).filter(function(key) { return key !== "Reviewer"; }));
   data.forEach(function(d) {
-    var yColumn = new Array();
+    var xColumn = new Array();
     d.columnDetails = columnHeaders.map(function(name) {
       for (ic in innerColumns) {
         if($.inArray(name, innerColumns[ic]) >= 0){
-          if (!yColumn[ic]){
-            yColumn[ic] = 0;
+          if (xColumn[ic]){
+            xColumn[ic] = 0;
           }
-          yBegin = yColumn[ic];
-          yColumn[ic] += +d[name];
+          xBegin = xColumn[ic];
+          xColumn[ic] += +d[name];
           console.log("innerColumn:" + ic);
-          return {name: name, column: ic, yBegin: yBegin, yEnd: +d[name] + yBegin,};
+          return {name: name, column: ic, xBegin: xBegin, xEnd: +d[name] + xBegin,};
         }
       }
     });
     d.total = d3.max(d.columnDetails, function(d) {
-      console.log(d.yEnd);
-      return d.yEnd;
+      console.log(d.xEnd);
+      return d.xEnd;
     });
   });
 
@@ -146,40 +146,41 @@ d3.csv("data.csv", function(error, data) {
 
   // svg.append("g")
   inner.append("g")
-      .attr("class", "x axis")
+      .attr("class", "y axis")
       .attr("transform", "translate(0," + height + ")")
-      .call(xAxis);
+      .call(yAxis)
+      .append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 6)
+        .attr("dy", ".7em")
+        .style("text-anchor", "end")
+        .text("");
 
   // svg.append("g")
   inner.append("g")
-      .attr("class", "y axis")
-      .call(yAxis)
-    .append("text")
-      .attr("transform", "rotate(-90)")
-      .attr("y", 6)
-      .attr("dy", ".7em")
-      .style("text-anchor", "end")
-      .text("");
+      .attr("class", "x axis")
+      .call(xAxis) ;
+
 
   // var project_stackedbar = svg.selectAll(".project_stackedbar")
     var project_stackedbar = inner.selectAll(".project_stackedbar")
       .data(data)
     .enter().append("g")
       .attr("class", "g")
-      .attr("transform", function(d) { return "translate(" + x0(d.Reviewer) + ",0)"; });
+      .attr("transform", function(d) { return "translate(" + y0(d.Reviewer) + ",0)"; });
 
   project_stackedbar.selectAll("rect")
       .data(function(d) { return d.columnDetails; })
     .enter().append("rect")
-      .attr("width", x1.rangeBand())
-      .attr("x", function(d) {
-        return x1(d.column);
-         })
+      .attr("width", y1.rangeBand())
       .attr("y", function(d) {
-        return y(d.yEnd);
+        return y1(d.column);
+         })
+      .attr("x", function(d) {
+        return x(d.xEnd);
       })
       .attr("height", function(d) {
-        return y(d.yBegin) - y(d.yEnd);
+        return x(d.xBegin) - x(d.xEnd);
       })
       .style("fill", function(d) { return color(d.name); });
 
