@@ -126,7 +126,7 @@ d3.csv("data.csv", function(error, data) {
       }
     });
     d.total = d3.max(d.columnDetails, function(d) {
-      console.log("d.xEnd" + d.xEnd);
+      console.log("d.xEnd:" + d.xEnd);
       return d.xEnd;
     });
   });
@@ -137,10 +137,11 @@ d3.csv("data.csv", function(error, data) {
   // y.domain([0, d3.max(data, function(d) {
   //   return d.total;
   // })]);
-  y0.domain(data.map(function(d) { return d.Reviewer; }));
+  y0.domain(data.map(function(d) { console.log(d); return d.Reviewer; }));
   y1.domain(d3.keys(innerColumns)).rangeRoundBands([0, y0.rangeBand()]);
 
   x.domain([0, d3.max(data, function(d) {
+    console.log("d.total:" + d.total);
     return d.total;
   })]);
 
