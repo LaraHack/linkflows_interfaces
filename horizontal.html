@@ -32,21 +32,22 @@ var margin = {top: 10, right: 100, bottom: 30, left: 40},
     height = 500 - margin.top - margin.bottom;
 
 var y0 = d3.scale.ordinal()
-    .range([height, 0]); // change here
+    .rangeRoundBands([0, width], 0.1);
+    // .range([height, 0]);
 
 var y1 = d3.scale.ordinal();
 
 var x = d3.scale.linear()
-    .rangeRoundBands([0, width], 0.1);
+    .range([height, 0]);
 
 var yAxis = d3.svg.axis()
     .scale(y0)
-    .orient("left");
+    .orient("left")
+    .tickFormat(d3.format(".2s"))
 
 var xAxis = d3.svg.axis()
     .scale(x)
-    .orient("bottom")
-    .tickFormat(d3.format(".2s"));
+    .orient("bottom");
 
 // var color = d3.scale.ordinal()
 //     .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
@@ -79,7 +80,7 @@ var xBegin;
 var innerColumns = {
   "column1" : ["syntax","style","content"],
   "column2" : ["negative", "neutral", "positive"],
-  "column3" : ["1", "2", "3", "4", "5"],
+  "column3" : ["I1", "I2", "I3", "I4", "I5"],
   "column4" : ["compulsory", "suggestion", "no action"]
 }
 

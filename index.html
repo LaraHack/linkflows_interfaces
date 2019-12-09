@@ -18,7 +18,7 @@ body {
   fill: steelblue;
 }
 
-.x.axis path {
+.y.axis path {
   display: none;
 }
 
@@ -79,7 +79,7 @@ var yBegin;
 var innerColumns = {
   "column1" : ["syntax","style","content"],
   "column2" : ["negative", "neutral", "positive"],
-  "column3" : ["1", "2", "3", "4", "5"],
+  "column3" : ["I1", "I2", "I3", "I4", "I5"],
   "column4" : ["compulsory", "suggestion", "no action"]
 }
 
@@ -186,7 +186,7 @@ d3.csv("data.csv", function(error, data) {
   console.log("action_needed:" + action_needed);
 
   var legend = inner.selectAll(".legend")
-      .data(columnHeaders.slice(0,5))
+      .data(columnHeaders.slice())
     .enter().append("g")
       .attr("class", "legend")
       .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
