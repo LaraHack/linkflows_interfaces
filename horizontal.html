@@ -115,7 +115,7 @@ d3.csv("data.csv", function(error, data) {
     d.columnDetails = columnHeaders.map(function(name) {
       for (ic in innerColumns) {
         if($.inArray(name, innerColumns[ic]) >= 0){
-          if (xColumn[ic]){
+          if (!xColumn[ic]){
             xColumn[ic] = 0;
           }
           xBegin = xColumn[ic];
@@ -126,7 +126,7 @@ d3.csv("data.csv", function(error, data) {
       }
     });
     d.total = d3.max(d.columnDetails, function(d) {
-      console.log(d.xEnd);
+      console.log("d.xEnd" + d.xEnd);
       return d.xEnd;
     });
   });
