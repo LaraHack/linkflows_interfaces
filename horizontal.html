@@ -31,35 +31,25 @@ var margin = {top: 10, right: 100, bottom: 30, left: 40},
     width = 960 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
+var x = d3.scale.linear()
+    .range([0, width]);
+
+var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom");
+
 var y0 = d3.scale.ordinal()
-    .rangeRoundBands([0, width], 0.1);
-    // .range([height, 0]);
+    .rangeRoundBands([height, 0], 0.1);
 
 var y1 = d3.scale.ordinal();
-
-var x = d3.scale.linear()
-    .range([0, height]);
 
 var yAxis = d3.svg.axis()
     .scale(y0)
     .orient("left")
     .tickFormat(d3.format(".2s"))
 
-var xAxis = d3.svg.axis()
-    .scale(x)
-    .orient("bottom");
-
-// var color = d3.scale.ordinal()
-//     .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
-
 var color = d3.scale.ordinal()
     .range(["#ead1dc", "#b4a7d6", "#c9daf8", "#d5a6bd", "#674ea7", "#bae4e5", "#2a8fbd", "#6cdfea", "#02779e", "#7f94b0", "#a1bee6", "#04c4bb", "#d4f3e9", "#a8c0a8"]);
-
-// var svg = d3.select("body").append("svg")
-//     .attr("width", width + margin.left + margin.right)
-//     .attr("height", height + margin.top + margin.bottom)
-//   .append("g")
-//     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 var svg = d3.select("body").append("svg")
     .attr("width", width + margin.left + margin.right)
@@ -70,41 +60,12 @@ var inner = svg.append("g")
 
 var xBegin;
 
-// var innerColumns = {
-//   "column1" : ["Under 5 Years","5 to 13 Years","14 to 17 Years"],
-//   "column2" : ["18 to 24 Years"],
-//   "column3" : ["25 to 44 Years"],
-//   "column4" : ["45 to 64 Years", "65 Years and Over"]
-// }
-
-var innerColumns = {
-  "column1" : ["syntax","style","content"],
-  "column2" : ["negative", "neutral", "positive"],
-  "column3" : ["I1", "I2", "I3", "I4", "I5"],
-  "column4" : ["compulsory", "suggestion", "no action"]
+var dimensions = {
+  "aspect" : ["syntax","style","content"],
+  "positivity_negativity" : ["negative", "neutral", "positive"],
+  "impact" : ["I1", "I2", "I3", "I4", "I5"],
+  "action_needed" : ["compulsory", "suggestion", "no action"]
 }
-
-// d3.csv("initial_data.csv", function(error, data) {
-//   var columnHeaders = d3.keys(data[0]).filter(function(key) { return key !== "State"; });
-//   color.domain(d3.keys(data[0]).filter(function(key) { return key !== "State"; }));
-//   data.forEach(function(d) {
-//     var yColumn = new Array();
-//     d.columnDetails = columnHeaders.map(function(name) {
-//       for (ic in innerColumns) {
-//         if($.inArray(name, innerColumns[ic]) >= 0){
-//           if (!yColumn[ic]){
-//             yColumn[ic] = 0;
-//           }
-//           yBegin = yColumn[ic];
-//           yColumn[ic] += +d[name];
-//           return {name: name, column: ic, yBegin: yBegin, yEnd: +d[name] + yBegin,};
-//         }
-//       }
-//     });
-//     d.total = d3.max(d.columnDetails, function(d) {
-//       return d.yEnd;
-//     });
-//   });
 
 d3.csv("data.csv", function(error, data) {
   var columnHeaders = d3.keys(data[0]).filter(function(key) { return key !== "Reviewer"; });
@@ -113,8 +74,8 @@ d3.csv("data.csv", function(error, data) {
   data.forEach(function(d) {
     var xColumn = new Array();
     d.columnDetails = columnHeaders.map(function(name) {
-      for (ic in innerColumns) {
-        if($.inArray(name, innerColumns[ic]) >= 0){
+      for (ic in dimensions) {
+        if($.inArray(name, dimensions[ic]) >= 0){
           if (!xColumn[ic]){
             xColumn[ic] = 0;
           }
@@ -131,21 +92,16 @@ d3.csv("data.csv", function(error, data) {
     });
   });
 
-  // x0.domain(data.map(function(d) { return d.Reviewer; }));
-  // x1.domain(d3.keys(innerColumns)).rangeRoundBands([0, x0.rangeBand()]);
-  //
-  // y.domain([0, d3.max(data, function(d) {
-  //   return d.total;
-  // })]);
-  y0.domain(data.map(function(d) { console.log(d); return d.Reviewer; }));
-  y1.domain(d3.keys(innerColumns)).rangeRoundBands([0, y0.rangeBand()]);
+  y0.domain(data.map(function(d) {  console.log("***********" + d.Reviewer); return d.Reviewer; }));
+// console.log("*********d.Reviewer:" + d.Reviewer);
+console.log("d3.keys.dimensions:" + d3.keys(dimensions));
+console.log("****" + y0.rangeBand());
+  y1.domain(d3.keys(dimensions)).rangeRoundBands([0, y0.rangeBand()]);
 
   x.domain([0, d3.max(data, function(d) {
     console.log("d.total:" + d.total);
     return d.total;
   })]);
-
-
 
 // svg.append("g")
 inner.append("g")
@@ -153,82 +109,83 @@ inner.append("g")
     .attr("transform", "translate(0," + height + ")")
     .call(xAxis) ;
 
+  // console.log("xAxis:" + xAxis);
+
   // svg.append("g")
-  // inner.append("g")
-  //     .attr("class", "y axis")
-  //     .attr("transform", "translate(0," + height + ")")
-  //     .call(yAxis)
-  //     .append("text")
-  //       .attr("transform", "rotate(-90)")
-  //       .attr("y", 6)
-  //       .attr("dy", ".7em")
-  //       .style("text-anchor", "end")
-  //       .text("");
+  inner.append("g")
+      .attr("class", "y axis")
+      .call(yAxis)
+      .append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 6)
+        .attr("dy", ".7em")
+        .style("text-anchor", "end")
+        .text("");
 
 
   // var project_stackedbar = svg.selectAll(".project_stackedbar")
-    var project_stackedbar = inner.selectAll(".project_stackedbar")
-      .data(data)
-    .enter().append("g")
-      .attr("class", "g")
-      .attr("transform", function(d) { return "translate(" + y0(d.Reviewer) + ",0)"; });
-
-  project_stackedbar.selectAll("rect")
-      .data(function(d) { return d.columnDetails; })
-    .enter().append("rect")
-      .attr("width", y1.rangeBand())
-      .attr("y", function(d) {
-        return y1(d.column);
-         })
-      .attr("x", function(d) {
-        return x(d.xEnd);
-      })
-      .attr("height", function(d) {
-        return x(d.xBegin) - x(d.xEnd);
-      })
-      .style("fill", function(d) { return color(d.name); });
-
-      var aspect = columnHeaders.slice(0,3);
-      console.log("aspect:" + aspect);
-      var positivity_negativity = columnHeaders.slice(3,6);
-      console.log("pos/neg:" + positivity_negativity);
-      var impact = columnHeaders.slice(6,11);
-      console.log("impact:" + impact);
-      var action_needed = columnHeaders.slice(11,14);
-      console.log("action_needed:" + action_needed);
-
-  var legend = inner.selectAll(".legend")
-      .data(columnHeaders.slice(0,5))
-    .enter().append("g")
-      .attr("class", "legend")
-      .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
-      // .attr("transform", position)
-
-      console.log("colHeaders:" + columnHeaders.slice());
-
-    // function position(d,i) {
-    //   var c = 3;   // number of columns
-    //   var h = 20;  // height of each entry
-    //   var w = 50; // width of each entry (so you can position the next column)
-    //   var tx = 50; // tx/ty are essentially margin values
-    //   var ty = 10;
-    //   var x = i % c * w + tx;
-    //   var y = Math.floor(i / c) * h + ty;
-    //   return "translate(" + x + "," + y + ")";
-    // }
-
-  legend.append("rect")
-      .attr("x", width - 18)
-      .attr("width", 18)
-      .attr("height", 18)
-      .style("fill", color);
-
-  legend.append("text")
-      .attr("x", width - 24)
-      .attr("y", 9)
-      .attr("dy", ".35em")
-      .style("text-anchor", "end")
-      .text(function(d) { return d; });
+  //   var project_stackedbar = inner.selectAll(".project_stackedbar")
+  //     .data(data)
+  //   .enter().append("g")
+  //     .attr("class", "g")
+  //     .attr("transform", function(d) { return "translate(" + y0(d.Reviewer) + ",0)"; });
+  //
+  // project_stackedbar.selectAll("rect")
+  //     .data(function(d) { return d.columnDetails; })
+  //   .enter().append("rect")
+  //     .attr("width", y1.rangeBand())
+  //     .attr("y", function(d) {
+  //       return y1(d.column);
+  //        })
+  //     .attr("x", function(d) {
+  //       return x(d.xEnd);
+  //     })
+  //     .attr("height", function(d) {
+  //       return x(d.xBegin) - x(d.xEnd);
+  //     })
+  //     .style("fill", function(d) { return color(d.name); });
+  //
+  //     var aspect = columnHeaders.slice(0,3);
+  //     console.log("aspect:" + aspect);
+  //     var positivity_negativity = columnHeaders.slice(3,6);
+  //     console.log("pos/neg:" + positivity_negativity);
+  //     var impact = columnHeaders.slice(6,11);
+  //     console.log("impact:" + impact);
+  //     var action_needed = columnHeaders.slice(11,14);
+  //     console.log("action_needed:" + action_needed);
+  //
+  // var legend = inner.selectAll(".legend")
+  //     .data(columnHeaders.slice(0,5))
+  //   .enter().append("g")
+  //     .attr("class", "legend")
+  //     .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+  //     // .attr("transform", position)
+  //
+  //     console.log("colHeaders:" + columnHeaders.slice());
+  //
+  //   // function position(d,i) {
+  //   //   var c = 3;   // number of columns
+  //   //   var h = 20;  // height of each entry
+  //   //   var w = 50; // width of each entry (so you can position the next column)
+  //   //   var tx = 50; // tx/ty are essentially margin values
+  //   //   var ty = 10;
+  //   //   var x = i % c * w + tx;
+  //   //   var y = Math.floor(i / c) * h + ty;
+  //   //   return "translate(" + x + "," + y + ")";
+  //   // }
+  //
+  // legend.append("rect")
+  //     .attr("x", width - 18)
+  //     .attr("width", 18)
+  //     .attr("height", 18)
+  //     .style("fill", color);
+  //
+  // legend.append("text")
+  //     .attr("x", width - 24)
+  //     .attr("y", 9)
+  //     .attr("dy", ".35em")
+  //     .style("text-anchor", "end")
+  //     .text(function(d) { return d; });
 
 });
 
