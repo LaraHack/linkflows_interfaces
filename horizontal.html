@@ -92,10 +92,13 @@ d3.csv("data.csv", function(error, data) {
     });
   });
 
-  y0.domain(data.map(function(d) {  console.log("***********" + d.Reviewer); return d.Reviewer; }));
+var reviewers = (data.map(function(d) { return d.Reviewer; });
+y0.domain(reviewers);
+  // y0.domain(data.map(function(d) { return d.Reviewer; }));
 // console.log("*********d.Reviewer:" + d.Reviewer);
 // console.log("d3.keys.dimensions:" + d3.keys(dimensions));
-// console.log("y0.domain.slice():" + y0.domain.slice());
+console.log("y0.domain[0]:" + y0.domain()[0]);
+console.log("y0.rangeBand():" +  y0.rangeBand());
 // console.log("****" + y0.rangeBand());
   y1.domain(d3.keys(dimensions)).rangeRoundBands([0, y0.rangeBand()]);
 
