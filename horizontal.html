@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
-<!-- Code from http://bl.ocks.org/gencay/4629518 -->
+<!-- See https://bl.ocks.org/bricedev/0d95074b6d83a77dc3ad and http://bl.ocks.org/gencay/4629518 -->
 <style>
 
 body {
@@ -39,7 +39,7 @@ var xAxis = d3.svg.axis()
     .orient("bottom");
 
 var y0 = d3.scale.ordinal()
-    .rangeRoundBands([0, height], 0.1);
+    .rangeRoundBands([height, 0], 0.1);
 
 var y1 = d3.scale.ordinal();
 
@@ -69,7 +69,7 @@ var dimensions = {
 
 d3.csv("data.csv", function(error, data) {
   var columnHeaders = d3.keys(data[0]).filter(function(key) { return key !== "Reviewer"; });
-  console.log("column headers:" + columnHeaders);
+  // console.log("column headers:" + columnHeaders);
   color.domain(d3.keys(data[0]).filter(function(key) { return key !== "Reviewer"; }));
   data.forEach(function(d) {
     var xColumn = new Array();
@@ -81,25 +81,26 @@ d3.csv("data.csv", function(error, data) {
           }
           xBegin = xColumn[ic];
           xColumn[ic] += +d[name];
-          console.log("innerColumn:" + ic);
+          // console.log("innerColumn:" + ic);
           return {name: name, column: ic, xBegin: xBegin, xEnd: +d[name] + xBegin,};
         }
       }
     });
     d.total = d3.max(d.columnDetails, function(d) {
-      console.log("d.xEnd:" + d.xEnd);
+      // console.log("d.xEnd:" + d.xEnd);
       return d.xEnd;
     });
   });
 
   y0.domain(data.map(function(d) {  console.log("***********" + d.Reviewer); return d.Reviewer; }));
 // console.log("*********d.Reviewer:" + d.Reviewer);
-console.log("d3.keys.dimensions:" + d3.keys(dimensions));
-console.log("****" + y0.rangeBand());
+// console.log("d3.keys.dimensions:" + d3.keys(dimensions));
+// console.log("y0.domain.slice():" + y0.domain.slice());
+// console.log("****" + y0.rangeBand());
   y1.domain(d3.keys(dimensions)).rangeRoundBands([0, y0.rangeBand()]);
 
   x.domain([0, d3.max(data, function(d) {
-    console.log("d.total:" + d.total);
+    // console.log("d.total:" + d.total);
     return d.total;
   })]);
 
