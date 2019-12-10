@@ -90,6 +90,7 @@ d3.csv("data.csv", function(error, data) {
           yBegin = yColumn[ic];
           yColumn[ic] += +d[name];
           console.log("innerColumn:" + ic);
+          console.log("++++output:" + {name: name, column: ic, yBegin: yBegin, yEnd: +d[name] + yBegin,});
           return {name: name, column: ic, yBegin: yBegin, yEnd: +d[name] + yBegin,};
         }
       }
@@ -134,12 +135,14 @@ console.log("x0.domain[0]:" + x0.domain()[0]);
       .style("text-anchor", "end")
       .text("");
 
-  var project_stackedbar = svg.selectAll(".project_stackedbar")
+  // var project_stackedbar = svg.selectAll(".project_stackedbar")
     var project_stackedbar = inner.selectAll(".project_stackedbar")
       .data(data)
     .enter().append("g")
       .attr("class", "g")
-      .attr("transform", function(d) { return "translate(" + x0(d.Reviewer) + ",0)"; });
+      .attr("transform", function(d) {
+        console.log("**************y0Reviewer:" + x0(d.Reviewer));
+        return "translate(" + x0(d.Reviewer) + ",0)"; });
 
   project_stackedbar.selectAll("rect")
       .data(function(d) { return d.columnDetails; })

@@ -27,7 +27,7 @@ body {
 <script src="https://d3js.org/d3.v3.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
 <script>
-var margin = {top: 10, right: 100, bottom: 30, left: 40},
+var margin = {top: 10, right: 100, bottom: 30, left: 100},
     width = 960 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
@@ -46,7 +46,7 @@ var y1 = d3.scale.ordinal();
 var yAxis = d3.svg.axis()
     .scale(y0)
     .orient("left")
-    .tickFormat(d3.format(".2s"))
+    // .tickFormat(d3.format(".2s"))
 
 var color = d3.scale.ordinal()
     .range(["#ead1dc", "#b4a7d6", "#c9daf8", "#d5a6bd", "#674ea7", "#bae4e5", "#2a8fbd", "#6cdfea", "#02779e", "#7f94b0", "#a1bee6", "#04c4bb", "#d4f3e9", "#a8c0a8"]);
@@ -68,31 +68,31 @@ var dimensions = {
 }
 
 d3.csv("data.csv", function(error, data) {
-  var columnHeaders = d3.keys(data[0]).filter(function(key) { return key !== "Reviewer"; });
+  var rowHeaders = d3.keys(data[0]).filter(function(key) { return key !== "Reviewer"; });
   // console.log("column headers:" + columnHeaders);
   color.domain(d3.keys(data[0]).filter(function(key) { return key !== "Reviewer"; }));
   data.forEach(function(d) {
-    var xColumn = new Array();
-    d.columnDetails = columnHeaders.map(function(name) {
+    var xRow = new Array();
+    d.rowDetails = rowHeaders.map(function(name) {
       for (ic in dimensions) {
         if($.inArray(name, dimensions[ic]) >= 0){
-          if (!xColumn[ic]){
-            xColumn[ic] = 0;
+          if (!xRow[ic]){
+            xRow[ic] = 0;
           }
-          xBegin = xColumn[ic];
-          xColumn[ic] += +d[name];
-          // console.log("innerColumn:" + ic);
+          xBegin = xRow[ic];
+          xRow[ic] += +d[name];
+          console.log("innerColumn:" + ic);
           return {name: name, column: ic, xBegin: xBegin, xEnd: +d[name] + xBegin,};
         }
       }
     });
-    d.total = d3.max(d.columnDetails, function(d) {
+    d.total = d3.max(d.rowDetails, function(d) {
       // console.log("d.xEnd:" + d.xEnd);
       return d.xEnd;
     });
   });
 
-var reviewers = (data.map(function(d) { return d.Reviewer; });
+var reviewers = data.map(function(d) { return d.Reviewer; });
 y0.domain(reviewers);
   // y0.domain(data.map(function(d) { return d.Reviewer; }));
 // console.log("*********d.Reviewer:" + d.Reviewer);
@@ -128,12 +128,14 @@ inner.append("g")
 
 
   // var project_stackedbar = svg.selectAll(".project_stackedbar")
-  //   var project_stackedbar = inner.selectAll(".project_stackedbar")
-  //     .data(data)
-  //   .enter().append("g")
-  //     .attr("class", "g")
-  //     .attr("transform", function(d) { return "translate(" + y0(d.Reviewer) + ",0)"; });
-  //
+//     var project_stackedbar = inner.selectAll(".project_stackedbar")
+//       .data(data)
+//     .enter().append("g")
+//       .attr("class", "g")
+//       .attr("transform", function(d) {
+// console.log("**************y0Reviewer:" + y0(d.Reviewer));
+//         return "translate(" + y0(d.Reviewer) + ",0)"; });
+
   // project_stackedbar.selectAll("rect")
   //     .data(function(d) { return d.columnDetails; })
   //   .enter().append("rect")
@@ -148,7 +150,7 @@ inner.append("g")
   //       return x(d.xBegin) - x(d.xEnd);
   //     })
   //     .style("fill", function(d) { return color(d.name); });
-  //
+
   //     var aspect = columnHeaders.slice(0,3);
   //     console.log("aspect:" + aspect);
   //     var positivity_negativity = columnHeaders.slice(3,6);
@@ -166,18 +168,18 @@ inner.append("g")
   //     // .attr("transform", position)
   //
   //     console.log("colHeaders:" + columnHeaders.slice());
-  //
-  //   // function position(d,i) {
-  //   //   var c = 3;   // number of columns
-  //   //   var h = 20;  // height of each entry
-  //   //   var w = 50; // width of each entry (so you can position the next column)
-  //   //   var tx = 50; // tx/ty are essentially margin values
-  //   //   var ty = 10;
-  //   //   var x = i % c * w + tx;
-  //   //   var y = Math.floor(i / c) * h + ty;
-  //   //   return "translate(" + x + "," + y + ")";
-  //   // }
-  //
+
+    // function position(d,i) {
+    //   var c = 3;   // number of columns
+    //   var h = 20;  // height of each entry
+    //   var w = 50; // width of each entry (so you can position the next column)
+    //   var tx = 50; // tx/ty are essentially margin values
+    //   var ty = 10;
+    //   var x = i % c * w + tx;
+    //   var y = Math.floor(i / c) * h + ty;
+    //   return "translate(" + x + "," + y + ")";
+    // }
+
   // legend.append("rect")
   //     .attr("x", width - 18)
   //     .attr("width", 18)
