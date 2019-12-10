@@ -24,22 +24,33 @@ body {
 
 </style>
 <body>
-<script src="https://d3js.org/d3.v3.min.js"></script>
+<!-- <script src="https://d3js.org/d3.v3.min.js"></script> -->
+<script src="https://d3js.org/d3.v5.min.js"</script>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
 <script>
 var margin = {top: 10, right: 100, bottom: 30, left: 40},
     width = 960 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
-var x0 = d3.scale.ordinal()
-    .rangeRoundBands([0, width], 0.1);
+// var x0 = d3.scale.ordinal()
+var x0 = d3.scaleOrdinal()
+    // .rangeRoundBands([0, width], 0.1);
 
-var x1 = d3.scale.ordinal();
+var x0 = d3.scaleBand()
+    .rangeRound([0, width])
+    .padding(0.1);
 
-var y = d3.scale.linear()
+    // console.log("++++++++++++x0:" + x0.rangeRoundBands([0, width], 0.1));
+
+// var x1 = d3.scale.ordinal();
+var x1 = d3.scaleOrdinal();
+
+// var y = d3.scale.linear()
+var y = d3.scaleLinear()
     .range([height, 0]);
 
-var xAxis = d3.svg.axis()
+// var xAxis = d3.svg.axis()
+var xAxis = d3.axis()
     .scale(x0)
     .orient("bottom");
 
@@ -76,7 +87,7 @@ var dimensions = {
 d3.csv("data.csv", function(error, data) {
   var columnHeaders = d3.keys(data[0]).filter(function(key) { return key !== "Reviewer"; });
   console.log("column headers:" + columnHeaders);
-  color.domain(d3.keys(data[0]).filter(function(key) { return key !== "Reviewer"; }));
+  color.domain(columnHeaders);
   data.forEach(function(d) {
     var yColumn = new Array();
     d.columnDetails = columnHeaders.map(function(name) {
@@ -100,8 +111,9 @@ d3.csv("data.csv", function(error, data) {
 
   x0.domain(data.map(function(d) { console.log("***********" + d.Reviewer); return d.Reviewer; }));
 
-  console.log("d3.keys.inner" + d3.keys(dimensions));
-  console.log("****" + x0.rangeBand());
+  console.log("+++++++++++x1.domain:" + x1.domain(d3.keys(dimensions)) );
+    console.log("d3.keys.dimensions:" + d3.keys(dimensions));
+  console.log("****x0.rangeBand()" + x0.rangeBand());
   x1.domain(d3.keys(dimensions)).rangeRoundBands([0, x0.rangeBand()]);
 
   y.domain([0, d3.max(data, function(d) {
