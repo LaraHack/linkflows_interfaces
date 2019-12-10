@@ -140,14 +140,14 @@ inner.append("g")
   project_stackedbar.selectAll("rect")
       .data(function(d) { return d.rowDetails; })
     .enter().append("rect")
-      .attr("width", y1.rangeBand())
+      .attr("height", y1.rangeBand())
       .attr("y", function(d) {
         return y1(d.row);
          })
       .attr("x", function(d) {
         return x(d.xEnd);
       })
-      .attr("height", function(d) {
+      .attr("width", function(d) {
         // return x(d.xBegin) - x(d.xEnd);
         return x(d.xEnd) - x(d.xBegin);
       })
