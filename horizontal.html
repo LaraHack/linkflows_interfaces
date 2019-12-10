@@ -81,13 +81,14 @@ d3.csv("data.csv", function(error, data) {
           }
           xBegin = xRow[ic];
           xRow[ic] += +d[name];
-          console.log("innerColumn:" + ic);
-          return {name: name, column: ic, xBegin: xBegin, xEnd: +d[name] + xBegin,};
+          // console.log("innerColumn:" + ic);
+          console.log("yBegin:" + xBegin);
+          return {name: name, row: ic, xBegin: xBegin, xEnd: +d[name] + xBegin,};
         }
       }
     });
     d.total = d3.max(d.rowDetails, function(d) {
-      // console.log("d.xEnd:" + d.xEnd);
+      console.log("d.xEnd:" + d.xEnd);
       return d.xEnd;
     });
   });
@@ -128,28 +129,29 @@ inner.append("g")
 
 
   // var project_stackedbar = svg.selectAll(".project_stackedbar")
-//     var project_stackedbar = inner.selectAll(".project_stackedbar")
-//       .data(data)
-//     .enter().append("g")
-//       .attr("class", "g")
-//       .attr("transform", function(d) {
+    var project_stackedbar = inner.selectAll(".project_stackedbar")
+      .data(data)
+    .enter().append("g")
+      .attr("class", "g")
+      .attr("transform", function(d) {
 // console.log("**************y0Reviewer:" + y0(d.Reviewer));
-//         return "translate(" + y0(d.Reviewer) + ",0)"; });
+        return "translate(" + y0(d.Reviewer) + ",0)"; });
 
-  // project_stackedbar.selectAll("rect")
-  //     .data(function(d) { return d.columnDetails; })
-  //   .enter().append("rect")
-  //     .attr("width", y1.rangeBand())
-  //     .attr("y", function(d) {
-  //       return y1(d.column);
-  //        })
-  //     .attr("x", function(d) {
-  //       return x(d.xEnd);
-  //     })
-  //     .attr("height", function(d) {
-  //       return x(d.xBegin) - x(d.xEnd);
-  //     })
-  //     .style("fill", function(d) { return color(d.name); });
+  project_stackedbar.selectAll("rect")
+      .data(function(d) { return d.rowDetails; })
+    .enter().append("rect")
+      .attr("width", y1.rangeBand())
+      .attr("y", function(d) {
+        return y1(d.row);
+         })
+      .attr("x", function(d) {
+        return x(d.xEnd);
+      })
+      .attr("height", function(d) {
+        // return x(d.xBegin) - x(d.xEnd);
+        return x(d.xEnd) - x(d.xBegin);
+      })
+      .style("fill", function(d) { return color(d.name); });
 
   //     var aspect = columnHeaders.slice(0,3);
   //     console.log("aspect:" + aspect);

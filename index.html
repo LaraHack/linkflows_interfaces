@@ -77,7 +77,7 @@ var dimensions = {
 
 d3.csv("data.csv", function(error, data) {
   var columnHeaders = d3.keys(data[0]).filter(function(key) { return key !== "Reviewer"; });
-  console.log("column headers:" + columnHeaders);
+  // console.log("column headers:" + columnHeaders);
   color.domain(columnHeaders);
   data.forEach(function(d) {
     var yColumn = new Array();
@@ -89,14 +89,15 @@ d3.csv("data.csv", function(error, data) {
           }
           yBegin = yColumn[ic];
           yColumn[ic] += +d[name];
-          console.log("innerColumn:" + ic);
-          console.log("++++output:" + {name: name, column: ic, yBegin: yBegin, yEnd: +d[name] + yBegin,});
+          // console.log("innerColumn:" + ic);
+          // console.log("++++output:" + {name: name, column: ic, yBegin: yBegin, yEnd: +d[name] + yBegin,});
+          console.log("yBegin:" + yBegin);
           return {name: name, column: ic, yBegin: yBegin, yEnd: +d[name] + yBegin,};
         }
       }
     });
     d.total = d3.max(d.columnDetails, function(d) {
-      console.log("d.yEnd:" + d.yEnd);
+      console.log("yEnd:" + d.yEnd);
       return d.yEnd;
     });
   });
@@ -105,14 +106,14 @@ d3.csv("data.csv", function(error, data) {
   x0.domain(reviewers);
 
   // x0.domain(data.map(function(d) { console.log("***********" + d.Reviewer); return d.Reviewer; }));
-console.log("x0.domain[0]:" + x0.domain()[0]);
+// console.log("x0.domain[0]:" + x0.domain()[0]);
   // console.log("+++++++++++x1.domain:" + x1.domain(d3.keys(dimensions)) );
   //   console.log("d3.keys.dimensions:" + d3.keys(dimensions));
   // console.log("****x0.rangeBand()" + x0.rangeBand());
   x1.domain(d3.keys(dimensions)).rangeRoundBands([0, x0.rangeBand()]);
 
   y.domain([0, d3.max(data, function(d) {
-    console.log("d.total:" + d.total);
+    // console.log("d.total:" + d.total);
     return d.total;
   })]);
 
@@ -141,7 +142,7 @@ console.log("x0.domain[0]:" + x0.domain()[0]);
     .enter().append("g")
       .attr("class", "g")
       .attr("transform", function(d) {
-        console.log("**************y0Reviewer:" + x0(d.Reviewer));
+        // console.log("**************y0Reviewer:" + x0(d.Reviewer));
         return "translate(" + x0(d.Reviewer) + ",0)"; });
 
   project_stackedbar.selectAll("rect")
@@ -159,47 +160,47 @@ console.log("x0.domain[0]:" + x0.domain()[0]);
       })
       .style("fill", function(d) { return color(d.name); });
 
-  var aspect = columnHeaders.slice(0,3);
-  console.log("aspect:" + aspect);
-  var positivity_negativity = columnHeaders.slice(3,6);
-  console.log("pos/neg:" + positivity_negativity);
-  var impact = columnHeaders.slice(6,11);
-  console.log("impact:" + impact);
-  var action_needed = columnHeaders.slice(11,14);
-  console.log("action_needed:" + action_needed);
+  // var aspect = columnHeaders.slice(0,3);
+  // console.log("aspect:" + aspect);
+  // var positivity_negativity = columnHeaders.slice(3,6);
+  // console.log("pos/neg:" + positivity_negativity);
+  // var impact = columnHeaders.slice(6,11);
+  // console.log("impact:" + impact);
+  // var action_needed = columnHeaders.slice(11,14);
+  // console.log("action_needed:" + action_needed);
 
-  var legend = inner.selectAll(".legend")
-      .data(columnHeaders.slice())
-    .enter().append("g")
-      .attr("class", "legend")
-      .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
-      // .attr("transform", position)
-
-      console.log("colHeaders:" + columnHeaders.slice());
-
-    // function position(d,i) {
-    //   var c = 3;   // number of columns
-    //   var h = 20;  // height of each entry
-    //   var w = 50; // width of each entry (so you can position the next column)
-    //   var tx = 50; // tx/ty are essentially margin values
-    //   var ty = 10;
-    //   var x = i % c * w + tx;
-    //   var y = Math.floor(i / c) * h + ty;
-    //   return "translate(" + x + "," + y + ")";
-    // }
-
-  legend.append("rect")
-      .attr("x", width - 18)
-      .attr("width", 18)
-      .attr("height", 18)
-      .style("fill", color);
-
-  legend.append("text")
-      .attr("x", width - 24)
-      .attr("y", 9)
-      .attr("dy", ".35em")
-      .style("text-anchor", "end")
-      .text(function(d) { return d; });
+  // var legend = inner.selectAll(".legend")
+  //     .data(columnHeaders.slice())
+  //   .enter().append("g")
+  //     .attr("class", "legend")
+  //     .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+  //     // .attr("transform", position)
+  //
+  //     console.log("colHeaders:" + columnHeaders.slice());
+  //
+  //   // function position(d,i) {
+  //   //   var c = 3;   // number of columns
+  //   //   var h = 20;  // height of each entry
+  //   //   var w = 50; // width of each entry (so you can position the next column)
+  //   //   var tx = 50; // tx/ty are essentially margin values
+  //   //   var ty = 10;
+  //   //   var x = i % c * w + tx;
+  //   //   var y = Math.floor(i / c) * h + ty;
+  //   //   return "translate(" + x + "," + y + ")";
+  //   // }
+  //
+  // legend.append("rect")
+  //     .attr("x", width - 18)
+  //     .attr("width", 18)
+  //     .attr("height", 18)
+  //     .style("fill", color);
+  //
+  // legend.append("text")
+  //     .attr("x", width - 24)
+  //     .attr("y", 9)
+  //     .attr("dy", ".35em")
+  //     .style("text-anchor", "end")
+  //     .text(function(d) { return d; });
 
 });
 
