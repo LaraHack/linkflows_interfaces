@@ -22,89 +22,104 @@ body {
 <script src="https://d3js.org/d3.v3.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
 <script>
-var margin = {top: 10, right: 100, bottom: 30, left: 100},
-    width = 960 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom;
+  var margin = {top: 10, right: 100, bottom: 30, left: 100},
+      width = 960 - margin.left - margin.right,
+      height = 500 - margin.top - margin.bottom;
 
-var x = d3.scale.linear()
-    .range([0, width]);
+  // settings for the x axis
+  var x = d3.scale.linear()
+      .range([0, width]);
 
-var xAxis = d3.svg.axis()
-    .scale(x)
-    .orient("bottom");
+  var xAxis = d3.svg.axis()
+      .scale(x)
+      .orient("bottom");
 
-var y0 = d3.scale.ordinal()
-    .rangeRoundBands([height, 0], 0.1);
+  // settings for the y axis: extra grouping on the y axis by using y0 and y1
+  // grouping of reviewers
+  var y0 = d3.scale.ordinal()
+      .rangeRoundBands([height, 0], 0.1);
 
-var y1 = d3.scale.ordinal();
+  // grouping of dimensions
+  var y1 = d3.scale.ordinal();
 
-var yAxis = d3.svg.axis()
-    .scale(y0)
-    .orient("left")
-    // .tickFormat(d3.format(".2s"))
+  var yAxis = d3.svg.axis()
+      .scale(y0)
+      .orient("left")
 
-var color = d3.scale.ordinal()
-    .range(["#cbf5f6", "#3b91ce", "#7de1fb",
-      "#bae4e5", "#2a8fbd", "#6cdfea",
-      "#ff0000", "#ffff00", "#0000ff",
-      "#ead1dc", "#b4a7d6", "#c9daf8", "#d5a6bd", "#674ea7",
-      "#04c4bb", "#d4f3e9", "#a8c0a8"]);
+  // palette of colors used
+  var color = d3.scale.ordinal()
+      .range(["#cbf5f6", "#3b91ce", "#7de1fb", // part of article: article, section, paragraph
+        "#bae4e5", "#2a8fbd", "#6cdfea", // aspect: syntax, style, content
+        "#ff0000", "#ffff00", "#0000ff", // positivity/negativity: negative, neutral, positive
+        "#ead1dc", "#b4a7d6", "#c9daf8", "#d5a6bd", "#674ea7", // impact: 1, 2, 3, 4, 5
+        "#04c4bb", "#d4f3e9", "#a8c0a8"]); // action_needed: compulsory, suggestion, no_action
 
-var svg = d3.select("body").append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom);
+  // graph dimensions
+  var svg = d3.select("body").append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom);
 
-var inner = svg.append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+  // added inner child to put label outside the graph
+  var inner = svg.append("g")
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-var xBegin;
+  var xBegin;
 
-var dimensions = {
-  "part" : ["article","section","paragraph"],
-  "aspect" : ["syntax","style","content"],
-  "positivity_negativity" : ["negative", "neutral", "positive"],
-  "impact" : ["I1", "I2", "I3", "I4", "I5"],
-  "action_needed" : ["compulsory", "suggestion", "no action"]
-}
+  // definition of dimensions used in the grouped stacked chart
+  var dimensions = {
+    "part" : ["article","section","paragraph"],
+    "aspect" : ["syntax","style","content"],
+    "positivity_negativity" : ["negative", "neutral", "positive"],
+    "impact" : ["I1", "I2", "I3", "I4", "I5"],
+    "action_needed" : ["compulsory", "suggestion", "no action"]
+  }
 
-d3.csv("data.csv", function(error, data) {
-  var rowHeaders = d3.keys(data[0]).filter(function(key) { return key !== "Reviewer"; });
-  color.domain(d3.keys(data[0]).filter(function(key) { return key !== "Reviewer"; }));
-  data.forEach(function(d) {
-    var xRow = new Array();
-    d.rowDetails = rowHeaders.map(function(name) {
-      for (ic in dimensions) {
-        if($.inArray(name, dimensions[ic]) >= 0){
-          if (!xRow[ic]){
-            xRow[ic] = 0;
+  // reading the data from a csv file and mapping it on the dimensions defined above
+  d3.csv("data.csv", function(error, data) {
+    // get the reviewers
+    var rowHeaders = d3.keys(data[0]).filter(function(key) { return key !== "Reviewer"; });
+
+    //map colors in the defined palette to the dimensions of the data in the csv
+    color.domain(d3.keys(data[0]).filter(function(key) { return key !== "Reviewer"; }));
+
+    // get data for each dimension and
+    // calculate the coordonates for the beginning and the end of each for the x axis
+    data.forEach(function(d) {
+      var xRow = new Array();
+      d.rowDetails = rowHeaders.map(function(name) {
+        for (ic in dimensions) {
+          if($.inArray(name, dimensions[ic]) >= 0){
+            if (!xRow[ic]){
+              xRow[ic] = 0;
+            }
+            xBegin = xRow[ic];
+            xRow[ic] += +d[name];
+            return {name: name, row: ic, xBegin: xBegin, xEnd: +d[name] + xBegin,};
           }
-          xBegin = xRow[ic];
-          xRow[ic] += +d[name];
-          return {name: name, row: ic, xBegin: xBegin, xEnd: +d[name] + xBegin,};
         }
-      }
+      });
+      // get maximum number of review comments for each reviewer
+      d.total = d3.max(d.rowDetails, function(d) {
+        return d.xEnd;
+      });
     });
-    d.total = d3.max(d.rowDetails, function(d) {
-      console.log("d.xEnd:" + d.xEnd);
-      return d.xEnd;
-    });
-  });
 
-var reviewers = data.map(function(d) { return d.Reviewer; });
-y0.domain(reviewers);
-console.log("y0.domain[0]:" + y0.domain()[0]);
-console.log("y0.rangeBand():" +  y0.rangeBand());
+  // map data onto graph axes
+  var reviewers = data.map(function(d) { return d.Reviewer; });
+  y0.domain(reviewers);
   y1.domain(d3.keys(dimensions)).rangeRoundBands([0, y0.rangeBand()]);
 
   x.domain([0, d3.max(data, function(d) {
     return d.total;
   })]);
 
-inner.append("g")
+  // draw x axis
+  inner.append("g")
     .attr("class", "x axis")
     .attr("transform", "translate(0," + height + ")")
     .call(xAxis) ;
 
+  // draw y axis
   inner.append("g")
       .attr("class", "y axis")
       .call(yAxis)
@@ -115,13 +130,15 @@ inner.append("g")
         .style("text-anchor", "end")
         .text("");
 
-    var grouped_stackedbar = inner.selectAll(".grouped_stackedbar")
-      .data(data)
-    .enter().append("g")
-      .attr("class", "g")
-      .attr("transform", function(d) {
-        return "translate(0," + y0(d.Reviewer) + ")"; });
+  // add grouped stacked bar and add Reviewers
+  var grouped_stackedbar = inner.selectAll(".grouped_stackedbar")
+    .data(data)
+  .enter().append("g")
+    .attr("class", "g")
+    .attr("transform", function(d) {
+      return "translate(0," + y0(d.Reviewer) + ")"; });
 
+  // draw stacked bars for each dimension of each Reviewer
   grouped_stackedbar.selectAll("rect")
       .data(function(d) { return d.rowDetails; })
     .enter().append("rect")
@@ -137,15 +154,9 @@ inner.append("g")
       })
       .style("fill", function(d) { return color(d.name); });
 
-  //     var aspect = columnHeaders.slice(0,3);
-  //     console.log("aspect:" + aspect);
-  //     var positivity_negativity = columnHeaders.slice(3,6);
-  //     console.log("pos/neg:" + positivity_negativity);
-  //     var impact = columnHeaders.slice(6,11);
-  //     console.log("impact:" + impact);
-  //     var action_needed = columnHeaders.slice(11,14);
-  //     console.log("action_needed:" + action_needed);
-  //
+  // TODO: add legend outside paragraph
+  // TODO: in the legend make one column for each dimension
+
   // var legend = inner.selectAll(".legend")
   //     .data(columnHeaders.slice(0,5))
   //   .enter().append("g")
