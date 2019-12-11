@@ -157,10 +157,10 @@ body {
       })
       .style("fill", function(d) { return color(d.name); })
       .on("mouseover", function(d) {
-          d3.select(this).style("fill", d3.rgb(color(d.row)).darker(2));
+          d3.select(this).style("fill", d3.rgb(color(d.name)).darker(2));
       })
       .on("mouseout", function(d) {
-          d3.select(this).style("fill", color(d.row));
+          d3.select(this).style("fill", color(d.name));
       });
 
     // //add a value label to the right of each bar
