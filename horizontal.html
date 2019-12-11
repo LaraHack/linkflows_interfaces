@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
-<!-- See https://bl.ocks.org/bricedev/0d95074b6d83a77dc3ad and http://bl.ocks.org/gencay/4629518 -->
 <style>
 
 body {
@@ -17,10 +16,6 @@ body {
 .bar {
   fill: steelblue;
 }
-
-/* .x.axis path {
-  display: none;
-} */
 
 </style>
 <body>
@@ -74,7 +69,6 @@ var dimensions = {
 
 d3.csv("data.csv", function(error, data) {
   var rowHeaders = d3.keys(data[0]).filter(function(key) { return key !== "Reviewer"; });
-  // console.log("column headers:" + columnHeaders);
   color.domain(d3.keys(data[0]).filter(function(key) { return key !== "Reviewer"; }));
   data.forEach(function(d) {
     var xRow = new Array();
@@ -86,8 +80,6 @@ d3.csv("data.csv", function(error, data) {
           }
           xBegin = xRow[ic];
           xRow[ic] += +d[name];
-          // console.log("innerColumn:" + ic);
-          console.log("yBegin:" + xBegin);
           return {name: name, row: ic, xBegin: xBegin, xEnd: +d[name] + xBegin,};
         }
       }
@@ -100,28 +92,19 @@ d3.csv("data.csv", function(error, data) {
 
 var reviewers = data.map(function(d) { return d.Reviewer; });
 y0.domain(reviewers);
-  // y0.domain(data.map(function(d) { return d.Reviewer; }));
-// console.log("*********d.Reviewer:" + d.Reviewer);
-// console.log("d3.keys.dimensions:" + d3.keys(dimensions));
 console.log("y0.domain[0]:" + y0.domain()[0]);
 console.log("y0.rangeBand():" +  y0.rangeBand());
-// console.log("****" + y0.rangeBand());
   y1.domain(d3.keys(dimensions)).rangeRoundBands([0, y0.rangeBand()]);
 
   x.domain([0, d3.max(data, function(d) {
-    // console.log("d.total:" + d.total);
     return d.total;
   })]);
 
-// svg.append("g")
 inner.append("g")
     .attr("class", "x axis")
     .attr("transform", "translate(0," + height + ")")
     .call(xAxis) ;
 
-  // console.log("xAxis:" + xAxis);
-
-  // svg.append("g")
   inner.append("g")
       .attr("class", "y axis")
       .call(yAxis)
@@ -137,8 +120,6 @@ inner.append("g")
     .enter().append("g")
       .attr("class", "g")
       .attr("transform", function(d) {
-// console.log("**************y0Reviewer:" + y0(d.Reviewer));
-        // return "translate(" + y0(d.Reviewer) + ",0)"; });
         return "translate(0," + y0(d.Reviewer) + ")"; });
 
   grouped_stackedbar.selectAll("rect")
@@ -148,12 +129,6 @@ inner.append("g")
       .attr("y", function(d) {
         return y1(d.row);
          })
-      // .attr("x", function(d) {
-      //   return width - x(d.xEnd);
-      // })
-      // .attr("width", function(d) {
-      //   return x(d.xEnd) - x(d.xBegin);
-      // })
       .attr("x", function(d) {
         return x(d.xBegin);
       })
@@ -161,22 +136,6 @@ inner.append("g")
         return x(d.xEnd) - x(d.xBegin);
       })
       .style("fill", function(d) { return color(d.name); });
-
-  // grouped_stackedbar.selectAll("rect")
-  //     .data(function(d) { return d.rowDetails; })
-  //   .enter().append("rect")
-  //     .attr("height", y1.rangeBand())
-  //     .attr("y", function(d) {
-  //       return y1(d.row);
-  //        })
-  //     .attr("x", function(d) {
-  //       return x(d.xEnd);
-  //     })
-  //     .attr("width", function(d) {
-  //       // return x(d.xBegin) - x(d.xEnd);
-  //       return x(d.xEnd) - x(d.xBegin);
-  //     })
-  //     .style("fill", function(d) { return color(d.name); });
 
   //     var aspect = columnHeaders.slice(0,3);
   //     console.log("aspect:" + aspect);

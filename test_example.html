@@ -82,7 +82,6 @@ var dimensions = {
 
 d3.csv("data.csv", function(error, data) {
   var columnHeaders = d3.keys(data[0]).filter(function(key) { return key !== "Reviewer"; });
-  // console.log("column headers:" + columnHeaders);
   color.domain(columnHeaders);
   data.forEach(function(d) {
     var yColumn = new Array();
@@ -94,9 +93,6 @@ d3.csv("data.csv", function(error, data) {
           }
           yBegin = yColumn[ic];
           yColumn[ic] += +d[name];
-          // console.log("innerColumn:" + ic);
-          // console.log("++++output:" + {name: name, column: ic, yBegin: yBegin, yEnd: +d[name] + yBegin,});
-          console.log("yBegin:" + yBegin);
           return {name: name, column: ic, yBegin: yBegin, yEnd: +d[name] + yBegin,};
         }
       }
@@ -110,11 +106,6 @@ d3.csv("data.csv", function(error, data) {
   var reviewers = data.map(function(d) { return d.Reviewer; });
   x0.domain(reviewers);
 
-  // x0.domain(data.map(function(d) { console.log("***********" + d.Reviewer); return d.Reviewer; }));
-// console.log("x0.domain[0]:" + x0.domain()[0]);
-  // console.log("+++++++++++x1.domain:" + x1.domain(d3.keys(dimensions)) );
-  //   console.log("d3.keys.dimensions:" + d3.keys(dimensions));
-  // console.log("****x0.rangeBand()" + x0.rangeBand());
   x1.domain(d3.keys(dimensions)).rangeRoundBands([0, x0.rangeBand()]);
 
   y.domain([0, d3.max(data, function(d) {
@@ -127,8 +118,6 @@ d3.csv("data.csv", function(error, data) {
       .attr("class", "x axis")
       .attr("transform", "translate(0," + height + ")")
       .call(xAxis);
-  //
-  // console.log("xAxis:" + xAxis);
 
   // svg.append("g")
   inner.append("g")
@@ -141,13 +130,12 @@ d3.csv("data.csv", function(error, data) {
       .style("text-anchor", "end")
       .text("");
 
-  // var project_stackedbar = svg.selectAll(".grouped_stackedbar")
+  // var grouped_stackedbar = svg.selectAll(".grouped_stackedbar")
     var grouped_stackedbar = inner.selectAll(".grouped_stackedbar")
       .data(data)
     .enter().append("g")
       .attr("class", "g")
       .attr("transform", function(d) {
-        // console.log("**************y0Reviewer:" + x0(d.Reviewer));
         return "translate(" + x0(d.Reviewer) + ",0)"; });
 
   grouped_stackedbar.selectAll("rect")
