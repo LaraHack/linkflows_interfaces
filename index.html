@@ -117,6 +117,7 @@ body {
   inner.append("g")
     .attr("class", "x axis")
     .attr("transform", "translate(0," + height + ")")
+    .style("opacity", "0")
     .call(xAxis) ;
 
   // draw y axis
@@ -124,11 +125,13 @@ body {
       .attr("class", "y axis")
       .call(yAxis)
       .append("text")
-        .attr("transform", "rotate(-90)")
+        .attr("transform", "rotate(180)")
         .attr("y", 6)
         .attr("dy", ".7em")
-        .style("text-anchor", "end")
-        .text("");
+        .style("text-anchor", "start")
+        .text("reviewers");
+
+  inner.select('.x').transition().duration(500).delay(1300).style("opacity","1");
 
   // add grouped stacked bar and add Reviewers
   var grouped_stackedbar = inner.selectAll(".grouped_stackedbar")
@@ -152,9 +155,30 @@ body {
       .attr("width", function(d) {
         return x(d.xEnd) - x(d.xBegin);
       })
-      .style("fill", function(d) { return color(d.name); });
+      .style("fill", function(d) { return color(d.name); })
+      .on("mouseover", function(d) {
+          d3.select(this).style("fill", d3.rgb(color(d.row)).darker(2));
+      })
+      .on("mouseout", function(d) {
+          d3.select(this).style("fill", color(d.row));
+      });
 
-  // TODO: add legend outside paragraph
+    // //add a value label to the right of each bar
+    // grouped_stackedbar.append("text")
+    //     .attr("class", "label")
+    //     //y position of the label is halfway down the bar
+    //     .attr("y", function (d) {
+    //         return y(d.name) + y.rangeBand() / 2 + 4;
+    //     })
+    //     //x position is 3 pixels to the right of the bar
+    //     .attr("x", function (d) {
+    //         return x(d.value) + 3;
+    //     })
+    //     .text(function (d) {
+    //         return d.value;
+    //     });
+
+  // TODO: add legend outside graph
   // TODO: in the legend make one column for each dimension
 
   // var legend = inner.selectAll(".legend")
