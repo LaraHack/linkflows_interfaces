@@ -51,7 +51,11 @@ var yAxis = d3.svg.axis()
     .tickFormat(d3.format(".2s"));
 
 var color = d3.scale.ordinal()
-    .range(["#bae4e5", "#2a8fbd", "#6cdfea", "#02779e", "#7f94b0", "#a1bee6", "#ead1dc", "#b4a7d6", "#c9daf8", "#d5a6bd", "#674ea7", "#04c4bb", "#d4f3e9", "#a8c0a8"]);
+    .range(["#cbf5f6", "#3b91ce", "#7de1fb",
+      "#bae4e5", "#2a8fbd", "#6cdfea",
+      "#ff0000", "#ffff00", "#0000ff",
+      "#ead1dc", "#b4a7d6", "#c9daf8", "#d5a6bd", "#674ea7",
+      "#04c4bb", "#d4f3e9", "#a8c0a8"]);
 
 // var svg = d3.select("body").append("svg")
 //     .attr("width", width + margin.left + margin.right)
@@ -69,6 +73,7 @@ var inner = svg.append("g")
 var yBegin;
 
 var dimensions = {
+  "part" : ["article","section","paragraph"],
   "aspect" : ["syntax","style","content"],
   "positivity_negativity" : ["negative", "neutral", "positive"],
   "impact" : ["I1", "I2", "I3", "I4", "I5"],
@@ -136,8 +141,8 @@ d3.csv("data.csv", function(error, data) {
       .style("text-anchor", "end")
       .text("");
 
-  // var project_stackedbar = svg.selectAll(".project_stackedbar")
-    var project_stackedbar = inner.selectAll(".project_stackedbar")
+  // var project_stackedbar = svg.selectAll(".grouped_stackedbar")
+    var grouped_stackedbar = inner.selectAll(".grouped_stackedbar")
       .data(data)
     .enter().append("g")
       .attr("class", "g")
@@ -145,7 +150,7 @@ d3.csv("data.csv", function(error, data) {
         // console.log("**************y0Reviewer:" + x0(d.Reviewer));
         return "translate(" + x0(d.Reviewer) + ",0)"; });
 
-  project_stackedbar.selectAll("rect")
+  grouped_stackedbar.selectAll("rect")
       .data(function(d) { return d.columnDetails; })
     .enter().append("rect")
       .attr("width", x1.rangeBand())
