@@ -148,11 +148,16 @@ inner.append("g")
       .attr("y", function(d) {
         return y1(d.row);
          })
+      // .attr("x", function(d) {
+      //   return width - x(d.xEnd);
+      // })
+      // .attr("width", function(d) {
+      //   return x(d.xEnd) - x(d.xBegin);
+      // })
       .attr("x", function(d) {
-        return width-x(d.xEnd);
+        return x(d.xBegin);
       })
       .attr("width", function(d) {
-        // return x(d.xBegin) - x(d.xEnd);
         return x(d.xEnd) - x(d.xBegin);
       })
       .style("fill", function(d) { return color(d.name); });
