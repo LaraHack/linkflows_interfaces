@@ -149,13 +149,29 @@ inner.append("g")
         return y1(d.row);
          })
       .attr("x", function(d) {
-        return x(d.xEnd);
+        return width-x(d.xEnd);
       })
       .attr("width", function(d) {
         // return x(d.xBegin) - x(d.xEnd);
         return x(d.xEnd) - x(d.xBegin);
       })
       .style("fill", function(d) { return color(d.name); });
+
+  // grouped_stackedbar.selectAll("rect")
+  //     .data(function(d) { return d.rowDetails; })
+  //   .enter().append("rect")
+  //     .attr("height", y1.rangeBand())
+  //     .attr("y", function(d) {
+  //       return y1(d.row);
+  //        })
+  //     .attr("x", function(d) {
+  //       return x(d.xEnd);
+  //     })
+  //     .attr("width", function(d) {
+  //       // return x(d.xBegin) - x(d.xEnd);
+  //       return x(d.xEnd) - x(d.xBegin);
+  //     })
+  //     .style("fill", function(d) { return color(d.name); });
 
   //     var aspect = columnHeaders.slice(0,3);
   //     console.log("aspect:" + aspect);
