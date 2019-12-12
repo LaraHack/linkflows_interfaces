@@ -1,0 +1,33 @@
+body {
+  font: 14px sans-serif;
+}
+
+span.legend {
+  display:inline-block;
+  font-weight:bold;
+  width:91px;
+  text-align:center;
+}
+
+span.legendImpact {
+  display:inline-block;
+  font-weight:bold;
+  width:53px;
+  text-align:center;
+}
+
+table.legend {
+  border:1px black solid;
+  padding: 5px;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.bar {
+  fill: steelblue;
+}
