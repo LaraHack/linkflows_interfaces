@@ -103,7 +103,6 @@ function setSpanColor(dimName) {
 }
 
 for (const [key, value] of Object.entries(colors)) {
-  console.log(key, value);
   setSpanColor(key);
 }
 
@@ -133,15 +132,11 @@ for (const [key, value] of Object.entries(colors)) {
 
   var yAxis = d3.svg.axis()
       .scale(y0)
-      .orient("left")
+      .orient("left");
 
   // palette of colors used
   var color = d3.scale.ordinal()
-      .range(["#cbf5f6", "#3b91ce", "#7de1fb", // part of article: article, section, paragraph
-        "#bae4e5", "#2a8fbd", "#6cdfea", // aspect: syntax, style, content
-        "#ff0000", "#ffff00", "#0000ff", // positivity/negativity: negative, neutral, positive
-        "#ead1dc", "#b4a7d6", "#c9daf8", "#d5a6bd", "#674ea7", // impact: 1, 2, 3, 4, 5
-        "#04c4bb", "#d4f3e9", "#a8c0a8"]); // action_needed: compulsory, suggestion, no_action
+      .range(Object.values(colors));
 
   // graph dimensions
   var svg = d3.select("body").append("svg")
