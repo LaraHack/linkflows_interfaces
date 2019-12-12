@@ -13,6 +13,13 @@ span.legend {
   text-align:center;
 }
 
+span.legendImpact {
+  display:inline-block;
+  font-weight:bold;
+  width:40px;
+  text-align:center;
+}
+
 .axis path,
 .axis line {
   fill: none;
@@ -29,37 +36,50 @@ span.legend {
 <script src="https://d3js.org/d3.v3.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
 
-Article level:
-<span style="background:#cbf5f6" class="legend">article</span>
-<span style="background:#3b91ce" class="legend">section</span>
-<span style="background:#7de1fb" class="legend">paragraph</span>
-<br/>
-
-Aspect:
-<span style="background:#bae4e5" class="legend">syntax</span>
-<span style="background:#2a8fbd" class="legend">style</span>
-<span style="background:#6cdfea" class="legend">content</span>
-<br/>
-
-Positivity/negativity:
-<span style="background:#ff0000; color:white" class="legend">negative</span>
-<span style="background:#ffff00" class="legend">neutral</span>
-<span style="background:#0000ff; color:white;"  class="legend" >positive</span>
-<br/>
-
-Impact:
-<span style="background:#ead1dc; width:40px;" class="legend">1</span>
-<span style="background:#b4a7d6; width:40px;" class="legend">2</span>
-<span style="background:#c9daf8; width:40px;" class="legend">3</span>
-<span style="background:#d5a6bd; width:40px;" class="legend">4</span>
-<span style="background:#674ea7; width:40px; color:white" class="legend">5</span>
-<br/>
-
-Action needed:
-<span style="background:#04c4bb" class="legend">compulsory</span>
-<span style="background:#d4f3e9" class="legend">suggestion</span>
-<span style="background:#a8c0a8" class="legend">no action</span>
-<br/>
+<table>
+  <tr>
+    <td>Article level:</td>
+    <td>
+      <span style="background:#cbf5f6" class="legend">article</span>
+      <span style="background:#3b91ce" class="legend">section</span>
+      <span style="background:#7de1fb" class="legend">paragraph</span>
+    </td>
+  </tr>
+  <tr>
+    <td>Aspect:</td>
+    <td>
+      <span style="background:#bae4e5" class="legend">syntax</span>
+      <span style="background:#2a8fbd" class="legend">style</span>
+      <span style="background:#6cdfea" class="legend">content</span>
+    </td>
+  </tr>
+  <tr>
+    <td>Positivity/negativity:</td>
+    <td>
+      <span style="background:#ff0000; color:white" class="legend">negative</span>
+      <span style="background:#ffff00" class="legend">neutral</span>
+      <span style="background:#0000ff; color:white;"  class="legend" >positive</span>
+    </td>
+  </tr>
+  <tr>
+    <td>Impact:  </td>
+    <td>
+      <span style="background:#ead1dc;" class="legendImpact">1</span>
+      <span style="background:#b4a7d6;" class="legendImpact">2</span>
+      <span style="background:#c9daf8;" class="legendImpact">3</span>
+      <span style="background:#d5a6bd;" class="legendImpact">4</span>
+      <span style="background:#674ea7; color:white" class="legendImpact">5</span>
+    </td>
+  </tr>
+  <tr>
+    <td>Action needed:</td>
+    <td>
+      <span style="background:#04c4bb" class="legend">compulsory</span>
+      <span style="background:#d4f3e9" class="legend">suggestion</span>
+      <span style="background:#a8c0a8" class="legend">no action</span>
+    </td>
+  </tr>
+</table>
 
 <script>
   var margin = {top: 10, right: 100, bottom: 30, left: 100},
