@@ -6,6 +6,13 @@ body {
   font: 10px sans-serif;
 }
 
+span.legend {
+  display:inline-block;
+  font-weight:bold;
+  width:70px;
+  text-align:center;
+}
+
 .axis path,
 .axis line {
   fill: none;
@@ -23,35 +30,35 @@ body {
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
 
 Article level:
-<span style="background:#cbf5f6">article</span>
-<span style="background:#3b91ce">section</span>
-<span style="background:#7de1fb">paragraph</span>
+<span style="background:#cbf5f6" class="legend">article</span>
+<span style="background:#3b91ce" class="legend">section</span>
+<span style="background:#7de1fb" class="legend">paragraph</span>
 <br/>
 
 Aspect:
-<span style="background:#bae4e5">syntax</span>
-<span style="background:#2a8fbd">style</span>
-<span style="background:#6cdfea">content</span>
+<span style="background:#bae4e5" class="legend">syntax</span>
+<span style="background:#2a8fbd" class="legend">style</span>
+<span style="background:#6cdfea" class="legend">content</span>
 <br/>
 
 Positivity/negativity:
-<span style="background:#ff0000">negative</span>
-<span style="background:#ffff00">neutral</span>
-<span style="background:#0000ff">positive</span>
+<span style="background:#ff0000; color:white" class="legend">negative</span>
+<span style="background:#ffff00" class="legend">neutral</span>
+<span style="background:#0000ff; color:white;"  class="legend" >positive</span>
 <br/>
 
 Impact:
-<span style="background:#ead1dc">1</span>
-<span style="background:#b4a7d6">2</span>
-<span style="background:#c9daf8">3</span>
-<span style="background:#d5a6bd">4</span>
-<span style="background:#674ea7">5</span>
+<span style="background:#ead1dc; width:40px;" class="legend">1</span>
+<span style="background:#b4a7d6; width:40px;" class="legend">2</span>
+<span style="background:#c9daf8; width:40px;" class="legend">3</span>
+<span style="background:#d5a6bd; width:40px;" class="legend">4</span>
+<span style="background:#674ea7; width:40px; color:white" class="legend">5</span>
 <br/>
 
 Action needed:
-<span style="background:#04c4bb">compulsory</span>
-<span style="background:#d4f3e9">suggestion</span>
-<span style="background:#a8c0a8">no action</span>
+<span style="background:#04c4bb" class="legend">compulsory</span>
+<span style="background:#d4f3e9" class="legend">suggestion</span>
+<span style="background:#a8c0a8" class="legend">no action</span>
 <br/>
 
 <script>
@@ -162,7 +169,7 @@ Action needed:
         .attr("y", 6)
         .attr("dy", ".7em")
         .style("text-anchor", "start")
-        .text("reviewers");
+        .text(""); //        .text("reviewers");
 
   inner.select('.x').transition().duration(500).delay(1300).style("opacity","1");
 
