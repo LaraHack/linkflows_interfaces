@@ -16,8 +16,13 @@ span.legend {
 span.legendImpact {
   display:inline-block;
   font-weight:bold;
-  width:40px;
+  width:41px;
   text-align:center;
+}
+
+table.legend {
+  border:1px black solid;
+  padding: 5px;
 }
 
 .axis path,
@@ -36,12 +41,12 @@ span.legendImpact {
 <script src="https://d3js.org/d3.v3.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
 
-<table>
+<table class="legend">
   <tr>
     <td>Article level:</td>
     <td>
       <span style="background:#cbf5f6" class="legend">article</span>
-      <span style="background:#3b91ce" class="legend">section</span>
+      <span style="background:#3b91ce; color:white;" class="legend">section</span>
       <span style="background:#7de1fb" class="legend">paragraph</span>
     </td>
   </tr>
@@ -49,7 +54,7 @@ span.legendImpact {
     <td>Aspect:</td>
     <td>
       <span style="background:#bae4e5" class="legend">syntax</span>
-      <span style="background:#2a8fbd" class="legend">style</span>
+      <span style="background:#2a8fbd; color:white;" class="legend">style</span>
       <span style="background:#6cdfea" class="legend">content</span>
     </td>
   </tr>
