@@ -1,59 +1,78 @@
 <!DOCTYPE html>
-<meta charset="utf-8">
-<head>
-  <link rel="stylesheet" href="/css/styles.css">
-</head>
-<body>
-<script src="https://d3js.org/d3.v3.min.js"></script>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/styles.css">
+    <script src="https://d3js.org/d3.v3.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+    <title>Linkflows: Editor view</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="row align-items-start">
+        <div class="col">
+          <h4>Article: "Detecting Linked Data Quality Issues via Crowdsourcing: A DBpedia Study" </h4>
+          <br/>
+          Authors: Maribel Acosta, Amrapali Zaveri, Elena Simperl, Dimitris Kontokostas, Fabian Flock, Jens Lehmann <br/>
+          Date submitted: 04/15/2015 - 15:45 <br/>
+        </div>
+        <div class="col">
+        <table class="legend">
+          <tr>
+            <td>Article level:</td>
+            <td>
+              <span class="legend" id="spanArticle">article</span> <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+              <span class="legend" id="spanSection">section</span> <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+              <span class="legend" id="spanParagraph">paragraph</span> <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+            </td>
+          </tr>
+          <tr>
+            <td>Aspect:</td>
+            <td>
+              <span class="legend" id="spanSyntax">syntax</span> <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+              <span class="legend" id="spanStyle">style</span> <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+              <span class="legend" id="spanContent">content</span> <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+            </td>
+          </tr>
+          <tr>
+            <td>Positivity/negativity:</td>
+            <td>
+              <span style="color:white" class="legend" id="spanNegative">negative</span> <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+              <span class="legend" id="spanNeutral">neutral</span> <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+              <span style="color:white;" class="legend" id="spanPositive">positive</span> <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+            </td>
+          </tr>
+          <tr>
+            <td>Impact:  </td>
+            <td>
+              <span class="legendImpact" id="spanI1">1</span> <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+              <span class="legendImpact" id="spanI2">2</span> <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+              <span style="color:white;" class="legendImpact" id="spanI3">3</span> <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+              <span style="color:white;" class="legendImpact" id="spanI4">4</span> <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+              <span style="color:white;" class="legendImpact" id="spanI5">5</span> <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+            </td>
+          </tr>
+          <tr>
+            <td>Action needed:</td>
+            <td>
+              <span class="legend" id="spanCompulsory">compulsory</span> <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+              <span class="legend" id="spanSuggestion">suggestion</span> <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+              <span class="legend" id="spanNo_action">no action</span> <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div id="graphArea"></div>
+    </div>
+    </div>
 
-<table class="legend">
-  <tr>
-    <td>Article level:</td>
-    <td>
-      <span class="legend" id="spanArticle">article</span>
-      <span class="legend" id="spanSection">section</span>
-      <span class="legend" id="spanParagraph">paragraph</span>
-    </td>
-  </tr>
-  <tr>
-    <td>Aspect:</td>
-    <td>
-      <span class="legend" id="spanSyntax">syntax</span>
-      <span class="legend" id="spanStyle">style</span>
-      <span class="legend" id="spanContent">content</span>
-    </td>
-  </tr>
-  <tr>
-    <td>Positivity/negativity:</td>
-    <td>
-      <span style="color:white" class="legend" id="spanNegative">negative</span>
-      <span class="legend" id="spanNeutral">neutral</span>
-      <span style="color:white;" class="legend" id="spanPositive">positive</span>
-    </td>
-  </tr>
-  <tr>
-    <td>Impact:  </td>
-    <td>
-      <span class="legendImpact" id="spanI1">1</span>
-      <span class="legendImpact" id="spanI2">2</span>
-      <span style="color:white;" class="legendImpact" id="spanI3">3</span>
-      <span style="color:white;" class="legendImpact" id="spanI4">4</span>
-      <span style="color:white;" class="legendImpact" id="spanI5">5</span>
-    </td>
-  </tr>
-  <tr>
-    <td>Action needed:</td>
-    <td>
-      <span class="legend" id="spanCompulsory">compulsory</span>
-      <span class="legend" id="spanSuggestion">suggestion</span>
-      <span class="legend" id="spanNo_action">no action</span>
-    </td>
-  </tr>
-</table>
-<br/>
-<div id="graphArea"></div>
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 
-<script src="/js/init.js"></script>
+    <script src="/js/init.js"></script>
 
-</body>
+  </body>
+</html>
