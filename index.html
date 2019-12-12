@@ -45,48 +45,72 @@ table.legend {
   <tr>
     <td>Article level:</td>
     <td>
-      <span style="background:#cd853f; color:white;" class="legend">article</span>
-      <span style="background:#deb887;" class="legend">section</span>
-      <span style="background:#ffe4c4;" class="legend">paragraph</span>
+      <span class="legend" id="spanArticle">article</span>
+      <span class="legend" id="spanSection">section</span>
+      <span class="legend" id="spanParagraph">paragraph</span>
     </td>
   </tr>
   <tr>
     <td>Aspect:</td>
     <td>
-      <span style="background:#d8bfd8;" class="legend">syntax</span>
-      <span style="background:#dda0dd;" class="legend">style</span>
-      <span style="background:#da70d6;" class="legend">content</span>
+      <span class="legend" id="spanSyntax">syntax</span>
+      <span class="legend" id="spanStyle">style</span>
+      <span class="legend" id="spanContent">content</span>
     </td>
   </tr>
   <tr>
     <td>Positivity/negativity:</td>
     <td>
-      <span style="background:#ff0000; color:white" class="legend">negative</span>
-      <span style="background:#ffff00" class="legend">neutral</span>
-      <span style="background:#008000; color:white;"  class="legend" >positive</span>
+      <span style="color:white" class="legend" id="spanNegative">negative</span>
+      <span class="legend" id="spanNeutral">neutral</span>
+      <span style="color:white;" class="legend" id="spanPositive">positive</span>
     </td>
   </tr>
   <tr>
     <td>Impact:  </td>
     <td>
-      <span style="background:rgba(0, 0, 0, 0);" class="legendImpact">1</span>
-      <span style="background:rgba(0, 0, 0, 0.25);" class="legendImpact">2</span>
-      <span style="background:rgba(0, 0, 0, 0.5); color:white;" class="legendImpact">3</span>
-      <span style="background:rgba(0, 0, 0, 0.75); color:white;" class="legendImpact">4</span>
-      <span style="background:rgba(0, 0, 0, 1);; color:white;" class="legendImpact">5</span>
+      <span class="legendImpact" id="spanI1">1</span>
+      <span class="legendImpact" id="spanI2">2</span>
+      <span style="color:white;" class="legendImpact" id="spanI3">3</span>
+      <span style="color:white;" class="legendImpact" id="spanI4">4</span>
+      <span style="color:white;" class="legendImpact" id="spanI5">5</span>
     </td>
   </tr>
   <tr>
     <td>Action needed:</td>
     <td>
-      <span style="background:#ff6500" class="legend">compulsory</span>
-      <span style="background:#ffa500" class="legend">suggestion</span>
-      <span style="background:#ffd700" class="legend">no action</span>
+      <span class="legend" id="spanCompulsory">compulsory</span>
+      <span class="legend" id="spanSuggestion">suggestion</span>
+      <span class="legend" id="spanNo_action">no action</span>
     </td>
   </tr>
 </table>
 
 <script>
+
+var colors = {article: "#cd853f", section: "#deb887", paragraph: "#ffe4c4",
+  syntax: "#d8bfd8", style: "#dda0dd", content:"#da70d6",
+  negative: "#ff0000", neutral: "#ffff00", positive: "#008000",
+  I1: "rgba(0, 0, 0, 0)", I2: "rgba(0, 0, 0, 0.25)", I3: "rgba(0, 0, 0, 0.5)", I4: "rgba(0, 0, 0, 0.75)", I5: "rgba(0, 0, 0, 1)",
+  compulsory: "#ff6500", suggestion: "#ffa500", no_action: "#ffd700"};
+
+function setSpanColor(dimName) {
+  var spanId = "span" + dimName.charAt(0).toUpperCase() + dimName.slice(1);
+  var spanFound = document.getElementById(spanId);
+  if (spanFound) {
+      spanFound.style.background = colors[dimName];
+  }
+}
+
+for (const [key, value] of Object.entries(colors)) {
+  console.log(key, value);
+  setSpanColor(key);
+}
+
+</script>
+
+<script>
+
   var margin = {top: 10, right: 100, bottom: 30, left: 100},
       width = 960 - margin.left - margin.right,
       height = 500 - margin.top - margin.bottom;
