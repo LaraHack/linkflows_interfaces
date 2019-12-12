@@ -1,6 +1,6 @@
 
 var colors = {article: "#cd853f", section: "#deb887", paragraph: "#ffe4c4",
-  syntax: "#d8bfd8", style: "#dda0dd", content:"#da70d6",
+  syntax: "#c6deff", style: "#82cafa", content:"#9e7bff",
   negative: "#ff0000", neutral: "#ffff00", positive: "#008000",
   I1: "rgba(0, 0, 0, 0)", I2: "rgba(0, 0, 0, 0.25)", I3: "rgba(0, 0, 0, 0.5)", I4: "rgba(0, 0, 0, 0.75)", I5: "rgba(0, 0, 0, 1)",
   compulsory: "#ff6500", suggestion: "#ffa500", no_action: "#ffd700"};
