@@ -5,14 +5,14 @@ body {
 span.legend {
   display:inline-block;
   font-weight:bold;
-  width:91px;
+  width:101px;
   text-align:center;
 }
 
 span.legendImpact {
   display:inline-block;
   font-weight:bold;
-  width:53px;
+  width:59px;
   text-align:center;
 }
 
@@ -30,4 +30,9 @@ table.legend {
 
 .bar {
   fill: steelblue;
+}
+
+input {
+  vertical-align: middle;
+  display:inline-block;
 }
