@@ -66,7 +66,7 @@ var dimensions = {
 }
 
 // reading the data from a csv file and mapping it on the dimensions defined above
-d3.csv("data.csv", function(error, data) {
+d3.csv("Q6.csv", function(error, data) {
   // get the reviewers
   var rowHeaders = d3.keys(data[0]).filter(function(key) { return key !== "Reviewer"; });
 
