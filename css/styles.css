@@ -7,6 +7,7 @@ span.legend {
   font-weight:bold;
   width:101px;
   text-align:center;
+  vertical-align: middle;
 }
 
 span.legendImpact {
@@ -35,4 +36,5 @@ table.legend {
 input[type=checkbox] {
   vertical-align: middle;
   float: right;
+  padding: 15px;
 }
