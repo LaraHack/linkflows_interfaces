@@ -41,7 +41,7 @@ var yAxis = d3.svg.axis()
     .scale(y0)
     .orient("left");
 
-// palette of colors used
+// palette of colors used for all dimensions
 var color = d3.scale.ordinal()
     .range(Object.values(colors));
 
@@ -62,16 +62,26 @@ var dimensions = {
   "aspect" : ["syntax","style","content"],
   "positivity_negativity" : ["negative", "neutral", "positive"],
   "impact" : ["I1", "I2", "I3", "I4", "I5"],
-  "action_needed" : ["compulsory", "suggestion", "no action"]
+  "action_needed" : ["compulsory", "suggestion", "no_action"]
 }
 
 // reading the data from a csv file and mapping it on the dimensions defined above
-d3.csv("Q6.csv", function(error, data) {
+// data.csv contains all data for all dimensions
+// Qi.csv, where i = 1,..., 6 contains the data for question number i in the questionnaire
+d3.csv("Q2.csv", function(error, data) {
   // get the reviewers
   var rowHeaders = d3.keys(data[0]).filter(function(key) { return key !== "Reviewer"; });
 
+  var colorRange = [];
+
+  for (var i = 0; i < rowHeaders.length; i++) {
+    colorRange[i] = colors[rowHeaders[i]];
+  }
+
+  color.range(colorRange);
+
   //map colors in the defined palette to the dimensions of the data in the csv
-  color.domain(d3.keys(data[0]).filter(function(key) { return key !== "Reviewer"; }));
+  color.domain(rowHeaders);
 
   // get data for each dimension and
   // calculate the coordonates for the beginning and the end of each for the x axis
