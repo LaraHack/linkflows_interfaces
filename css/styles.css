@@ -17,6 +17,14 @@ span.legendImpact {
   text-align:center;
 }
 
+div.legend {
+  display:inline-block;
+  font-weight:bold;
+  width:101px;
+  text-align:center;
+  vertical-align: middle;
+}
+
 table.legend {
   border:1px black solid;
   padding: 5px;
@@ -34,7 +42,7 @@ table.legend {
 }
 
 input[type=checkbox] {
-  vertical-align: middle;
+  margin-top: 2px;
   float: right;
   padding: 15px;
 }
