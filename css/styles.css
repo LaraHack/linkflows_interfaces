@@ -32,7 +32,7 @@ table.legend {
   fill: steelblue;
 }
 
-input {
+input[type=checkbox] {
   vertical-align: middle;
-  display:inline-block;
+  float: right;
 }

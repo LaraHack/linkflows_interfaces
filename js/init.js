@@ -73,7 +73,7 @@ var dimensions = {
 // reading the data from a csv file and mapping it on the dimensions defined above
 // data.csv contains all data for all dimensions
 // Qi.csv, where i = 1,..., 6 contains the data for question number i in the questionnaire
-d3.csv("Q2.csv", function(error, data) {
+d3.csv("Q3.csv", function(error, data) {
   // get the reviewers
   var rowHeaders = d3.keys(data[0]).filter(function(key) { return key !== "Reviewer"; });
 
