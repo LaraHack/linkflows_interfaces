@@ -173,7 +173,7 @@ grouped_stackedbar.selectAll("rect")
         .data(function(d) { console.log(d.rowDetails); return d.rowDetails; })
       .enter().append("text")
         .attr("x", function(d) {
-          return x(d.xEnd);
+          return x(d.xBegin) + (x(d.xEnd) - x(d.xBegin))/2;
         })
         .attr("y", function(d) {
           return y1(d.row);
