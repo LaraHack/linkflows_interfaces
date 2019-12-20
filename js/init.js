@@ -111,66 +111,67 @@ d3.csv("data.csv", function(error, data) {
     });
   });
 
-// map data onto graph axes
-var reviewers = data.map(function(d) { return d.Reviewer; });
-y0.domain(reviewers);
-y1.domain(d3.keys(dimensions)).rangeRoundBands([0, y0.rangeBand()]);
+  // map data onto graph axes
+  var reviewers = data.map(function(d) { return d.Reviewer; });
+  y0.domain(reviewers);
+  y1.domain(d3.keys(dimensions)).rangeRoundBands([0, y0.rangeBand()]);
 
-x.domain([0, d3.max(data, function(d) {
-  return d.total;
-})]);
+  x.domain([0, d3.max(data, function(d) {
+    return d.total;
+  })]);
 
-// draw x axis
-inner.append("g")
-  .attr("class", "x axis")
-  .attr("transform", "translate(0," + height + ")")
-  .style("opacity", "0")
-  .call(xAxis) ;
+  // draw x axis
+  inner.append("g")
+    .attr("class", "x axis")
+    .attr("transform", "translate(0," + height + ")")
+    .style("opacity", "0")
+    .call(xAxis) ;
 
-// draw y axis
-inner.append("g")
-    .attr("class", "y axis")
-    .call(yAxis)
-    .append("text")
-      .attr("transform", "rotate(0)")
-      .attr("y", 6)
-      .attr("dy", ".20em")
-      .style("text-anchor", "end")
-      .text(""); // .text("reviewers");
+  // draw y axis
+  inner.append("g")
+      .attr("class", "y axis")
+      .call(yAxis)
+      .append("text")
+        .attr("transform", "rotate(0)")
+        .attr("y", 6)
+        .attr("dy", ".20em")
+        .style("text-anchor", "end")
+        .text(""); // .text("reviewers");
 
-inner.select('.x').transition().duration(500).delay(1300).style("opacity","1");
+  inner.select('.x').transition().duration(500).delay(1300).style("opacity","1");
 
-// add grouped stacked bar and add Reviewers
-var grouped_stackedbar = inner.selectAll(".grouped_stackedbar")
-  .data(data)
-.enter().append("g")
-  .attr("class", "g")
-  .attr("transform", function(d) {
-    return "translate(0," + y0(d.Reviewer) + ")"; });
+  // add grouped stacked bar and add Reviewers
+  var grouped_stackedbar = inner.selectAll(".grouped_stackedbar")
+    .data(data)
+  .enter().append("g")
+    .attr("class", "g")
+    .attr("transform", function(d) {
+      return "translate(0," + y0(d.Reviewer) + ")"; });
 
-// draw stacked bars for each dimension of each Reviewer
-grouped_stackedbar.selectAll("rect")
+  // draw stacked bars for each dimension of each Reviewer
+  grouped_stackedbar.selectAll("rect")
     .data(function(d) { return d.rowDetails; })
-  .enter().append("rect")
-    .attr("height", y1.rangeBand())
-    .attr("y", function(d) {
-      return y1(d.row);
-       })
-    .attr("x", function(d) {
-      return x(d.xBegin);
-    })
-    .attr("width", function(d) {
-      return x(d.xEnd) - x(d.xBegin);
-    })
-    .style("fill", function(d) { return color(d.name); })
-    .on("mouseover", function(d) {
-        d3.select(this).style("fill", d3.rgb(color(d.name)).darker(2));
-    })
-    .on("mouseout", function(d) {
-        d3.select(this).style("fill", color(d.name));
+      .enter().append("rect")
+        .attr("height", y1.rangeBand())
+        .attr("y", function(d) {
+          return y1(d.row);
+        })
+        .attr("x", function(d) {
+          return x(d.xBegin);
+        })
+        .attr("width", function(d) {
+          return x(d.xEnd) - x(d.xBegin);
+        })
+        .style("fill", function(d) { return color(d.name); })
+        .on("mouseover", function(d) {
+            d3.select(this).style("fill", d3.rgb(color(d.name)).darker(2));
+        })
+        .on("mouseout", function(d) {
+            d3.select(this).style("fill", color(d.name))
+        });
 
-    grouped_stackedbar.selectAll(".text")
-        .data(function(d) { console.log(d.rowDetails); return d.rowDetails; })
+  grouped_stackedbar.selectAll("text")
+    .data(function(d) { return d.rowDetails; })
       .enter().append("text")
         .attr("x", function(d) {
           return x(d.xBegin) + (x(d.xEnd) - x(d.xBegin))/2;
@@ -178,92 +179,10 @@ grouped_stackedbar.selectAll("rect")
         .attr("y", function(d) {
           return y1(d.row);
         })
-        .attr("dy", "1.1em")
-        // .style("text-anchor", "start")
-        .style("font-size", "16px")
+        .attr("dy", "1.2em")
+        .style("font-size", "14px")
         .style("color", "white")
-        .text(function(d,i) { console.log(d.xEnd-d.xBegin); return (d.xEnd-d.xBegin) !== 0 ? (d.xEnd-d.xBegin) : "" });
-
-    })
-
-    // svgContainer.selectAll(".text")
-    // 	  .data(data)
-    // 	  .enter()
-    // 	  .append("text")
-    // 	  .attr("class","label")
-    // 	  .attr("x", (function(d) { return xScale(d.food) + xScale.rangeBand() / 2 ; }  ))
-    // 	  .attr("y", function(d) { return yScale(d.quantity) + 1; })
-    // 	  .attr("dy", ".75em")
-    // 	  .text(function(d) { return d.quantity; });
-
-    // .append("text")
-    //   .attr("x", function(d) { return x(d.xBegin); })
-    //   .attr("y", y1.rangeBand()/2)
-    //   .attr("dy", "0.5em")
-    //   .attr("dx", "0.5em")
-    //   .style("font" ,"10px sans-serif")
-    //   .style("color", "white")
-    //   .style("text-anchor", "middle")
-    //   .text(function(d) { console.log(d.xEnd-d.xBegin); return (d.xEnd-d.xBegin) !== 0 ? (d.xEnd-d.xBegin) : "" });
-
-
-      // grouped_stackedbar.append("text")
-      //    .attr("x", 200)
-   	  // .attr("y",y0.rangeBand()/2 )
-      //    .style("text-anchor", "end")
-   	  // .style("font-size", "20px")
-   	  // .style("color", "white")
-   	  // .text(function(d,i) { return i+1; });
-
-  // //add a value label to the right of each bar
-  // grouped_stackedbar.append("text")
-  //     .attr("class", "label")
-  //     //y position of the label is halfway down the bar
-  //     .attr("y", function (d) {
-  //         return y(d.name) + y.rangeBand() / 2 + 4;
-  //     })
-  //     //x position is 3 pixels to the right of the bar
-  //     .attr("x", function (d) {
-  //         return x(d.value) + 3;
-  //     })
-  //     .text(function (d) {
-  //         return d.value;
-  //     });
-
-// TODO: add legend outside graph
-// TODO: in the legend make one column for each dimension
-
-// var legend = inner.selectAll(".legend")
-//     .data(columnHeaders.slice(0,5))
-//   .enter().append("g")
-//     .attr("class", "legend")
-//     .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
-//     // .attr("transform", position)
-//
-//     console.log("colHeaders:" + columnHeaders.slice());
-
-  // function position(d,i) {
-  //   var c = 3;   // number of columns
-  //   var h = 20;  // height of each entry
-  //   var w = 50; // width of each entry (so you can position the next column)
-  //   var tx = 50; // tx/ty are essentially margin values
-  //   var ty = 10;
-  //   var x = i % c * w + tx;
-  //   var y = Math.floor(i / c) * h + ty;
-  //   return "translate(" + x + "," + y + ")";
-  // }
-
-// legend.append("rect")
-//     .attr("x", width - 18)
-//     .attr("width", 18)
-//     .attr("height", 18)
-//     .style("fill", color);
-//
-// legend.append("text")
-//     .attr("x", width - 24)
-//     .attr("y", 9)
-//     .attr("dy", ".35em")
-//     .style("text-anchor", "end")
-//     .text(function(d) { return d; });
-
+        .text(function(d,i) {
+          return (d.xEnd-d.xBegin) !== 0 ? (d.xEnd-d.xBegin) : "";
+        });
 });
