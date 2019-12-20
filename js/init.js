@@ -170,8 +170,9 @@ d3.csv("data.csv", function(error, data) {
             d3.select(this).style("fill", color(d.name))
         });
 
+  // add text labels for each dimension on top of the graph
   grouped_stackedbar.selectAll("text")
-    .data(function(d) { return d.rowDetails; })
+    .data(function(d) { console.log(d.rowDetails); return d.rowDetails; })
       .enter().append("text")
         .attr("x", function(d) {
           return x(d.xBegin) + (x(d.xEnd) - x(d.xBegin))/2;
@@ -181,7 +182,11 @@ d3.csv("data.csv", function(error, data) {
         })
         .attr("dy", "1.2em")
         .style("font-size", "14px")
-        .style("color", "white")
+        .style("fill", function(d) {
+          if (d.name == "I3" || d.name == "I4" || d.name == "I5")
+            return "white";
+          return "black";
+        })
         .text(function(d,i) {
           return (d.xEnd-d.xBegin) !== 0 ? (d.xEnd-d.xBegin) : "";
         });
