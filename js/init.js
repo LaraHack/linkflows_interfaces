@@ -173,14 +173,14 @@ grouped_stackedbar.selectAll("rect")
         .data(function(d) { console.log(d.rowDetails); return d.rowDetails; })
       .enter().append("text")
         .attr("x", function(d) {
-          return x(d.xEnd) - x(d.xBegin);
+          return x(d.xEnd);
         })
         .attr("y", function(d) {
           return y1(d.row);
         })
-        .attr("dy", ".75em")
-        .style("text-anchor", "end")
-        .style("font-size", "20px")
+        .attr("dy", "1.1em")
+        // .style("text-anchor", "start")
+        .style("font-size", "16px")
         .style("color", "white")
         .text(function(d,i) { console.log(d.xEnd-d.xBegin); return (d.xEnd-d.xBegin) !== 0 ? (d.xEnd-d.xBegin) : "" });
 
