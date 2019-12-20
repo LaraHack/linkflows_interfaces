@@ -168,7 +168,52 @@ grouped_stackedbar.selectAll("rect")
     })
     .on("mouseout", function(d) {
         d3.select(this).style("fill", color(d.name));
-    });
+
+    grouped_stackedbar.selectAll(".text")
+        .data(function(d) { console.log(d.rowDetails); return d.rowDetails; })
+      .enter().append("text")
+        .attr("x", function(d) {
+          return x(d.xEnd) - x(d.xBegin);
+        })
+        .attr("y", function(d) {
+          return y1(d.row);
+        })
+        .attr("dy", ".75em")
+        .style("text-anchor", "end")
+        .style("font-size", "20px")
+        .style("color", "white")
+        .text(function(d,i) { console.log(d.xEnd-d.xBegin); return (d.xEnd-d.xBegin) !== 0 ? (d.xEnd-d.xBegin) : "" });
+
+    })
+
+    // svgContainer.selectAll(".text")
+    // 	  .data(data)
+    // 	  .enter()
+    // 	  .append("text")
+    // 	  .attr("class","label")
+    // 	  .attr("x", (function(d) { return xScale(d.food) + xScale.rangeBand() / 2 ; }  ))
+    // 	  .attr("y", function(d) { return yScale(d.quantity) + 1; })
+    // 	  .attr("dy", ".75em")
+    // 	  .text(function(d) { return d.quantity; });
+
+    // .append("text")
+    //   .attr("x", function(d) { return x(d.xBegin); })
+    //   .attr("y", y1.rangeBand()/2)
+    //   .attr("dy", "0.5em")
+    //   .attr("dx", "0.5em")
+    //   .style("font" ,"10px sans-serif")
+    //   .style("color", "white")
+    //   .style("text-anchor", "middle")
+    //   .text(function(d) { console.log(d.xEnd-d.xBegin); return (d.xEnd-d.xBegin) !== 0 ? (d.xEnd-d.xBegin) : "" });
+
+
+      // grouped_stackedbar.append("text")
+      //    .attr("x", 200)
+   	  // .attr("y",y0.rangeBand()/2 )
+      //    .style("text-anchor", "end")
+   	  // .style("font-size", "20px")
+   	  // .style("color", "white")
+   	  // .text(function(d,i) { return i+1; });
 
   // //add a value label to the right of each bar
   // grouped_stackedbar.append("text")
