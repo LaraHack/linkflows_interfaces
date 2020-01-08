@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- CSS file(s) -->
+    <link rel="stylesheet" href="styles.css">
+        <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script> -->
+
+    <!-- JavaScript functions-->
+    <script src="init.js"></script>
+    <title>Review Comment v0.1</title>
+  </head>
+  <body>
+    <div class="container">
+    	<div class="row">
+    		<div class="col-md-6 col-md-offset-4">
+                  <div class="po-markup">
+                    <a href="#" class="btn btn-lg btn-success po-link">Click</a> ←  Here
+
+                    <div class="po-content hidden">
+                        <div class="po-title">Review comment</div>
+
+                        <div class="po-body">
+                          <form>
+                            <div class="form-group row">
+                                <div class="col-sm-2">Aspect:<sup class="text-danger">* </sup></div>
+                                <div class="col-sm-10">
+                                  <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="aspectOptionSyntax" id="aspectSyntax" value="syntax" required>
+                                    <label class="form-check-label" for="aspectSyntax">syntax</label>
+                                  </div>
+                                  <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="aspectOptionStyle" id="aspectStyle" value="style" required>
+                                    <label class="form-check-label" for="aspectStyle">style</label>
+                                  </div>
+                                  <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="aspectOptionContent" id="aspectContent" value="content" required>
+                                    <label class="form-check-label" for="aspectContent">content</label>
+                                  </div>
+                              </div>
+                            </div>
+
+                            <div class="form-group row">
+                              <div class="col-sm-2">Positivity/negativity:<sup class="text-danger">* </sup></div>
+                              <div class="col-sm-10">
+                                <div class="form-check form-check-inline">
+                                  <input class="form-check-input" type="radio" name="sentimentOptionNegative" id="sentimentNegative" value="negative" required>
+                                  <label class="form-check-label" for="sentimentNegative">negative</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                  <input class="form-check-input" type="radio" name="sentimentOptionNeutral" id="sentimentNeutral" value="neutral" required>
+                                  <label class="form-check-label" for="sentimentNeutral">neutral/balanced</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                  <input class="form-check-input" type="radio" name="sentimentOptionPositive" id="sentimentPositive" value="positive" required>
+                                  <label class="form-check-label" for="sentimentPositive">positive</label>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div class="form-group row">
+                              <div class="col-sm-2">Action needed:<sup class="text-danger">* </sup></div>
+                              <div class="col-sm-10">
+                                <div class="form-check form-check-inline">
+                                  <input class="form-check-input" type="radio" name="actionOptionAddress" id="actionAddress" value="adress" required>
+                                  <label class="form-check-label" for="actionAddress">needs to be addressed</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                  <input class="form-check-input" type="radio" name="actionOptionSuggestion" id="actionSuggestion" value="suggestion" required>
+                                  <label class="form-check-label" for="actionSuggestion">suggestion</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                  <input class="form-check-input" type="radio" name="actionOptionNoAction" id="actionNoAction" value="noAction" required>
+                                  <label class="form-check-label" for="actionNoAction">no action needed</label>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="form-group row">
+                              <div class="col-sm-10">
+                                <label for="ReviewerComment">Comment text:</label>
+                                <textarea class="form-control" placeholder="" id="ReviewerComment" rows="3" style="width: 80%;"></textarea>
+                              </div>
+                            </div>
+                            <div class="form-group row">
+                              <div class="col-sm-2">Impact for overall quality:<sup class="text-danger">* </sup></div>
+                              <div class="col-sm-10">
+                                <div class="radio-label-vertical-wrapper">
+                                  <div class="form-group row">
+                                    <label class="radio-label-vertical">
+                                      <input type="radio" name="impact-1" value="1" required>1</label>
+                                    <label class="radio-label-vertical">
+                                      <input type="radio" name="impact-2" value="2" required>2</label>
+                                    <label class="radio-label-vertical">
+                                      <input type="radio" name="impact-3" value="3" required>3</label>
+                                    <label class="radio-label-vertical">
+                                      <input type="radio" name="impact-4" value="4" required>4</label>
+                                    <label class="radio-label-vertical">
+                                      <input type="radio" name="impact-5" value="5" required>5</label>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="form-group row">
+                              <div class="col-sm-10">
+                                <button type="cancel" class="btn btn-default">Cancel</button>
+                                <button type="submit" class="btn btn-primary" style="background-color:#9061C2; border-color: #9061C2">Submit</button>
+                              </div>
+                            </div>
+                          </fo
+                        </div><!-- ./po-body -->
+                     </div>  <!-- ./po-content -->
+                     </div><!-- ./po-markup -->
+
+
+                    <hr>
+                    </div>
+    	</div>
+    </div>
+  </body>
+</html>

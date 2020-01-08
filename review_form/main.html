@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <!-- CSS file(s) -->
+    <link rel="stylesheet" href="styles.css">
+    <!-- <script>
+      $(document).ready(function(){
+        $('[data-toggle="popover"]').popover();
+      });
+    </script> -->
+
+    <title>Review Comment v0.1</title>
+  </head>
+  <body>
+    <nav class="navbar sticky-top navbar-dark" style="background-color: #4E2161;">
+      <a class="navbar-brand" href="#">Reading mode</a>
+    </nav>
+
+    <!-- <br/>
+    <br/>
+    <a href="#" id="firstButton" class="btn btn-primary" rel="popover" data-message="Message">Click Me (Working)</a>
+    <br/>
+    <br/>
+    <a href="#" id="secondButton" class="btn btn-primary" rel="popover" data-message="Message">Click Me (Failing)</a>
+
+    <button type="button" class="btn btn-lg btn-danger" data-toggle="popover" title="Popover title" data-content="And here's some amazing content. It's very engaging. Right?">Click to toggle popover</button> -->
+    <!-- <div id="includedContent"></div>
+    <script>
+    $(function(){
+      $("#includedContent").load("form.html");
+      alert("included content");
+    });
+    </script> -->
+
+    <div class="container">
+      <div class="article-text" data-toggle="popover" data-container="body" data-placement="auto" data-html="true" >
+        <h1>Lorem ipsum dolor sit amet</h3>
+        <div class="paragraph" paragraph_id="1">
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Dignissim suspendisse in est ante in nibh. Sed nisi lacus sed viverra. Sapien et ligula ullamcorper malesuada proin libero nunc. Id velit ut tortor pretium viverra. Malesuada pellentesque elit eget gravida cum sociis. In dictum non consectetur a erat nam at lectus. Dui ut ornare lectus sit amet est placerat in egestas. Elementum pulvinar etiam non quam lacus suspendisse faucibus interdum posuere. Morbi leo urna molestie at elementum eu facilisis sed odio. Pretium quam vulputate dignissim suspendisse. Cursus euismod quis viverra nibh cras pulvinar mattis. Quis enim lobortis scelerisque fermentum dui faucibus in ornare. Quis ipsum suspendisse ultrices gravida dictum fusce ut placerat. Nisl rhoncus mattis rhoncus urna neque viverra justo nec ultrices.</p>
+        </div>
+        <div class="paragraph" paragraph_id="2">
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Dignissim suspendisse in est ante in nibh. Sed nisi lacus sed viverra. Sapien et ligula ullamcorper malesuada proin libero nunc. Id velit ut tortor pretium viverra. Malesuada pellentesque elit eget gravida cum sociis. In dictum non consectetur a erat nam at lectus. Dui ut ornare lectus sit amet est placerat in egestas. Elementum pulvinar etiam non quam lacus suspendisse faucibus interdum posuere. Morbi leo urna molestie at elementum eu facilisis sed odio. Pretium quam vulputate dignissim suspendisse. Cursus euismod quis viverra nibh cras pulvinar mattis. Quis enim lobortis scelerisque fermentum dui faucibus in ornare. Quis ipsum suspendisse ultrices gravida dictum fusce ut placerat. Nisl rhoncus mattis rhoncus urna neque viverra justo nec ultrices.</p>
+        </div>
+        <div class="paragraph" paragraph_id="3">
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Dignissim suspendisse in est ante in nibh. Sed nisi lacus sed viverra. Sapien et ligula ullamcorper malesuada proin libero nunc. Id velit ut tortor pretium viverra. Malesuada pellentesque elit eget gravida cum sociis. In dictum non consectetur a erat nam at lectus. Dui ut ornare lectus sit amet est placerat in egestas. Elementum pulvinar etiam non quam lacus suspendisse faucibus interdum posuere. Morbi leo urna molestie at elementum eu facilisis sed odio. Pretium quam vulputate dignissim suspendisse. Cursus euismod quis viverra nibh cras pulvinar mattis. Quis enim lobortis scelerisque fermentum dui faucibus in ornare. Quis ipsum suspendisse ultrices gravida dictum fusce ut placerat. Nisl rhoncus mattis rhoncus urna neque viverra justo nec ultrices.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- <div id="popoverContent" class="d-none">
+             <button type="button" class="btn btn-primary">Primary</button>
+    </div> -->
+
+    <!-- <div id="popoverContent" class="d-none">
+      <div class="input-group">
+        <input type="text" class="form-control" placeholder="Recipient's username"
+             aria-label="Recipient's username with two button addons" aria-describedby="button-addon1">
+        <button type="button" class="btn btn-primary">Primary</button>
+      </div>
+    </div> -->
+    <!-- <button type="button" class="btn btn-lg btn-danger" data-toggle="popover" title="Popover title">Click to toggle popover</button> -->
+
+    <div id="selectedText">
+
+    <!-- <button type="button" class="btn btn-lg btn-danger" data-toggle="popover">Click to comment</button> -->
+
+    <div id="reviewComment" class="d-none">
+    <div class="container" style="background-color:#FAF2F8; border-color:#9061C2;">
+      </br><button type="button" class="close btn-lg" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+          </button>
+          <h3 class="purple-color">Review comment</h3>
+      <hr></hr>
+      <form>
+        <div class="form-group row">
+            <div class="col-sm-2">Aspect:<sup class="text-danger">* </sup></div>
+            <div class="col-sm-10">
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="aspectOptionSyntax" id="aspectSyntax" value="syntax" required>
+                <label class="form-check-label" for="aspectSyntax">syntax</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="aspectOptionStyle" id="aspectStyle" value="style" required>
+                <label class="form-check-label" for="aspectStyle">style</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="aspectOptionContent" id="aspectContent" value="content" required>
+                <label class="form-check-label" for="aspectContent">content</label>
+              </div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-sm-2">Positivity/negativity:<sup class="text-danger">* </sup></div>
+          <div class="col-sm-10">
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="sentimentOptionNegative" id="sentimentNegative" value="negative" required>
+              <label class="form-check-label" for="sentimentNegative">negative</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="sentimentOptionNeutral" id="sentimentNeutral" value="neutral" required>
+              <label class="form-check-label" for="sentimentNeutral">neutral/balanced</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="sentimentOptionPositive" id="sentimentPositive" value="positive" required>
+              <label class="form-check-label" for="sentimentPositive">positive</label>
+            </div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-sm-2">Action needed:<sup class="text-danger">* </sup></div>
+          <div class="col-sm-10">
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="actionOptionAddress" id="actionAddress" value="adress" required>
+              <label class="form-check-label" for="actionAddress">needs to be addressed</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="actionOptionSuggestion" id="actionSuggestion" value="suggestion" required>
+              <label class="form-check-label" for="actionSuggestion">suggestion</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="actionOptionNoAction" id="actionNoAction" value="noAction" required>
+              <label class="form-check-label" for="actionNoAction">no action needed</label>
+            </div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-sm-10">
+            <label for="ReviewerComment">Comment text:</label>
+            <textarea class="form-control" placeholder="" id="ReviewerComment" rows="3" style="width: 80%;"></textarea>
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-sm-2">Impact for overall quality:<sup class="text-danger">* </sup></div>
+          <div class="col-sm-10">
+            <div class="radio-label-vertical-wrapper">
+              <div class="form-group row">
+                <label class="radio-label-vertical">
+                  <input type="radio" name="impact-1" value="1" required>1</label>
+                <label class="radio-label-vertical">
+                  <input type="radio" name="impact-2" value="2" required>2</label>
+                <label class="radio-label-vertical">
+                  <input type="radio" name="impact-3" value="3" required>3</label>
+                <label class="radio-label-vertical">
+                  <input type="radio" name="impact-4" value="4" required>4</label>
+                <label class="radio-label-vertical">
+                  <input type="radio" name="impact-5" value="5" required>5</label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-sm-10 text-right">
+            <button type="button" class="btn btn-outline-dark" style="color: #9061C2; border-color: #9061C2">Cancel</button>
+            <button type="submit" class="btn btn-primary" style="background-color:#9061C2; border-color: #9061C2">Submit comment</button>
+          </div>
+        </div>
+      </form>
+      </br>
+    </div>
+    </div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+    <!-- JavaScript functions-->
+    <script src="init.js"></script>
+   </body>
+</html>
