@@ -3,11 +3,11 @@ $("#getPicFromServer").on("click", getImageFromServer);
 
 function getImageFromServer () {
 	// var serverConnection = "http://127.0.0.1:8081/images/test.jpeg";
-		var serverConnection = "http://localhost:8081/hello";
+		var serverConnection = "http://localhost:8081/";
 
 	$.get(serverConnection, function (data) {
-		$("#testMessage").html(data);
-		alert("Communication with server done!");
+		//$("#testMessage").text(data);
+		alert("Communication with server done: " + data);
 	});
 	// var net = require('net');
 	//
