@@ -11,9 +11,12 @@
   </head>
   <body>
     <div class="container">
-      <p> Click the button below to get a test image from a running NodeJS server </p>
+      <h5> Click the button below communicate to a running NodeJS server </h5>
       <input class="btn btn-primary" type="button" value="Get message from server" id="getMessage">
-      <p id="testMessage"></p>
+      <span class="alert alert-success collapse" role="alert" id="testMessage" style="display:none;"> </span>
+      <br />
+      <h5> Image from the running NodeJS server </h5>
+      <img src="http://127.1.0.1:8081/images/test.jpeg" alt="image from server" class="img-thumbnail">
     </div>
 
     <script

@@ -7,7 +7,7 @@ function getMessageFromServer () {
 
 	$.get(serverConnection, function (data, status) {
 		$("#testMessage").text(data);
-		alert("Communication with server done: " + status);
+		$("#testMessage").show();
 	});
 	// var net = require('net');
 	//
