@@ -78,8 +78,9 @@ var csvData;
 
 $.get(serverConnection, function (data, status) {
   csvData = data;
+  console.log("csvData:" + csvData);
+  console.log("status:" + status);
 });
-console.log("csvData:" + csvData);
 
 // d3.csv("data.csv", function(error, data) {
 d3.csv(csvData, function(error, data) {
