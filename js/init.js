@@ -74,7 +74,6 @@ var dimensions = {
 // data.csv contains all data for all dimensions
 // Qi.csv, where i = 1,..., 6 contains the data for question number i in the questionnaire
 var serverConnection = "http://localhost:8081/editors/csv";
-// var data;
 
 $.get(serverConnection)
   .done(function (dataEditors, status)  {
@@ -100,27 +99,6 @@ $.get(serverConnection)
   .fail(function (jqXHR, textStatus, error) {
         console.log("Get error: " + error);
     });
-// });
-//
-//   // var jsonData = d3.nest()
-//   //   .key(function(d) {
-//   //     return d.Key;
-//   //   })
-//   //   .entries(data);
-//   //
-//   //   console.log(jsonData);
-//
-//     d3.csv("data.csv", function(error, data) {
-//       console.log("csv data:");
-//       console.log(data);
-//       console.log("_____________________");
-//     });
-//
-//     d3.json("data.json", function(error, data) {
-//       console.log("json data:");
-//       console.log(data);
-//       console.log("_____________________");
-//     });
 
 // d3.csv("data.csv", function(error, data) {
 // d3.json(dataEditors, function(error, data) {
