@@ -80,10 +80,26 @@ $.get(serverConnection)
   .done(function (dataEditors, status)  {
     console.log("data:" + dataEditors);
     console.log("status:" + status);
-  })
-  .fail(function() {
 
-  });
+    var dataJSON = JSON.parse(dataEditors);
+    console.log("_____________________");
+    console.log("json data:");
+    console.log(dataJSON);
+    console.log("_____________________");
+
+    // d3.json("data.json", function(error, dataJSON) {
+    //   console.log("_____________________");
+    //   console.log("json data:");
+    //   console.log(dataJSON);
+    //   console.log("_____________________");
+    // });
+  })
+  // jqXHR is a JS XMLHTTPRequest object
+  // textStatus is the error and
+  // error is Internal Server Error
+  .fail(function (jqXHR, textStatus, error) {
+        console.log("Get error: " + error);
+    });
 // });
 //
 //   // var jsonData = d3.nest()
