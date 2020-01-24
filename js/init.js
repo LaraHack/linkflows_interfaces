@@ -74,37 +74,41 @@ var dimensions = {
 // data.csv contains all data for all dimensions
 // Qi.csv, where i = 1,..., 6 contains the data for question number i in the questionnaire
 var serverConnection = "http://localhost:8081/editors/csv";
-var data;
+// var data;
 
-$.get(serverConnection, function (dataEditors, status) {
-  data = dataEditors;
-  console.log("data:" + data);
-  console.log("status:" + status);
-});
+$.get(serverConnection)
+  .done(function (dataEditors, status)  {
+    console.log("data:" + dataEditors);
+    console.log("status:" + status);
+  })
+  .fail(function() {
 
-  // var jsonData = d3.nest()
-  //   .key(function(d) {
-  //     return d.Key;
-  //   })
-  //   .entries(data);
-  //
-  //   console.log(jsonData);
-
-    d3.csv("data.csv", function(error, data) {
-      console.log("csv data:");
-      console.log(data);
-      console.log("_____________________");
-    });
-
-    d3.json("data.json", function(error, data) {
-      console.log("json data:");
-      console.log(data);
-      console.log("_____________________");
-    });
+  });
+// });
+//
+//   // var jsonData = d3.nest()
+//   //   .key(function(d) {
+//   //     return d.Key;
+//   //   })
+//   //   .entries(data);
+//   //
+//   //   console.log(jsonData);
+//
+//     d3.csv("data.csv", function(error, data) {
+//       console.log("csv data:");
+//       console.log(data);
+//       console.log("_____________________");
+//     });
+//
+//     d3.json("data.json", function(error, data) {
+//       console.log("json data:");
+//       console.log(data);
+//       console.log("_____________________");
+//     });
 
 // d3.csv("data.csv", function(error, data) {
-// d3.csv(csvData, function(error, data) {
-  // get the reviewers
+// d3.json(dataEditors, function(error, data) {
+//   // get the reviewers
 //   var rowHeaders = d3.keys(data[0]).filter(function(key) { return key !== "Reviewer"; });
 //
 //   // set color range for the dimensions present in the data file
@@ -232,4 +236,5 @@ $.get(serverConnection, function (dataEditors, status) {
 //             return "black";
 //           });
 //         });
-// });
+//       });
+//     });
