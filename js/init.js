@@ -80,10 +80,10 @@ $.get(serverConnection)
     console.log("data:" + dataEditors);
     console.log("status:" + status);
 
-    var dataJSON = JSON.parse(dataEditors);
+    var data = JSON.parse(dataEditors);
     console.log("_____________________");
     console.log("json data:");
-    console.log(dataJSON);
+    console.log(data);
     console.log("_____________________");
 
     // d3.json("data.json", function(error, dataJSON) {
@@ -94,7 +94,7 @@ $.get(serverConnection)
     // });
 
     var rowHeaders = d3.keys(data[0]).filter(function(key) { return key !== "Reviewer"; });
-   
+
      // set color range for the dimensions present in the data file
      var colorRange = [];
 
@@ -220,7 +220,6 @@ $.get(serverConnection)
                return "black";
              });
            });
-         });
   })
   // jqXHR is a JS XMLHTTPRequest object
   // textStatus is the error and
