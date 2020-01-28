@@ -10,21 +10,16 @@ function getMessageFromServer () {
 	});
 }
 
+$("#getData").on("click", getDataFromVirtuoso);
 
 function getDataFromVirtuoso () {
 	var serverConnection = "http://localhost:8081/sparql";
 
-	$.get(serverConnection, function (data, status) {
+	$.get(serverConnection, function (dataVirtuoso, status) {
 	    console.log("data:" + dataVirtuoso);
 	    console.log("status:" + status);
 
-	    var data = JSON.parse(dataVirtuoso);
-	    console.log("_____________________");
-	    console.log("json data:");
-	    console.log(data);
-	    console.log("_____________________");
-
-			$("#testData").text(data);
+			$("#testData").text(dataVirtuoso);
 			$("#testData").show();
-		}
+		});
 }
