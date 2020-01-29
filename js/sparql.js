@@ -1,7 +1,7 @@
 var serverConnection = "http://localhost:8081/sparql";
 
 $.get(serverConnection)
-  .done(function (dataEVirtuoso, status)  {
+  .done(function (dataVirtuoso, status)  {
     console.log("data:" + dataVirtuoso);
     console.log("status:" + status);
 
