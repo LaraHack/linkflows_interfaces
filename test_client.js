@@ -16,7 +16,7 @@ function getDataFromVirtuoso () {
 	var serverConnection = "http://localhost:8081/sparql";
 
 	$.get(serverConnection)
-	  .done(function (dataVirtuoso, status)  {
+	  .done((dataVirtuoso, status) => {
 	    console.log("data:" + dataVirtuoso);
 	    console.log("status:" + status);
 
