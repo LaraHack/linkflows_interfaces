@@ -1,3 +1,21 @@
+function checkAllCheckboxes() {
+  $('input[type="checkbox"]').prop("checked", true);
+}
+
+// id should be something in the form of '#myinput'
+function checkboxChecked(id) {
+  if ($(id).is(':checkbox') == true) {
+    $(id).click(function() {
+      if($(this).prop("checked") == true) {
+        alert("Checkbox is checked.");
+      }
+      else if($(this).prop("checked") == false) {
+        alert("Checkbox is unchecked.");
+      }
+    });
+  }
+}
+
 // palette of colors used for all dimensions
 var colors = {article: "#cd853f", section: "#deb887", paragraph: "#ffe4c4",
   syntax: "#c6deff", style: "#82cafa", content:"#9e7bff",
@@ -77,6 +95,7 @@ var serverConnection = "http://localhost:8081/editors/csv";
 
 $.get(serverConnection)
   .done(function (dataEditors, status)  {
+    checkAllCheckboxes();
     console.log("data:" + dataEditors);
     console.log("status:" + status);
 
