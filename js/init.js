@@ -19,7 +19,14 @@ function checkboxChecked(id) {
 }
 
 function getReviewComments() {
-
+  $('input[type="checkbox"]').click(function(){
+      if($(this).is(":checked")){
+          alert($(this).id + " is checked.");
+      }
+      else if($(this).is(":not(:checked)")){
+          alert($(this).id + " is unchecked.");
+      }
+  });
 }
 
 
