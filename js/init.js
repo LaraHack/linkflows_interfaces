@@ -2,6 +2,8 @@ function checkAllCheckboxes() {
   $('input[type="checkbox"]').prop("checked", true);
 }
 
+$("#bfCaptchaEntry").click(getReviewComments);
+
 // id should be something in the form of '#myinput'
 function checkboxChecked(id) {
   if ($(id).is(':checkbox') == true) {
@@ -15,6 +17,11 @@ function checkboxChecked(id) {
     });
   }
 }
+
+function getReviewComments() {
+
+}
+
 
 // palette of colors used for all dimensions
 var colors = {article: "#cd853f", section: "#deb887", paragraph: "#ffe4c4",
