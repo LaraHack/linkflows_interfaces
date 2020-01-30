@@ -1,3 +1,24 @@
+var checkedDimensions = {
+  "article": true,
+  "section": true,
+  "paragraph": true,
+  "syntax": true,
+  "style": true,
+  "content": true,
+  "negative": true,
+  "neutral": true,
+  "positive": true,
+  "I1": true,
+  "I2": true,
+  "I3": true,
+  "I4": true,
+  "I5": true,
+  "compulsory": true,
+  "suggestion": true,
+  "no_action": true
+};
+
+
 function checkAllCheckboxes() {
   $('input[type="checkbox"]').prop("checked", true);
 }
@@ -19,6 +40,7 @@ function checkboxChecked(id) {
 }
 
 function getReviewComments() {
+      checkAllCheckboxes();
   $('input[type="checkbox"]').click(function(){
       if($(this).is(":checked")){
           console.log($(this).prop('id') + " is checked.");
@@ -107,9 +129,8 @@ var dimensions = {
 // Qi.csv, where i = 1,..., 6 contains the data for question number i in the questionnaire
 var serverConnection = "http://localhost:8081/editors/csv";
 
-$.get(serverConnection)
+$.get(serverConnection, checkedDimensions)
   .done(function (dataEditors, status)  {
-    checkAllCheckboxes();
     console.log("data:" + dataEditors);
     console.log("status:" + status);
 
