@@ -2,7 +2,7 @@ function checkAllCheckboxes() {
   $('input[type="checkbox"]').prop("checked", true);
 }
 
-$("#bfCaptchaEntry").click(getReviewComments);
+$("#btnShowReviewComments").click(getReviewComments);
 
 // id should be something in the form of '#myinput'
 function checkboxChecked(id) {
@@ -21,10 +21,10 @@ function checkboxChecked(id) {
 function getReviewComments() {
   $('input[type="checkbox"]').click(function(){
       if($(this).is(":checked")){
-          alert($(this).id + " is checked.");
+          console.log($(this).prop('id') + " is checked.");
       }
       else if($(this).is(":not(:checked)")){
-          alert($(this).id + " is unchecked.");
+          console.log($(this).prop('id') + " is unchecked.");
       }
   });
 }
