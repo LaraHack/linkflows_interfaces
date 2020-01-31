@@ -1,22 +1,22 @@
-var checkedDimensions = {
-  "article": true,
-  "section": true,
-  "paragraph": true,
-  "syntax": true,
-  "style": true,
-  "content": true,
-  "negative": true,
-  "neutral": true,
-  "positive": true,
-  "I1": true,
-  "I2": true,
-  "I3": true,
-  "I4": true,
-  "I5": true,
-  "compulsory": true,
-  "suggestion": true,
-  "no_action": true
-};
+var checkedDimensions = new Map([
+  ["article": true],
+  ["section": true],
+  ["paragraph": true],
+  ["syntax": true],
+  ["style": true],
+  ["content": true],
+  ["negative": true],
+  ["neutral": true],
+  ["positive": true],
+  ["I1": true],
+  ["I2": true],
+  ["I3": true],
+  ["I4": true],
+  ["I5": true],
+  ["compulsory": true],
+  ["suggestion": true],
+  ["no_action": true]
+]);
 
 
 function checkAllCheckboxes() {
@@ -42,9 +42,10 @@ function checkboxChecked(id) {
 }
 
 function getReviewComments() {
-  $('input[type="checkbox"]').click(function(){
-    var dimensionName = str.replace(/checkbox/i, "").toLowerCase();
-    checkedDimensions[dimensionName] = $(this).is(":checked");
+  checkedDimensions.forEach((k, v) => console.log(`Key is ${k} and value is ${v}`));
+  // $('input[type="checkbox"]').click(function(){
+  //   var dimensionName = str.replace(/checkbox/i, "").toLowerCase();
+  //   checkedDimensions[dimensionName] = $(this).is(":checked");
     console.log(dimensionName + " is checked:" + checkedDimensions[dimensionName]);
     // if($(this).is(":checked")){
     //     console.log($(this).prop('id') + " is checked.");
