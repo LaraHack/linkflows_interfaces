@@ -42,18 +42,23 @@ function checkboxChecked(id) {
 }
 
 function getReviewComments() {
-  checkedDimensions.forEach((k, v) => console.log(`Key is ${k} and value is ${v}`));
+  checkedDimensions.forEach((k, v) => {
+    console.log(`Key is ${k} and value is ${v}`));
   // $('input[type="checkbox"]').click(function(){
   //   var dimensionName = str.replace(/checkbox/i, "").toLowerCase();
-  //   checkedDimensions[dimensionName] = $(this).is(":checked");
-    console.log(dimensionName + " is checked:" + checkedDimensions[dimensionName]);
-    // if($(this).is(":checked")){
-    //     console.log($(this).prop('id') + " is checked.");
-    // }
-    // else if($(this).is(":not(:checked)")){
-    //     console.log($(this).prop('id') + " is unchecked.");
-    // }
-  });
+      var dimension = ${k};
+      var dimensionCamelCase = dimension.charAt(0).toUpperCase() + dimension.substr(1).toLowerCase()
+      var checkboxDimension = "checkbox".concat();
+      checkedDimensions[dimensionName] = $(checkboxDimension).is(":checked");
+      console.log(dimensionName + " is checked:" + checkedDimensions[dimensionName]);
+      // if($(this).is(":checked")){
+      //     console.log($(this).prop('id') + " is checked.");
+      // }
+      // else if($(this).is(":not(:checked)")){
+      //     console.log($(this).prop('id') + " is unchecked.");
+      // }
+    });
+  }
 }
 
 
