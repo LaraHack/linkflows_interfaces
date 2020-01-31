@@ -23,6 +23,8 @@ function checkAllCheckboxes() {
   $('input[type="checkbox"]').prop("checked", true);
 }
 
+checkAllCheckboxes();
+
 $("#btnShowReviewComments").click(getReviewComments);
 
 // id should be something in the form of '#myinput'
@@ -40,14 +42,16 @@ function checkboxChecked(id) {
 }
 
 function getReviewComments() {
-      checkAllCheckboxes();
   $('input[type="checkbox"]').click(function(){
-      if($(this).is(":checked")){
-          console.log($(this).prop('id') + " is checked.");
-      }
-      else if($(this).is(":not(:checked)")){
-          console.log($(this).prop('id') + " is unchecked.");
-      }
+    var dimensionName = str.replace(/checkbox/i, "").toLowerCase();
+    checkedDimensions[dimensionName] = $(this).is(":checked");
+    console.log(dimensionName + " is checked:" + checkedDimensions[dimensionName]);
+    // if($(this).is(":checked")){
+    //     console.log($(this).prop('id') + " is checked.");
+    // }
+    // else if($(this).is(":not(:checked)")){
+    //     console.log($(this).prop('id') + " is unchecked.");
+    // }
   });
 }
 
