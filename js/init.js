@@ -44,13 +44,15 @@ function checkboxChecked(id) {
 function getReviewComments() {
   console.log("inside review comments");
   checkedDimensions.forEach((k, v) => {
-    console.log(`Key is ${k} and value is ${v}`);
+
   // $('input[type="checkbox"]').click(function(){
   //   var dimensionName = str.replace(/checkbox/i, "").toLowerCase();
-      // var dimension = ;
-      // var dimensionCamelCase = dimension.charAt(0).toUpperCase() + dimension.substr(1).toLowerCase()
-      // var checkboxDimension = "checkbox".concat();
-      // checkedDimensions[dimensionName] = $(checkboxDimension).is(":checked");
+      var dimension = String(v);
+      var dimensionCamelCase = dimension.charAt(0).toUpperCase() + dimension.substr(1).toLowerCase();
+      var checkboxDimension = "checkbox".concat(dimensionCamelCase);
+      console.log(checkboxDimension);
+      checkedDimensions[dimension] = $(checkboxDimension).is(":checked");
+      console.log(`Key is ${k} and value is ${v}`);
       // console.log(dimensionName + " is checked:" + checkedDimensions[dimensionName]);
       // if($(this).is(":checked")){
       //     console.log($(this).prop('id') + " is checked.");
