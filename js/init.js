@@ -51,9 +51,9 @@ function getReviewComments() {
       var dimension = String(v);
       var dimensionCamelCase = dimension.charAt(0).toUpperCase() + dimension.substr(1).toLowerCase();
       var checkboxDimension = "checkbox".concat(dimensionCamelCase);
-      console.log(checkboxDimension);
-      checkedDimensions[dimension] = $(checkboxDimension).is(":checked");
-      console.log(dimension + " is " + checkedDimensions[dimension]);
+      console.log(checkboxDimension + ":" + $("#".concat(checkboxDimension)).is(":checked"));
+      // checkedDimensions[dimension] = $(checkboxDimension).is(":checked");
+      // console.log(dimension + " is " + checkedDimensions[dimension]);
       // console.log(dimensionName + " is checked:" + checkedDimensions[dimensionName]);
       // if($(this).is(":checked")){
       //     console.log($(this).prop('id') + " is checked.");
