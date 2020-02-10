@@ -47,12 +47,13 @@ function getReviewComments() {
 
   // $('input[type="checkbox"]').click(function(){
   //   var dimensionName = str.replace(/checkbox/i, "").toLowerCase();
+        // console.log(`Key is ${k} and value is ${v}`);
       var dimension = String(v);
       var dimensionCamelCase = dimension.charAt(0).toUpperCase() + dimension.substr(1).toLowerCase();
       var checkboxDimension = "checkbox".concat(dimensionCamelCase);
       console.log(checkboxDimension);
       checkedDimensions[dimension] = $(checkboxDimension).is(":checked");
-      console.log(`Key is ${k} and value is ${v}`);
+      console.log(dimension + " is " + checkedDimensions[dimension]);
       // console.log(dimensionName + " is checked:" + checkedDimensions[dimensionName]);
       // if($(this).is(":checked")){
       //     console.log($(this).prop('id') + " is checked.");
