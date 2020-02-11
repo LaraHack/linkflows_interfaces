@@ -114,6 +114,7 @@ var dimensions = {
 }
 
 var serverConnection = "http://localhost:8081/editors/csv";
+var serverConnection2 = "http://localhost:8081/editors";
 
 // sends a request to the server to draw the graph
 function getReviewComments() {
@@ -125,8 +126,14 @@ function getReviewComments() {
     });
 
   // $.get(serverConnection, checkedDimensions)
-  $.put(serverConnection, checkedDimensions)
-    .done(function (dataEditors, status)  {
+  // $.put(serverConnection, checkedDimensions)
+  $.ajax({
+    url: serverConnection2,
+    method: 'PUT',
+    data: checkedDimensions, // data as js object
+    success: function() {}
+  })
+  .done(function (dataEditors, status)  {
       console.log("data:" + dataEditors);
       console.log("status:" + status);
 
