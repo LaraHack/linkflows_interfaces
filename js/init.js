@@ -125,14 +125,15 @@ function getReviewComments() {
     // console.log(dimension + ":" + checkedDimensions[dimension]);
     });
 
-  // $.get(serverConnection, checkedDimensions)
+  $.get(serverConnection, checkedDimensions)
   // $.put(serverConnection, checkedDimensions)
-  $.ajax({
-    url: serverConnection2,
-    method: 'PUT',
-    data: checkedDimensions, // data as js object
-    success: function() {}
-  })
+  // $.ajax({
+  //   url: serverConnection2,
+  //   method: 'PUT',
+  //   data: checkedDimensions, // data as js object
+  //   success: function() {}
+  // })
+  $.get(serverConnection)
   .done(function (dataEditors, status)  {
       console.log("data:" + dataEditors);
       console.log("status:" + status);
