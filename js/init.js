@@ -124,7 +124,8 @@ function getReviewComments() {
     // console.log(dimension + ":" + checkedDimensions[dimension]);
     });
 
-  $.get(serverConnection, checkedDimensions)
+  // $.get(serverConnection, checkedDimensions)
+  $.put(serverConnection, checkedDimensions)
     .done(function (dataEditors, status)  {
       console.log("data:" + dataEditors);
       console.log("status:" + status);
