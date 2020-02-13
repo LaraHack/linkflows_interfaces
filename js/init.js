@@ -125,7 +125,9 @@ function getReviewComments() {
     // console.log(dimension + ":" + checkedDimensions[dimension]);
     });
 
-  $.get(serverConnection, checkedDimensions)
+    console.log("Button is clicked");
+
+  // $.get(serverConnection, checkedDimensions)
   // $.put(serverConnection, checkedDimensions)
   // $.ajax({
   //   url: serverConnection2,
@@ -133,12 +135,13 @@ function getReviewComments() {
   //   data: checkedDimensions, // data as js object
   //   success: function() {}
   // })
-  $.get(serverConnection)
-  .done(function (dataEditors, status)  {
-      console.log("data:" + dataEditors);
-      console.log("status:" + status);
+  // $.get(serverConnection)
+  // .done(function (dataEditors, status)  {
+      // console.log("data:" + dataEditors);
+      // console.log("status:" + status);
 
-      var data = JSON.parse(dataEditors);
+      // var data = JSON.parse(dataEditors);
+  d3.csv("Q4.csv", function(error, data) {
       console.log("_____________________");
       console.log("json data:");
       console.log(data);
@@ -271,13 +274,13 @@ function getReviewComments() {
                return "black";
              });
            });
-  })
-  // jqXHR is a JS XMLHTTPRequest object
-  // textStatus is the error and
-  // error is Internal Server Error
-  .fail(function (jqXHR, textStatus, error) {
-        console.log("Get error: " + error);
-    });
+  // // jqXHR is a JS XMLHTTPRequest object
+  // // textStatus is the error and
+  // // error is Internal Server Error
+  // .fail(function (jqXHR, textStatus, error) {
+  //       console.log("Get error: " + error);
+  //   });
+  });
 }
 
   // d3.csv("data.csv", function(error, data) {
