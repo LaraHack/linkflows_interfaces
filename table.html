@@ -93,33 +93,46 @@
           <div class="float-center">
             <br />
           <table class="borders" id="tblStatsHeader" border="1">
+            <col class="outlined">
+            <col class="outlined">
+            <colgroup span="3" class="outlined"></colgroup>
+            <colgroup span="3" class="outlined"></colgroup>
+            <colgroup span="5" class="outlined"></colgroup>
+            <colgroup span="3" class="outlined"></colgroup>
+
             <tr>
-            <th class="borders" style="text-align:center;">Section</th>
-            <th class="borders" style="text-align:center;">Title</th>
-            <th class="borders" style="text-align:center; background-color: #ff0000;">negative</th>
-            <th class="borders" style="text-align:center; background-color: #ffff00;">neutral</th>
-            <th class="borders" style="text-align:center; background-color: #008000;">positive</th>
-            <th class="borders" style="text-align:center; background-color: #c6deff;">syntax</th>
-            <th class="borders" style="text-align:center; background-color: #82cafa;">style</th>
-            <th class="borders" style="text-align:center; background-color: #9e7bff;">content</th>
-            <th class="borders" style="text-align:center; background-color: #ff6500;">compulsory</th>
-            <th class="borders" style="text-align:center; background-color: #ffa500;">suggestion</th>
-            <th class="borders" style="text-align:center; background-color: #ffd700;">no action</th>
-            <th class="borders" style="text-align:center; background-color: rgba(0, 0, 0, 0);">I1</th>
-            <th class="borders" style="text-align:center; background-color: rgba(0, 0, 0, 0.25);">I2</th>
-            <th class="borders" style="text-align:center; background-color: rgba(0, 0, 0, 0.5); color:white;">I3</th>
-            <th class="borders" style="text-align:center; background-color: rgba(0, 0, 0, 0.75); color:white;">I4</th>
-            <th class="borders" style="text-align:center; background-color: rgba(0, 0, 0, 1); color:white;">I5</th>
+              <th class="borders" rowspan="2" style="text-align:center;">Section</th>
+              <th class="borders" rowspan="2" style="text-align:center;">Title</th>
+              <th class="borders" colspan="3" scope="colgroup" style="text-align:center;">Aspect</th>
+              <th class="borders" colspan="3" scope="colgroup" style="text-align:center;">Positivity/Negativity</th>
+              <th class="borders" colspan="5" scope="colgroup" style="text-align:center;">Impact</th>
+              <th class="borders" colspan="3" scope="colgroup" style="text-align:center;">Action needed</th>
+            </tr>
+
+            <tr>
+              <th class="borders" style="text-align:center; background-color: #c6deff;">syntax</th>
+              <th class="borders" style="text-align:center; background-color: #82cafa;">style</th>
+              <th class="borders" style="text-align:center; background-color: #9e7bff;">content</th>
+              <th class="borders" style="text-align:center; background-color: #ff0000;">negative</th>
+              <th class="borders" style="text-align:center; background-color: #ffff00;">neutral</th>
+              <th class="borders" style="text-align:center; background-color: #008000;">positive</th>
+              <th class="borders" style="text-align:center; background-color: rgba(0, 0, 0, 0);">I1</th>
+              <th class="borders" style="text-align:center; background-color: rgba(0, 0, 0, 0.25);">I2</th>
+              <th class="borders" style="text-align:center; background-color: rgba(0, 0, 0, 0.5); color:white;">I3</th>
+              <th class="borders" style="text-align:center; background-color: rgba(0, 0, 0, 0.75); color:white;">I4</th>
+              <th class="borders" style="text-align:center; background-color: rgba(0, 0, 0, 1); color:white;">I5</th>
+              <th class="borders" style="text-align:center; background-color: #ff6500;">compulsory</th>
+              <th class="borders" style="text-align:center; background-color: #ffa500;">suggestion</th>
+              <th class="borders" style="text-align:center; background-color: #ffd700;">no action</th>
           </tr>
-          <tr>
 <td>2</td>
 <td>Linked Data Quality Issues</td>
-<td align="right">2</td>
-<td> </td>
-<td> </td>
 <td> </td>
 <td> </td>
 <td align="right">2</td>
+<td align="right">2</td>
+<td> </td>
+<td> </td>
 <td> </td>
 <td> </td>
 <td align="right">2</td>
@@ -132,12 +145,12 @@
 <tr>
 <td>3.1.2</td>
 <td>Microtask Crowdsourcing</td>
-<td align="right">1</td>
-<td> </td>
-<td> </td>
 <td> </td>
 <td> </td>
 <td align="right">1</td>
+<td align="right">1</td>
+<td> </td>
+<td> </td>
 <td> </td>
 <td> </td>
 <td align="right"></td>
@@ -150,12 +163,12 @@
 <tr>
 <td>4</td>
 <td>Our Approach: Crowdsourcing Linked Data Quality Assessment</td>
-<td align="right">1</td>
-<td> </td>
-<td> </td>
 <td> </td>
 <td> </td>
 <td align="right">1</td>
+<td align="right">1</td>
+<td> </td>
+<td> </td>
 <td> </td>
 <td> </td>
 <td align="right"></td>
@@ -168,12 +181,12 @@
 <tr>
 <td>4.4</td>
 <td>Properties of Our Approach</td>
-<td align="right">1</td>
-<td> </td>
-<td> </td>
 <td> </td>
 <td> </td>
 <td align="right">1</td>
+<td align="right">1</td>
+<td> </td>
+<td> </td>
 <td> </td>
 <td>1</td>
 <td align="right"></td>
@@ -186,12 +199,12 @@
 <tr>
 <td>5</td>
 <td>Evaluation</td>
-<td align="right">6</td>
-<td> </td>
-<td> </td>
 <td> </td>
 <td> </td>
 <td align="right">6</td>
+<td align="right">6</td>
+<td> </td>
+<td> </td>
 <td> </td>
 <td> </td>
 <td align="right">2</td>
@@ -204,12 +217,12 @@
 <tr>
 <td>5.1.3</td>
 <td>Gold Standard</td>
-<td align="right">1</td>
-<td> </td>
-<td> </td>
 <td> </td>
 <td> </td>
 <td align="right">1</td>
+<td align="right">1</td>
+<td> </td>
+<td> </td>
 <td> </td>
 <td> </td>
 <td align="right"></td>
@@ -222,12 +235,12 @@
 <tr>
 <td>5.2</td>
 <td>Evaluation of Combining LD Experts (Find Stage) and Microtasks (Verify Stage)</td>
-<td align="right"></td>
-<td> </td>
-<td>1</td>
 <td> </td>
 <td> </td>
 <td align="right">1</td>
+<td align="right"></td>
+<td> </td>
+<td>1</td>
 <td> </td>
 <td> </td>
 <td align="right"></td>
@@ -240,12 +253,12 @@
 <tr>
 <td>5.2.3</td>
 <td>Overall Results</td>
-<td align="right"></td>
-<td> </td>
-<td>1</td>
 <td> </td>
 <td> </td>
 <td align="right">1</td>
+<td align="right"></td>
+<td> </td>
+<td>1</td>
 <td> </td>
 <td> </td>
 <td align="right"></td>
@@ -258,12 +271,12 @@
 <tr>
 <td>5.2.4</td>
 <td>Results: Incorrect/missing Values</td>
-<td align="right"></td>
-<td> </td>
-<td>1</td>
 <td> </td>
 <td> </td>
 <td align="right">1</td>
+<td align="right"></td>
+<td> </td>
+<td>1</td>
 <td> </td>
 <td> </td>
 <td align="right"></td>
@@ -276,12 +289,12 @@
 <tr>
 <td>5.2.5</td>
 <td>Results: Incorrect Datatypes or Language Tags</td>
-<td align="right"></td>
-<td> </td>
-<td>1</td>
 <td> </td>
 <td> </td>
 <td align="right">1</td>
+<td align="right"></td>
+<td> </td>
+<td>1</td>
 <td> </td>
 <td> </td>
 <td align="right"></td>
@@ -294,12 +307,12 @@
 <tr>
 <td>5.2.6</td>
 <td>Results: Incorrect Links</td>
-<td align="right">1</td>
-<td> </td>
-<td> </td>
 <td> </td>
 <td> </td>
 <td align="right">1</td>
+<td align="right">1</td>
+<td> </td>
+<td> </td>
 <td> </td>
 <td> </td>
 <td align="right">1</td>
@@ -312,12 +325,12 @@
 <tr>
 <td>5.3</td>
 <td>Evaluation of Using Microtrask Crowdsourcing in Find and Verify Stages</td>
-<td align="right"></td>
-<td> </td>
-<td>1</td>
 <td> </td>
 <td> </td>
 <td align="right">1</td>
+<td align="right"></td>
+<td> </td>
+<td>1</td>
 <td> </td>
 <td> </td>
 <td align="right"></td>
@@ -330,12 +343,12 @@
 <tr>
 <td>5.3.2</td>
 <td>Overall Results</td>
-<td align="right"></td>
-<td> </td>
-<td>1</td>
 <td> </td>
 <td> </td>
 <td align="right">1</td>
+<td align="right"></td>
+<td> </td>
+<td>1</td>
 <td> </td>
 <td> </td>
 <td align="right"></td>
@@ -348,12 +361,12 @@
 <tr>
 <td>5.3.3</td>
 <td>Results: Incorrect/missing Values</td>
-<td align="right"></td>
-<td> </td>
-<td>1</td>
 <td> </td>
 <td> </td>
 <td align="right">1</td>
+<td align="right"></td>
+<td> </td>
+<td>1</td>
 <td> </td>
 <td> </td>
 <td align="right"></td>
@@ -366,12 +379,12 @@
 <tr>
 <td>5.3.4</td>
 <td>Results: Incorrect Datatypes or Language Tags</td>
-<td align="right"></td>
-<td> </td>
-<td>1</td>
 <td> </td>
 <td> </td>
 <td align="right">1</td>
+<td align="right"></td>
+<td> </td>
+<td>1</td>
 <td> </td>
 <td> </td>
 <td align="right"></td>
@@ -384,12 +397,12 @@
 <tr>
 <td>5.3.5</td>
 <td>Results: Incorrect Links</td>
-<td align="right"></td>
-<td> </td>
-<td>1</td>
 <td> </td>
 <td> </td>
 <td align="right">1</td>
+<td align="right"></td>
+<td> </td>
+<td>1</td>
 <td> </td>
 <td> </td>
 <td align="right"></td>
@@ -402,12 +415,12 @@
 <tr>
 <td>5.4</td>
 <td>Evaluation of Baseline Approaches</td>
-<td align="right">3</td>
-<td> </td>
-<td>1</td>
 <td> </td>
 <td>1</td>
 <td align="right">3</td>
+<td align="right">3</td>
+<td> </td>
+<td>1</td>
 <td> </td>
 <td>1</td>
 <td align="right">1</td>
@@ -420,12 +433,12 @@
 <tr>
 <td>5.4.1</td>
 <td>Object Values, Datatypes and Literals</td>
-<td align="right">1</td>
-<td> </td>
-<td> </td>
 <td> </td>
 <td> </td>
 <td align="right">1</td>
+<td align="right">1</td>
+<td> </td>
+<td> </td>
 <td> </td>
 <td> </td>
 <td align="right">1</td>
@@ -438,12 +451,12 @@
 <tr>
 <td>7</td>
 <td>Related Work</td>
-<td align="right">1</td>
-<td> </td>
-<td> </td>
 <td> </td>
 <td> </td>
 <td align="right">1</td>
+<td align="right">1</td>
+<td> </td>
+<td> </td>
 <td> </td>
 <td> </td>
 <td align="right"></td>

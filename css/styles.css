@@ -66,3 +66,6 @@ td.selected
   color:red;
   font-weight:bold;
 }
+.outlined {
+  border-right: 2px solid black;
+}
