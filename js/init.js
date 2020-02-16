@@ -113,6 +113,21 @@ var dimensions = {
   "action_needed" : ["compulsory", "suggestion", "no_action"]
 }
 
+function showReviewComments() {
+  checkedDimensions.forEach((checked, dimension) => {
+    var dimensionCamelCase = String(dimension).charAt(0).toUpperCase() + String(dimension).substr(1).toLowerCase();
+    var checkboxDimension = "checkbox".concat(dimensionCamelCase);
+    checkedDimensions[dimension] = $("#".concat(checkboxDimension)).is(":checked");
+    // console.log(dimension + ":" + checkedDimensions[dimension]);
+    });
+    d3.csv("Q4.csv", function(error, data) {
+        console.log("_____________________");
+        console.log("json data:");
+        console.log(data);
+        console.log("_____________________");
+      }
+}
+
 var serverConnection = "http://localhost:8081/editors/csv";
 var serverConnection2 = "http://localhost:8081/editors";
 
@@ -124,9 +139,6 @@ function getReviewComments() {
     checkedDimensions[dimension] = $("#".concat(checkboxDimension)).is(":checked");
     // console.log(dimension + ":" + checkedDimensions[dimension]);
     });
-
-    console.log("Button is clicked");
-
   // $.get(serverConnection, checkedDimensions)
   // $.put(serverConnection, checkedDimensions)
   // $.ajax({
@@ -249,6 +261,9 @@ function getReviewComments() {
            })
            .on("mouseout", function(d) {
                d3.select(this).style("fill", color(d.name))
+           })
+           .on("click", function(d) {
+               showReviewComments();
            });
 
      // add text labels for each dimension on top of the graph
