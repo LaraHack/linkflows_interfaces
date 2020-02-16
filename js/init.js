@@ -141,7 +141,7 @@ function getReviewComments() {
       // console.log("status:" + status);
 
       // var data = JSON.parse(dataEditors);
-  d3.csv("Q3.csv", function(error, data) {
+  d3.csv("Q4.csv", function(error, data) {
       console.log("_____________________");
       console.log("json data:");
       console.log(data);
@@ -188,9 +188,10 @@ function getReviewComments() {
      y0.domain(reviewers);
      y1.domain(d3.keys(dimensions)).rangeRoundBands([0, y0.rangeBand()]);
 
-     x.domain([0, d3.max(data, function(d) {
-       return d.total;
-     })]);
+     // x.domain([0, d3.max(data, function(d) {
+     //   return d.total;
+     // })]);
+     x.domain([0, 40]);
 
      // draw x axis
      inner.append("g")
@@ -198,6 +199,14 @@ function getReviewComments() {
        .attr("transform", "translate(0," + height + ")")
        .style("opacity", "0")
        .call(xAxis) ;
+
+       // Add X axis label:
+      inner.append("text")
+          .attr("text-anchor", "end")
+          .attr("x", width)
+          .attr("y", height + margin.top + 20)
+          .style("font-size", 16)
+          .text("Number of review comments");
 
      // draw y axis
      inner.append("g")
