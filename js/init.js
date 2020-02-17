@@ -134,8 +134,8 @@ function getReviewComments() {
   // })
   // $.get(serverConnection)
   .done(function (dataEditors, status)  {
-      console.log("data:" + dataEditors);
-      console.log("status:" + status);
+      // console.log("data:" + dataEditors);
+      // console.log("status:" + status);
 
       var data = JSON.parse(dataEditors);
   // d3.csv("Q4.csv", function(error, data) {
