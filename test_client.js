@@ -20,7 +20,7 @@ function getDataFromVirtuoso () {
 	    console.log("data:" + dataVirtuoso);
 	    console.log("status:" + status);
 
-			$("#testData").text(JSON.stringify(dataVirtuoso));
+			$("#testData").text(dataVirtuoso);
 			$("#testData").show();
 	  })
 	  // jqXHR is a JS XMLHTTPRequest object

@@ -96,7 +96,7 @@ var color = d3.scale.ordinal()
 // graph dimensions
 var svg = d3.select("#graphArea").append("svg")
     .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom);
+    .attr("height", height + margin.top + (margin.bottom + 10));
 
 // added inner child to put label outside the graph
 var inner = svg.append("g")
@@ -113,22 +113,7 @@ var dimensions = {
   "action_needed" : ["compulsory", "suggestion", "no_action"]
 }
 
-function showReviewComments() {
-  checkedDimensions.forEach((checked, dimension) => {
-    var dimensionCamelCase = String(dimension).charAt(0).toUpperCase() + String(dimension).substr(1).toLowerCase();
-    var checkboxDimension = "checkbox".concat(dimensionCamelCase);
-    checkedDimensions[dimension] = $("#".concat(checkboxDimension)).is(":checked");
-    // console.log(dimension + ":" + checkedDimensions[dimension]);
-    });
-    d3.csv("Q4.csv", function(error, data) {
-        console.log("_____________________");
-        console.log("json data:");
-        console.log(data);
-        console.log("_____________________");
-      }
-}
-
-var serverConnection = "http://localhost:8081/editors/csv";
+var serverConnection1 = "http://localhost:8081/editors/csv";
 var serverConnection2 = "http://localhost:8081/editors";
 
 // sends a request to the server to draw the graph
@@ -137,9 +122,9 @@ function getReviewComments() {
     var dimensionCamelCase = String(dimension).charAt(0).toUpperCase() + String(dimension).substr(1).toLowerCase();
     var checkboxDimension = "checkbox".concat(dimensionCamelCase);
     checkedDimensions[dimension] = $("#".concat(checkboxDimension)).is(":checked");
-    // console.log(dimension + ":" + checkedDimensions[dimension]);
+    console.log(dimension + ":" + checkedDimensions[dimension]);
     });
-  // $.get(serverConnection, checkedDimensions)
+  $.get(serverConnection1, checkedDimensions)
   // $.put(serverConnection, checkedDimensions)
   // $.ajax({
   //   url: serverConnection2,
@@ -148,16 +133,16 @@ function getReviewComments() {
   //   success: function() {}
   // })
   // $.get(serverConnection)
-  // .done(function (dataEditors, status)  {
-      // console.log("data:" + dataEditors);
-      // console.log("status:" + status);
+  .done(function (dataEditors, status)  {
+      console.log("data:" + dataEditors);
+      console.log("status:" + status);
 
-      // var data = JSON.parse(dataEditors);
-  d3.csv("Q4.csv", function(error, data) {
-      console.log("_____________________");
-      console.log("json data:");
-      console.log(data);
-      console.log("_____________________");
+      var data = JSON.parse(dataEditors);
+  // d3.csv("Q4.csv", function(error, data) {
+      // console.log("_____________________");
+      // console.log("json data:");
+      // console.log(data);
+      // console.log("_____________________");
 
       var rowHeaders = d3.keys(data[0]).filter(function(key) { return key !== "Reviewer"; });
 
@@ -214,9 +199,11 @@ function getReviewComments() {
 
        // Add X axis label:
       inner.append("text")
-          .attr("text-anchor", "end")
-          .attr("x", width)
-          .attr("y", height + margin.top + 20)
+          .attr("class", "x label")
+          .attr("text-anchor", "middle")
+          .attr("x", (width / 2) )
+          // .attr("y", height + margin.top + 20)
+          .attr("y", height + margin.bottom + 10)
           .style("font-size", 16)
           .text("Number of review comments");
 
@@ -298,13 +285,14 @@ function getReviewComments() {
                return "black";
              });
            });
-  // // jqXHR is a JS XMLHTTPRequest object
-  // // textStatus is the error and
-  // // error is Internal Server Error
-  // .fail(function (jqXHR, textStatus, error) {
-  //       console.log("Get error: " + error);
-  //   });
-  });
+  })
+  // jqXHR is a JS XMLHTTPRequest object
+  // textStatus is the error and
+  // error is Internal Server Error
+  .fail(function (jqXHR, textStatus, error) {
+        console.log("Get error: " + error);
+    });
+  // }); // from read d3.csv
 }
 
   // d3.csv("data.csv", function(error, data) {
