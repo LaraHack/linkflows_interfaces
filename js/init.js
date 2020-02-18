@@ -67,56 +67,84 @@ for (const [key, value] of Object.entries(colors)) {
   setSpanColor(key);
 }
 
-// graph size
-var margin = {top: 10, right: 100, bottom: 30, left: 100},
-    width = 960 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom;
+// window.onload = function () {
+//   console.log("=======IN WINDOW LOAD==============");
+//     if (!("hasLoadedPageBefore" in localStorage)) {
+//       console.log("=======not in local storage==============");
+//       $.get(serverConnection1)
+//       .done((dataEditors, status) => {
+//         drawGraph(dataEditors);
+//       })
+//       .fail(function (jqXHR, textStatus, error) {
+//             console.log("Get error: " + error);
+//       });
+//
+//       localStorage.hasLoadedPageBefore = true;
+//     }
+// }
 
-// settings for the x axis
-var x = d3.scale.linear()
-    .range([0, width]);
-
-var xAxis = d3.svg.axis()
-    .scale(x)
-    .orient("bottom");
-
-// settings for the y axis: extra grouping on the y axis by using y0 and y1
-// grouping of reviewers
-var y0 = d3.scale.ordinal()
-    .rangeRoundBands([height, 0], 0.1);
-
-// grouping of dimensions
-var y1 = d3.scale.ordinal();
-
-var yAxis = d3.svg.axis()
-    .scale(y0)
-    .orient("left");
-
-// palette of colors used for all dimensions
-var color = d3.scale.ordinal()
-    .range(Object.values(colors));
-
-// graph dimensions
-var svg = d3.select("#graphArea").append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + (margin.bottom + 10));
-
-// added inner child to put label outside the graph
-var inner = svg.append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-var xBegin;
-
-// definition of dimensions used in the grouped stacked chart
-var dimensions = {
-  "part" : ["article","section","paragraph"],
-  "aspect" : ["syntax","style","content"],
-  "positivity_negativity" : ["negative", "neutral", "positive"],
-  "impact" : ["I1", "I2", "I3", "I4", "I5"],
-  "action_needed" : ["compulsory", "suggestion", "no_action"]
-}
+// get the data to first load the initial graph with all checkboxes clicked
+$.get(serverConnection1)
+.done((dataEditors, status) => {
+  drawGraph(dataEditors);
+})
+.fail(function (jqXHR, textStatus, error) {
+      console.log("Get error: " + error);
+});
 
 function drawGraph(dataEditors) {
+  // remove the graph that was drawn before
+  d3.select("#graphArea").selectAll("svg").remove();
+
+  // graph size
+  var margin = {top: 10, right: 100, bottom: 30, left: 100},
+      width = 960 - margin.left - margin.right,
+      height = 500 - margin.top - margin.bottom;
+
+  // settings for the x axis
+  var x = d3.scale.linear()
+      .range([0, width]);
+
+  var xAxis = d3.svg.axis()
+      .scale(x)
+      .orient("bottom");
+
+  // settings for the y axis: extra grouping on the y axis by using y0 and y1
+  // grouping of reviewers
+  var y0 = d3.scale.ordinal()
+      .rangeRoundBands([height, 0], 0.1);
+
+  // grouping of dimensions
+  var y1 = d3.scale.ordinal();
+
+  var yAxis = d3.svg.axis()
+      .scale(y0)
+      .orient("left");
+
+  // palette of colors used for all dimensions
+  var color = d3.scale.ordinal()
+      .range(Object.values(colors));
+
+  // graph dimensions
+  var svg = d3.select("#graphArea").append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + (margin.bottom + 10));
+
+  // added inner child to put label outside the graph
+  var inner = svg.append("g")
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+  var xBegin;
+
+  // definition of dimensions used in the grouped stacked chart
+  var dimensions = {
+    "part" : ["article","section","paragraph"],
+    "aspect" : ["syntax","style","content"],
+    "positivity_negativity" : ["negative", "neutral", "positive"],
+    "impact" : ["I1", "I2", "I3", "I4", "I5"],
+    "action_needed" : ["compulsory", "suggestion", "no_action"]
+  }
+
   console.log("DATA EDITORS:" + dataEditors);
   var data = JSON.parse(dataEditors);
   // d3.csv(dataEditors, (error, data) => {
@@ -269,24 +297,6 @@ function drawGraph(dataEditors) {
          });
   // })
 }
-
-
-window.onload = function () {
-  console.log("=======IN WINDOW LOAD==============");
-    if (!("hasLoadedPageBefore" in localStorage)) {
-      console.log("=======not in local storage==============");
-      $.get(serverConnection1)
-      .done((dataEditors, status) => {
-        drawGraph(dataEditors);
-      })
-      .fail(function (jqXHR, textStatus, error) {
-            console.log("Get error: " + error);
-      });
-
-      localStorage.hasLoadedPageBefore = true;
-    }
-}
-
 
 // sends a request to the server to draw the graph
 function getReviewComments() {
