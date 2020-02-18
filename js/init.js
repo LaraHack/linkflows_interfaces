@@ -1,3 +1,6 @@
+var serverConnection1 = "http://localhost:8081/editors/csv";
+var serverConnection2 = "http://localhost:8081/editors";
+
 var checkedDimensions = new Map([
   ["article", true],
   ["section", true],
@@ -113,8 +116,156 @@ var dimensions = {
   "action_needed" : ["compulsory", "suggestion", "no_action"]
 }
 
-var serverConnection1 = "http://localhost:8081/editors/csv";
-var serverConnection2 = "http://localhost:8081/editors";
+function drawGraph(dataEditors) {
+  d3.csv(dataEditors, (error, data) => {
+    // console.log("_____________________");
+    // console.log("json data:");
+    // console.log(data);
+    // console.log("_____________________");
+
+    var rowHeaders = d3.keys(data[0]).filter(function(key) { return key !== "Reviewer"; });
+
+     // set color range for the dimensions present in the data file
+     var colorRange = [];
+
+     for (var i = 0; i < rowHeaders.length; i++) {
+       colorRange[i] = colors[rowHeaders[i]];
+     }
+
+     color.range(colorRange);
+
+     //map colors in the defined palette to the dimensions of the data in the csv
+     color.domain(rowHeaders);
+
+     // get data for each dimension and
+     // calculate the coordonates for the beginning and the end of each for the x axis
+     data.forEach(function(d) {
+       var xRow = new Array();
+       d.rowDetails = rowHeaders.map(function(name) {
+         for (ic in dimensions) {
+           if($.inArray(name, dimensions[ic]) >= 0){
+             if (!xRow[ic]){
+               xRow[ic] = 0;
+             }
+             xBegin = xRow[ic];
+             xRow[ic] += +d[name];
+             return {name: name, row: ic, xBegin: xBegin, xEnd: +d[name] + xBegin,};
+           }
+         }
+       });
+       // get maximum number of review comments for each reviewer
+       d.total = d3.max(d.rowDetails, function(d) {
+         return d.xEnd;
+       });
+     });
+
+   // map data onto graph axes
+   var reviewers = data.map(function(d) { return d.Reviewer; });
+   y0.domain(reviewers);
+   y1.domain(d3.keys(dimensions)).rangeRoundBands([0, y0.rangeBand()]);
+
+   // x.domain([0, d3.max(data, function(d) {
+   //   return d.total;
+   // })]);
+   x.domain([0, 40]);
+
+   // draw x axis
+   inner.append("g")
+     .attr("class", "x axis")
+     .attr("transform", "translate(0," + height + ")")
+     .style("opacity", "0")
+     .call(xAxis) ;
+
+     // Add X axis label:
+    inner.append("text")
+        .attr("class", "x label")
+        .attr("text-anchor", "middle")
+        .attr("x", (width / 2) )
+        // .attr("y", height + margin.top + 20)
+        .attr("y", height + margin.bottom + 10)
+        .style("font-size", 16)
+        .text("Number of review comments");
+
+   // draw y axis
+   inner.append("g")
+       .attr("class", "y axis")
+       .call(yAxis)
+       .append("text")
+         .attr("transform", "rotate(0)")
+         .attr("y", 6)
+         .attr("dy", ".20em")
+         .style("text-anchor", "end")
+         .text(""); // .text("reviewers");
+
+   inner.select('.x').transition().duration(500).delay(1300).style("opacity","1");
+
+   // add grouped stacked bar and add Reviewers
+   var grouped_stackedbar = inner.selectAll(".grouped_stackedbar")
+     .data(data)
+   .enter().append("g")
+     .attr("class", "g")
+     .attr("transform", function(d) {
+       return "translate(0," + y0(d.Reviewer) + ")"; });
+
+   // draw stacked bars for each dimension of each Reviewer
+   grouped_stackedbar.selectAll("rect")
+     .data(function(d) { return d.rowDetails; })
+       .enter().append("rect")
+         .attr("height", y1.rangeBand())
+         .attr("y", function(d) {
+           return y1(d.row);
+         })
+         .attr("x", function(d) {
+           return x(d.xBegin);
+         })
+         .attr("width", function(d) {
+           return x(d.xEnd) - x(d.xBegin);
+         })
+         .style("fill", function(d) { return color(d.name); })
+         .on("mouseover", function(d) {
+             d3.select(this).style("fill", d3.rgb(color(d.name)).darker(2));
+         })
+         .on("mouseout", function(d) {
+             d3.select(this).style("fill", color(d.name))
+         })
+         .on("click", function(d) {
+             showReviewComments();
+         });
+
+   // add text labels for each dimension on top of the graph
+   grouped_stackedbar.selectAll("text")
+     .data(function(d) { console.log(d.rowDetails); return d.rowDetails; })
+       .enter().append("text")
+         .attr("x", function(d) {
+           return x(d.xBegin) + (x(d.xEnd) - x(d.xBegin))/2;
+         })
+         .attr("y", function(d) {
+           return y1(d.row);
+         })
+         .attr("dy", "1.2em")
+         .style("font-size", "14px")
+         .style("fill", function(d) {
+           if (d.name == "I3" || d.name == "I4" || d.name == "I5")
+             return "white";
+           return "black";
+         })
+         .text(function(d,i) {
+           return (d.xEnd-d.xBegin) !== 0 ? (d.xEnd-d.xBegin) : "";
+         })
+         .on("mouseover", function(d) {
+             d3.select(this).style("fill", "white");
+             d3.select(this).style("font-weight", "bold");
+         })
+         .on("mouseout", function(d) {
+           d3.select(this).style("font-weight", "");
+           d3.select(this).style("fill", function(d) {
+             if (d.name == "I3" || d.name == "I4" || d.name == "I5")
+               return "white";
+             return "black";
+           });
+         });
+  })
+}
 
 // sends a request to the server to draw the graph
 function getReviewComments() {
@@ -133,158 +284,13 @@ function getReviewComments() {
   //   success: function() {}
   // })
   // $.get(serverConnection)
-  .done(function (dataEditors, status)  {
-      // console.log("data:" + dataEditors);
-      // console.log("status:" + status);
+  .done((dataEditors, status) => {
+  // console.log("data:" + dataEditors);
+  // console.log("status:" + status);
 
-      var data = JSON.parse(dataEditors);
+  // var data = JSON.parse(dataEditors);
   // d3.csv("Q4.csv", function(error, data) {
-      // console.log("_____________________");
-      // console.log("json data:");
-      // console.log(data);
-      // console.log("_____________________");
-
-      var rowHeaders = d3.keys(data[0]).filter(function(key) { return key !== "Reviewer"; });
-
-       // set color range for the dimensions present in the data file
-       var colorRange = [];
-
-       for (var i = 0; i < rowHeaders.length; i++) {
-         colorRange[i] = colors[rowHeaders[i]];
-       }
-
-       color.range(colorRange);
-
-       //map colors in the defined palette to the dimensions of the data in the csv
-       color.domain(rowHeaders);
-
-       // get data for each dimension and
-       // calculate the coordonates for the beginning and the end of each for the x axis
-       data.forEach(function(d) {
-         var xRow = new Array();
-         d.rowDetails = rowHeaders.map(function(name) {
-           for (ic in dimensions) {
-             if($.inArray(name, dimensions[ic]) >= 0){
-               if (!xRow[ic]){
-                 xRow[ic] = 0;
-               }
-               xBegin = xRow[ic];
-               xRow[ic] += +d[name];
-               return {name: name, row: ic, xBegin: xBegin, xEnd: +d[name] + xBegin,};
-             }
-           }
-         });
-         // get maximum number of review comments for each reviewer
-         d.total = d3.max(d.rowDetails, function(d) {
-           return d.xEnd;
-         });
-       });
-
-     // map data onto graph axes
-     var reviewers = data.map(function(d) { return d.Reviewer; });
-     y0.domain(reviewers);
-     y1.domain(d3.keys(dimensions)).rangeRoundBands([0, y0.rangeBand()]);
-
-     // x.domain([0, d3.max(data, function(d) {
-     //   return d.total;
-     // })]);
-     x.domain([0, 40]);
-
-     // draw x axis
-     inner.append("g")
-       .attr("class", "x axis")
-       .attr("transform", "translate(0," + height + ")")
-       .style("opacity", "0")
-       .call(xAxis) ;
-
-       // Add X axis label:
-      inner.append("text")
-          .attr("class", "x label")
-          .attr("text-anchor", "middle")
-          .attr("x", (width / 2) )
-          // .attr("y", height + margin.top + 20)
-          .attr("y", height + margin.bottom + 10)
-          .style("font-size", 16)
-          .text("Number of review comments");
-
-     // draw y axis
-     inner.append("g")
-         .attr("class", "y axis")
-         .call(yAxis)
-         .append("text")
-           .attr("transform", "rotate(0)")
-           .attr("y", 6)
-           .attr("dy", ".20em")
-           .style("text-anchor", "end")
-           .text(""); // .text("reviewers");
-
-     inner.select('.x').transition().duration(500).delay(1300).style("opacity","1");
-
-     // add grouped stacked bar and add Reviewers
-     var grouped_stackedbar = inner.selectAll(".grouped_stackedbar")
-       .data(data)
-     .enter().append("g")
-       .attr("class", "g")
-       .attr("transform", function(d) {
-         return "translate(0," + y0(d.Reviewer) + ")"; });
-
-     // draw stacked bars for each dimension of each Reviewer
-     grouped_stackedbar.selectAll("rect")
-       .data(function(d) { return d.rowDetails; })
-         .enter().append("rect")
-           .attr("height", y1.rangeBand())
-           .attr("y", function(d) {
-             return y1(d.row);
-           })
-           .attr("x", function(d) {
-             return x(d.xBegin);
-           })
-           .attr("width", function(d) {
-             return x(d.xEnd) - x(d.xBegin);
-           })
-           .style("fill", function(d) { return color(d.name); })
-           .on("mouseover", function(d) {
-               d3.select(this).style("fill", d3.rgb(color(d.name)).darker(2));
-           })
-           .on("mouseout", function(d) {
-               d3.select(this).style("fill", color(d.name))
-           })
-           .on("click", function(d) {
-               showReviewComments();
-           });
-
-     // add text labels for each dimension on top of the graph
-     grouped_stackedbar.selectAll("text")
-       .data(function(d) { console.log(d.rowDetails); return d.rowDetails; })
-         .enter().append("text")
-           .attr("x", function(d) {
-             return x(d.xBegin) + (x(d.xEnd) - x(d.xBegin))/2;
-           })
-           .attr("y", function(d) {
-             return y1(d.row);
-           })
-           .attr("dy", "1.2em")
-           .style("font-size", "14px")
-           .style("fill", function(d) {
-             if (d.name == "I3" || d.name == "I4" || d.name == "I5")
-               return "white";
-             return "black";
-           })
-           .text(function(d,i) {
-             return (d.xEnd-d.xBegin) !== 0 ? (d.xEnd-d.xBegin) : "";
-           })
-           .on("mouseover", function(d) {
-               d3.select(this).style("fill", "white");
-               d3.select(this).style("font-weight", "bold");
-           })
-           .on("mouseout", function(d) {
-             d3.select(this).style("font-weight", "");
-             d3.select(this).style("fill", function(d) {
-               if (d.name == "I3" || d.name == "I4" || d.name == "I5")
-                 return "white";
-               return "black";
-             });
-           });
+    drawGraph(dataEditors);
   })
   // jqXHR is a JS XMLHTTPRequest object
   // textStatus is the error and
@@ -292,7 +298,6 @@ function getReviewComments() {
   .fail(function (jqXHR, textStatus, error) {
         console.log("Get error: " + error);
     });
-  // }); // from read d3.csv
 }
 
   // d3.csv("data.csv", function(error, data) {
