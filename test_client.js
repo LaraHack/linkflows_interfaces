@@ -1,3 +1,69 @@
+var checkedDimensions = new Map([
+  ["article", true],
+  ["section", true],
+  ["paragraph", true],
+  ["syntax", true],
+  ["style", true],
+  ["content", true],
+  ["negative", true],
+  ["neutral", true],
+  ["positive", true],
+  ["I1", true],
+  ["I2", true],
+  ["I3", true],
+  ["I4", true],
+  ["I5", true],
+  ["compulsory", true],
+  ["suggestion", true],
+  ["no_action", true]
+]);
+
+
+function checkAllCheckboxes() {
+  $('input[type="checkbox"]').prop("checked", true);
+}
+
+checkAllCheckboxes();
+
+// id should be something in the form of '#myinput'
+function checkboxChecked(id) {
+  if ($(id).is(':checkbox') == true) {
+    $(id).click(function() {
+      if($(this).prop("checked") == true) {
+        alert("Checkbox is checked.");
+      }
+      else if($(this).prop("checked") == false) {
+        alert("Checkbox is unchecked.");
+      }
+    });
+  }
+}
+
+// palette of colors used for all dimensions
+var colors = {article: "#cd853f", section: "#deb887", paragraph: "#ffe4c4",
+  syntax: "#c6deff", style: "#82cafa", content:"#9e7bff",
+  negative: "#ff0000", neutral: "#ffff00", positive: "#008000",
+  I1: "rgba(0, 0, 0, 0)", I2: "rgba(0, 0, 0, 0.25)", I3: "rgba(0, 0, 0, 0.5)", I4: "rgba(0, 0, 0, 0.75)", I5: "rgba(0, 0, 0, 1)",
+  compulsory: "#ff6500", suggestion: "#ffa500", no_action: "#ffd700"};
+
+// coloring a span element that acts as part of the legend for the graph
+// from the color palette above, for one part of one dimension
+function setSpanColor(dimName) {
+  var spanId = "span" + dimName.charAt(0).toUpperCase() + dimName.slice(1);
+  var spanFound = document.getElementById(spanId);
+  if (spanFound) {
+      spanFound.style.background = colors[dimName];
+  }
+}
+
+// coloring the separate span elements that act as legend for the graph
+// from the color palette above, for all dimensions
+for (const [key, value] of Object.entries(colors)) {
+  setSpanColor(key);
+}
+
+
+
 
 $("#getMessage").on("click", getMessageFromServer);
 

@@ -19,8 +19,60 @@
       <h5> Image from the running NodeJS server </h5>
       <img src="http://127.1.0.1:8081/images/test.jpeg" alt="image from server" class="img-thumbnail">
 
+      <br/> <br/>
       <h5> Click the button below to get data from a Virtuoso triple store </h5>
-      <input class="btn btn-primary" type="button" value="Get data from Virtuoso" id="getData">
+      <br/>
+      <h6>Different dimensions of review comments:</h6>
+      <table class="legend">
+        <tr>
+          <td>Article level:</td>
+          <td>
+            <span class="legend" id="spanArticle">article <input type="checkbox" value="" id="checkboxArticle"> </span>
+            <span class="legend" id="spanSection">section <input type="checkbox" value="" id="checkboxSection"> </span>
+            <span class="legend" id="spanParagraph">paragraph <input type="checkbox" value="" id="checkboxParagraph"> </span>
+          </td>
+        </tr>
+        <tr>
+          <td>Aspect:</td>
+          <td>
+            <span class="legend" id="spanSyntax">syntax <input type="checkbox" value="" id="checkboxSyntax"> </span>
+            <span class="legend" id="spanStyle">style <input type="checkbox" value="" id="checkboxStyle"> </span>
+            <span class="legend" id="spanContent">content <input type="checkbox" value="" id="checkboxContent"> </span>
+          </td>
+        </tr>
+        <tr>
+          <td>Positivity/negativity:</td>
+          <td>
+            <span style="color:white" class="legend" id="spanNegative">negative <input type="checkbox" value="" id="checkboxNegative"> </span>
+            <span class="legend" id="spanNeutral">neutral <input type="checkbox" value="" id="checkboxNeutral"> </span>
+            <span style="color:white;" class="legend" id="spanPositive">positive <input type="checkbox" value="" id="checkboxPositive"> </span>
+          </td>
+        </tr>
+        <tr>
+          <td>Impact:  </td>
+          <td>
+            <span class="legendImpact" id="spanI1">1 <input type="checkbox" value="" id="checkboxI1"> </span>
+            <span class="legendImpact" id="spanI2">2 <input type="checkbox" value="" id="checkboxI2"> </span>
+            <span style="color:white;" class="legendImpact" id="spanI3">3 <input type="checkbox" value="" id="checkboxI3"> </span>
+            <span style="color:white;" class="legendImpact" id="spanI4">4 <input type="checkbox" value="" id="checkboxI4"> </span>
+            <span style="color:white;" class="legendImpact" id="spanI5">5 <input type="checkbox" value="" id="checkboxI5"> </span>
+          </td>
+        </tr>
+        <tr>
+          <td>Action needed:</td>
+          <td>
+            <span class="legend" id="spanCompulsory">compulsory <input type="checkbox" value="" id="checkboxCompulsory"> </span>
+            <span class="legend" id="spanSuggestion">suggestion <input type="checkbox" value="" id="checkboxSuggestion"> </span>
+            <span class="legend" id="spanNo_action">no action <input type="checkbox" value="" id="checkboxNo_action"> </span>
+          </td>
+        </tr>
+      </table>
+      <br/>
+        <div class="row">
+              <input class="btn btn-primary btn-sm" type="button" value="Get data from Virtuoso" id="getData">
+        </div>
+      </div>
+      <br/>
       <div class="alert alert-success collapse" role="alert" id="testData" style="display:none;"> </div>
       <br /> <br /> <br />
     </div>
