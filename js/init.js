@@ -117,7 +117,10 @@ var dimensions = {
 }
 
 function drawGraph(dataEditors) {
-  d3.csv(dataEditors, (error, data) => {
+  console.log("DATA EDITORS:" + dataEditors);
+  var data = JSON.parse(dataEditors);
+  // d3.csv(dataEditors, (error, data) => {
+    // d3.json(dataEditors, (error, data) => {
     // console.log("_____________________");
     // console.log("json data:");
     // console.log(data);
@@ -264,8 +267,16 @@ function drawGraph(dataEditors) {
              return "black";
            });
          });
-  })
+  // })
 }
+
+$.get(serverConnection1)
+.done((dataEditors, status) => {
+  drawGraph(dataEditors);
+})
+.fail(function (jqXHR, textStatus, error) {
+      console.log("Get error: " + error);
+});
 
 // sends a request to the server to draw the graph
 function getReviewComments() {
@@ -288,7 +299,6 @@ function getReviewComments() {
   // console.log("data:" + dataEditors);
   // console.log("status:" + status);
 
-  // var data = JSON.parse(dataEditors);
   // d3.csv("Q4.csv", function(error, data) {
     drawGraph(dataEditors);
   })
