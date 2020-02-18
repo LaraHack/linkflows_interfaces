@@ -62,9 +62,6 @@ for (const [key, value] of Object.entries(colors)) {
   setSpanColor(key);
 }
 
-
-
-
 $("#getMessage").on("click", getMessageFromServer);
 
 function getMessageFromServer () {

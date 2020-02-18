@@ -84,7 +84,7 @@ for (const [key, value] of Object.entries(colors)) {
 // }
 
 // get the data to first load the initial graph with all checkboxes clicked
-$.get(serverConnection1)
+$.get(serverConnection1, checkedDimensions)
 .done((dataEditors, status) => {
   drawGraph(dataEditors);
 })
@@ -92,6 +92,8 @@ $.get(serverConnection1)
       console.log("Get error: " + error);
 });
 
+// function that draws the graph
+// dataEditors is the data in JSON format received after a GET request to the server
 function drawGraph(dataEditors) {
   // remove the graph that was drawn before
   d3.select("#graphArea").selectAll("svg").remove();
@@ -298,14 +300,18 @@ function drawGraph(dataEditors) {
   // })
 }
 
-// sends a request to the server to draw the graph
-function getReviewComments() {
+function getDimensionsChecked() {
   checkedDimensions.forEach((checked, dimension) => {
     var dimensionCamelCase = String(dimension).charAt(0).toUpperCase() + String(dimension).substr(1).toLowerCase();
     var checkboxDimension = "checkbox".concat(dimensionCamelCase);
     checkedDimensions[dimension] = $("#".concat(checkboxDimension)).is(":checked");
     console.log(dimension + ":" + checkedDimensions[dimension]);
     });
+}
+
+// sends a request to the server to draw the graph
+function getReviewComments() {
+  getDimensionsChecked();
   $.get(serverConnection1, checkedDimensions)
   // $.put(serverConnection, checkedDimensions)
   // $.ajax({
