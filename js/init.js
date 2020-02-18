@@ -270,13 +270,23 @@ function drawGraph(dataEditors) {
   // })
 }
 
-$.get(serverConnection1)
-.done((dataEditors, status) => {
-  drawGraph(dataEditors);
-})
-.fail(function (jqXHR, textStatus, error) {
-      console.log("Get error: " + error);
-});
+
+window.onload = function () {
+  console.log("=======IN WINDOW LOAD==============");
+    if (!("hasLoadedPageBefore" in localStorage)) {
+      console.log("=======not in local storage==============");
+      $.get(serverConnection1)
+      .done((dataEditors, status) => {
+        drawGraph(dataEditors);
+      })
+      .fail(function (jqXHR, textStatus, error) {
+            console.log("Get error: " + error);
+      });
+
+      localStorage.hasLoadedPageBefore = true;
+    }
+}
+
 
 // sends a request to the server to draw the graph
 function getReviewComments() {
