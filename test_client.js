@@ -75,15 +75,25 @@ function getMessageFromServer () {
 
 $("#getData").on("click", getDataFromVirtuoso);
 
+function getDimensionsChecked() {
+  checkedDimensions.forEach((checked, dimension) => {
+    var dimensionCamelCase = String(dimension).charAt(0).toUpperCase() + String(dimension).substr(1).toLowerCase();
+    var checkboxDimension = "checkbox".concat(dimensionCamelCase);
+    checkedDimensions[dimension] = $("#".concat(checkboxDimension)).is(":checked");
+    console.log(dimension + ":" + checkedDimensions[dimension]);
+    });
+}
+
 function getDataFromVirtuoso () {
 	var serverConnection = "http://localhost:8081/sparql";
-
-	$.get(serverConnection)
+  getDimensionsChecked();
+	$.get(serverConnection, checkedDimensions)
 	  .done((dataVirtuoso, status) => {
 	    console.log("data:" + dataVirtuoso);
 	    console.log("status:" + status);
 
-			$("#testData").text(dataVirtuoso);
+			var results = preprocessVirtuosoResults(dataVirtuoso);
+			$("#testData").text(results);
 			$("#testData").show();
 	  })
 	  // jqXHR is a JS XMLHTTPRequest object
@@ -95,4 +105,12 @@ function getDataFromVirtuoso () {
 					$("#testData").text(textStatus);
 					$("#testData").show();
 	    });
+}
+
+// Virtuoso results should be a CSV in the form of "reviewer","reviewComment","part","aspect","posNeg","impact","actionNeeded"
+function preprocessVirtuosoResults(results) {
+ 	// first read CSV file with results
+	  var csvData = [];
+		csvData = $.csv.toArrays(results);
+		return csvData;
 }
