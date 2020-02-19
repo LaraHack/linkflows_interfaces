@@ -86,7 +86,9 @@ function getDimensionsChecked() {
 
 function getDataFromVirtuoso () {
 	var serverConnection = "http://localhost:8081/sparql";
+
   getDimensionsChecked();
+
 	$.get(serverConnection, checkedDimensions)
 	  .done((dataVirtuoso, status) => {
 	    console.log("data:" + dataVirtuoso);
@@ -113,6 +115,89 @@ function preprocessVirtuosoResults(results) {
 	  var csvData = [];
 		console.log("in CSV");
 		csvData = $.csv.toArrays(results);
-		console.log("CSV data:" + csvData);
+		console.log("CSV data[0]:" + csvData[0]);
+		console.log("CSV data[1]:" + csvData[1]);
+
+		// var csv = {reviewer: "xxx", article: "yyy", ....};
+		// can be accessed csv.reviewer
+		// can be looped with csv.forEach() iterator
+		// Object instead of Array to create associative arrays in the form {"reviewer": "orchid_id", "article": "xxx", ...}
+		// var graphCSVData = new Object();
+
+		var reviewer = [];
+
+		// ordering in the current csvData: reviewer,reviewComment,part,aspect,posNeg,impact,actionNeeded
+		// for graph generation data needs to be in the form of
+		// Reviewer,article,section,paragraph,syntax,style,content,negative,neutral,positive,I1,I2,I3,I4,I5,compulsory,suggestion,no_action
+		for (var i = 1; i < csvData.length; i++) {
+			if (!reviewer.includes(csvData[i][0])) {
+				console.log("csvData[" + i + "][0]" + csvData[i][0]);
+				reviewer.push(csvData[i][0]);
+			}
+		}
+
+		var graphCSVData = new Object(reviewer.length);
+
+		// list separate reviewer
+		reviewer.forEach( (editor, i) => {
+			console.log("editor:" + editor);
+			graphCSVData[i] = new Object();
+			graphCSVData[i]["Reviewer " + (i+1)] = editor;
+			graphCSVData[i]["article"] = 0;
+			graphCSVData[i]["section"] = 0;
+			graphCSVData[i]["paragraph"] = 0;
+			graphCSVData[i]["syntax"] = 0;
+			graphCSVData[i]["style"] = 0;
+			graphCSVData[i]["content"] = 0;
+			graphCSVData[i]["negative"] = 0;
+			graphCSVData[i]["neutral"] = 0;
+			graphCSVData[i]["positive"] = 0;
+			graphCSVData[i]["I1"] = 0;
+			graphCSVData[i]["I2"] = 0;
+			graphCSVData[i]["I3"] = 0;
+			graphCSVData[i]["I4"] = 0;
+			graphCSVData[i]["I5"] = 0;
+			graphCSVData[i]["compulsory"] = 0;
+			graphCSVData[i]["suggestion"] = 0;
+			graphCSVData[i]["no_action"] = 0;
+		});
+
+		console.log(graphCSVData);
+
+		for(var i in graphCSVData) {
+			console.log("++++++++++++++++TEST+++++++++++++++++++");
+			console.log(graphCSVData[i]);
+		}
+		// for(var line in graphCSVData) {
+		// 	console.log("graphCSVData:" + graphCSVData[line]);
+		// }
+
+		// graphCSVData = new Array(reviewer.length);
+		// for (i = 0; i < graphCSVData.length; i++) {
+		// 		graphCSVData[i] = new Array(18);
+		// 		graphCSVData[i][0] = reviewer[i];
+		// }
+		// console.log(graphCSVData);
+
+		// for (var i = 1; i < csvData.length; i++) {
+		// 	console.log("++++++++++++++++TEST+++++++++++++++++++");
+		//
+		// }
+
+
+		// fill in data for each editor
+		// graphCSVData.forEach(editorLine => {
+		// 	for (i = 0; i < editorLine.length; i++) {
+		// 		// 3rd column contains the part attribute
+		// 		// count number of article occurences
+		// 		// count numnebr of section occurences
+		// 		// ".*\paragraph$"
+		// 		// // count number of paragraph occurences
+		// 		// ".*\paragraph$"
+		// 		// console.log("editorLine[5]:" + editorLine[5]);
+		// 	}
+		// });
+
+		// console.log("length:" + csvData[1].length);
 		return csvData;
 }
