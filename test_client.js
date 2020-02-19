@@ -188,6 +188,12 @@ function preprocessVirtuosoResults(results) {
 		for(var i in graphCSVData) {
 			console.log("++++++++++++++++TEST+++++++++++++++++++");
 			console.log(graphCSVData[i]);
+      // for (const k of graphCSVData[i].keys()) {
+      for (const [k, v] of graphCSVData[i]) {
+        console.log(`key ${k}: value=${v}`);
+      }
+
+      console.log("(graphCSVData[i]).get(article):" + graphCSVData[i].get("article"));
 		}
 
 		// regular expression for finding a paragraph in the "part" field: ".*\paragraph$"
@@ -198,25 +204,21 @@ function preprocessVirtuosoResults(results) {
     var patternSection = /.*\section$/;
     var patternParagraph = /.*\paragraph$/;
 
-		for (i = 1; i < csvData.length; i++) {
-			// console.log("++++++++++++++++COUNTING+++++++++++++++++++");
-      // console.log(i + " ->" + csvData[i][0]);
-			// find reviewer in graphCSVData
-      var indexOfReviewer = reviewer.indexOf(csvData[i][0]);
-      if (indexOfReviewer > -1) { // if reviewer is found
+		// for (i = 1; i < csvData.length; i++) {
+		// 	// console.log("++++++++++++++++COUNTING+++++++++++++++++++");
+    //   // console.log(i + " ->" + csvData[i][0]);
+		// 	// find reviewer in graphCSVData
+    //   var indexOfReviewer = reviewer.indexOf(csvData[i][0]);
+      // if (indexOfReviewer > -1) { // if reviewer is found
         // console.log("indexOf:" + reviewer.indexOf(csvData[i][0]));
         // console.log("csvData[i]:" + csvData[i]);
   			// check whether the part is article, section or paragraph and
   			// increment with 1 the corresponding part in graphCSVData
-        if (patternArticle.test(csvData[i][2])){
-          console.log("found article index: " + indexOfReviewer);
-          // graphCSVData[indexOfReviewer]["article"]++;
-          console.log("graphCSVData[indexOfReviewer][article]:" + graphCSVData[1]);
-          graphCSVData[i].forEach((dimension) => {
-            graphCSVData[i][dimension] = 1;
-            console.log(dimension + ":" + graphCSVData[i][dimension]);
-            });
-        } //else {
+        // if (patternArticle.test(csvData[i][2])){
+          // console.log("found article index: " + indexOfReviewer);
+          graphCSVData[0].set(graphCSVData[0].get("article"), 1);
+          console.log("new value article:" + graphCSVData[0].get("article"));
+        // } //else {
        //    if (patternSection.test(csvData[i][2])){
        //      graphCSVData[indexOfReviewer]["section"]++;
        //    } else {
@@ -225,8 +227,8 @@ function preprocessVirtuosoResults(results) {
        //      }
        //    }
        //  }
-		   }
-    }
+		   // }
+    // }
 
 
 		// console.log("length:" + csvData[1].length);
