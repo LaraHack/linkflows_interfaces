@@ -115,14 +115,6 @@ function preprocessVirtuosoResults(results) {
 	  var csvData = [];
 		console.log("in CSV");
 		csvData = $.csv.toArrays(results);
-		// console.log("CSV data[0]:" + csvData[0]);
-		// console.log("CSV data[1]:" + csvData[1]);
-
-		// var csv = {reviewer: "xxx", article: "yyy", ....};
-		// can be accessed csv.reviewer
-		// can be looped with csv.forEach() iterator
-		// Object instead of Array to create associative arrays in the form {"reviewer": "orchid_id", "article": "xxx", ...}
-		// var graphCSVData = new Object();
 
 		var reviewer = [];
 
@@ -135,29 +127,6 @@ function preprocessVirtuosoResults(results) {
 		}
 
 		var graphCSVData = new Array(reviewer.length);
-
-		// create data structure for every reviewer
-		// reviewer.forEach( (editor, i) => {
-		// 	graphCSVData[i] = new Object();
-		// 	graphCSVData[i]["Reviewer " + (i+1)] = editor;
-		// 	graphCSVData[i]["article"] = 0;
-		// 	graphCSVData[i]["section"] = 0;
-		// 	graphCSVData[i]["paragraph"] = 0;
-		// 	graphCSVData[i]["syntax"] = 0;
-		// 	graphCSVData[i]["style"] = 0;
-		// 	graphCSVData[i]["content"] = 0;
-		// 	graphCSVData[i]["negative"] = 0;
-		// 	graphCSVData[i]["neutral"] = 0;
-		// 	graphCSVData[i]["positive"] = 0;
-		// 	graphCSVData[i]["I1"] = 0;
-		// 	graphCSVData[i]["I2"] = 0;
-		// 	graphCSVData[i]["I3"] = 0;
-		// 	graphCSVData[i]["I4"] = 0;
-		// 	graphCSVData[i]["I5"] = 0;
-		// 	graphCSVData[i]["compulsory"] = 0;
-		// 	graphCSVData[i]["suggestion"] = 0;
-		// 	graphCSVData[i]["no_action"] = 0;
-		// });
 
     reviewer.forEach( (editor, i) => {
       graphCSVData[i] = new Map([
@@ -182,68 +151,85 @@ function preprocessVirtuosoResults(results) {
         ]);
     });
 
-		// console.log(graphCSVData);
-    // console.log("LENGTH:" + graphCSVData.length);
-    //
-		// for(var i in graphCSVData) {
-		// 	console.log("++++++++++++++++TEST+++++++++++++++++++");
-		// 	console.log(graphCSVData[i]);
-    //   // for (const k of graphCSVData[i].keys()) {
-    //   for (const [k, v] of graphCSVData[i]) {
-    //     console.log(`key ${k}: value=${v}`);
-    //
-    //   }
-    // }
-  //   graphCSVData[0].forEach((value, key) => {
-  //   console.log("key:" + key + " value:" + value);
-  //   console.log("graphCSVData[0])get(key):" + graphCSVData[0].get(key) );
-  //   graphCSVData[0].set(key, graphCSVData[0].get(key)+1);
-  //   console.log("graphCSVData[0])get(key):" + graphCSVData[0].get(key) );
-  // });
-
-		// regular expression for finding a paragraph in the "part" field: ".*\paragraph$"
-		// for every result line in the sparql query, fill in the numbers for the graphs for each reviewer
-    // console.log("csvData.length:" + csvData.length);
-    // ordering in the current csvData: reviewer,reviewComment,part,aspect,posNeg,impact,actionNeeded
+    // article level
     var patternArticle = /.*\#article/;
     var patternSection = /.*\#section$/;
     var patternParagraph = /.*\#paragraph$/;
 
-    // var testString = "http://purl.org/np/RAnVHrB5TSxLeOc6XTVafmd9hvosbs4c-4Ck0XRh_CgGk#articleVersion1";
-    // console.log("PATTERN++++++++++++++++++++++++" + patternSection.test(testString));
+    // aspect
+    var patternSyntax = /.*\#SyntaxComment$/;
+    var patternStyle = /.*\#StyleComment$/;
+    var patternContent = /.*\#ContentComment$/;
 
+    // positivity/negativity
+    var patternNegative = /.*\#NegativeComment$/;
+    var patternNeutral = /.*\#NeutralComment$/;
+    var patternPositive = /.*\#PositiveComment$/;
 
+    // action needed
+    var patternCompulsory = /.*\#ActionNeededComment$/;
+    var patternSuggestion = /.*\#SuggestionComment$/;
+    var patternNoAction = /.*\#NoActionNeededComment$/;
+
+    // ordering in the current csvData: reviewer,reviewComment,part,aspect,posNeg,impact,actionNeeded
 		for (i = 1; i < csvData.length; i++) {
-			// console.log("++++++++++++++++COUNTING+++++++++++++++++++");
-      // console.log(i + " ->" + csvData[i][0]);
 			// find reviewer in graphCSVData
       var indexOfReviewer = reviewer.indexOf(csvData[i][0]);
-      if (indexOfReviewer > -1) { // if reviewer is found
-        console.log("indexOf:" + reviewer.indexOf(csvData[i][0]));
-        console.log("csvData[i][2]:" + csvData[i][2]);
-  			// check whether the part is article, section or paragraph and
-  			// increment with 1 the corresponding part in graphCSVData
+
+      // if reviewer is found, then calculate counts for every dimension
+      if (indexOfReviewer > -1) {
+  			// check whether the part is article, section or paragraph
         if (patternArticle.test(csvData[i][2])){
-          console.log("found article index: " + indexOfReviewer);
           graphCSVData[indexOfReviewer].set("article", graphCSVData[indexOfReviewer].get("article")+1);
-          console.log("new value article:" + graphCSVData[indexOfReviewer].get("article"));
         }
         if (patternSection.test(csvData[i][2])){
-          console.log("found section index: " + indexOfReviewer);
           graphCSVData[indexOfReviewer].set("section", graphCSVData[indexOfReviewer].get("section")+1);
-          console.log("new value section:" + graphCSVData[indexOfReviewer].get("section"));
         }
         if (patternParagraph.test(csvData[i][2])){
-          console.log("found paragraph index: " + indexOfReviewer);
           graphCSVData[indexOfReviewer].set("paragraph", graphCSVData[indexOfReviewer].get("paragraph")+1);
-          console.log("new value paragraph:" + graphCSVData[indexOfReviewer].get("paragraph"));
+        }
+
+        // check whether the aspect is syntax, style or content
+        if (patternSyntax.test(csvData[i][3])){
+          graphCSVData[indexOfReviewer].set("syntax", graphCSVData[indexOfReviewer].get("syntax")+1);
+        }
+        if (patternStyle.test(csvData[i][3])){
+          graphCSVData[indexOfReviewer].set("style", graphCSVData[indexOfReviewer].get("style")+1);
+        }
+        if (patternContent.test(csvData[i][3])){
+          graphCSVData[indexOfReviewer].set("content", graphCSVData[indexOfReviewer].get("content")+1);
+        }
+
+        // check whether the positivity/negativity dimension is negative, neutral or positive
+        if (patternNegative.test(csvData[i][4])){
+          graphCSVData[indexOfReviewer].set("negative", graphCSVData[indexOfReviewer].get("negative")+1);
+        }
+        if (patternNeutral.test(csvData[i][4])){
+          graphCSVData[indexOfReviewer].set("neutral", graphCSVData[indexOfReviewer].get("neutral")+1);
+        }
+        if (patternPositive.test(csvData[i][4])){
+          graphCSVData[indexOfReviewer].set("positive", graphCSVData[indexOfReviewer].get("positive")+1);
+        }
+
+        // check whether the impact is 1, 2, 3, 4 or 5
+        if (0 < csvData[i][5] < 6){
+          graphCSVData[indexOfReviewer].set("I"+csvData[i][5], graphCSVData[indexOfReviewer].get("I"+csvData[i][5])+1);
+        }
+
+        // check whether the action needed is compulsory, suggestion or no_action
+        if (patternCompulsory.test(csvData[i][6])){
+          graphCSVData[indexOfReviewer].set("compulsory", graphCSVData[indexOfReviewer].get("compulsory")+1);
+        }
+        if (patternSuggestion.test(csvData[i][6])){
+          graphCSVData[indexOfReviewer].set("suggestion", graphCSVData[indexOfReviewer].get("suggestion")+1);
+        }
+        if (patternNoAction.test(csvData[i][6])){
+          graphCSVData[indexOfReviewer].set("no_action", graphCSVData[indexOfReviewer].get("no_action")+1);
         }
       }
     }
 
     console.log(graphCSVData);
 
-
-		// console.log("length:" + csvData[1].length);
-		// return csvData;
+    return graphCSVData;
 }
