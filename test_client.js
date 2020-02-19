@@ -126,7 +126,6 @@ function preprocessVirtuosoResults(results) {
 
 		var reviewer = [];
 
-		// ordering in the current csvData: reviewer,reviewComment,part,aspect,posNeg,impact,actionNeeded
 		// for graph generation data needs to be in the form of
 		// Reviewer,article,section,paragraph,syntax,style,content,negative,neutral,positive,I1,I2,I3,I4,I5,compulsory,suggestion,no_action
 		for (var i = 1; i < csvData.length; i++) {
@@ -183,7 +182,8 @@ function preprocessVirtuosoResults(results) {
         ]);
     });
 
-		console.log(graphCSVData);
+		// console.log(graphCSVData);
+    console.log("LENGTH:" + graphCSVData.length);
 
 		for(var i in graphCSVData) {
 			console.log("++++++++++++++++TEST+++++++++++++++++++");
@@ -192,18 +192,41 @@ function preprocessVirtuosoResults(results) {
 
 		// regular expression for finding a paragraph in the "part" field: ".*\paragraph$"
 		// for every result line in the sparql query, fill in the numbers for the graphs for each reviewer
-		// for (var i = 1; i < csvData.length; i++) {
-		// 	console.log("++++++++++++++++COUNTING+++++++++++++++++++");
-		// 	// find reviewer in graphCSVData
-		// 	for(var i in graphCSVData) {
-		// 		if (graphCSVData[i]["Reviewer "+ (i-1)] == csvData[i][0] ) { 	// reviewer ORCID found
-		// 			console.log(csvData[i][0] + " FOUND");
-		// 			// // check whether the part is article, section or paragraph and
-		// 			// // increment with 1 the corresponding part in graphCSVData
-		// 			// 	csvData[i][2] // part
-		// 		}
-		// 	}
-		// }
+    console.log("csvData.length:" + csvData.length);
+    // ordering in the current csvData: reviewer,reviewComment,part,aspect,posNeg,impact,actionNeeded
+    var patternArticle = /.*\article/;
+    var patternSection = /.*\section$/;
+    var patternParagraph = /.*\paragraph$/;
+
+		for (i = 1; i < csvData.length; i++) {
+			// console.log("++++++++++++++++COUNTING+++++++++++++++++++");
+      // console.log(i + " ->" + csvData[i][0]);
+			// find reviewer in graphCSVData
+      var indexOfReviewer = reviewer.indexOf(csvData[i][0]);
+      if (indexOfReviewer > -1) { // if reviewer is found
+        // console.log("indexOf:" + reviewer.indexOf(csvData[i][0]));
+        // console.log("csvData[i]:" + csvData[i]);
+  			// check whether the part is article, section or paragraph and
+  			// increment with 1 the corresponding part in graphCSVData
+        if (patternArticle.test(csvData[i][2])){
+          console.log("found article index: " + indexOfReviewer);
+          // graphCSVData[indexOfReviewer]["article"]++;
+          console.log("graphCSVData[indexOfReviewer][article]:" + graphCSVData[1]);
+          graphCSVData[i].forEach((dimension) => {
+            graphCSVData[i][dimension] = 1;
+            console.log(dimension + ":" + graphCSVData[i][dimension]);
+            });
+        } //else {
+       //    if (patternSection.test(csvData[i][2])){
+       //      graphCSVData[indexOfReviewer]["section"]++;
+       //    } else {
+       //      if (patternParagraph.test(csvData[i][2])){
+       //        graphCSVData[indexOfReviewer]["paragraph"]++;
+       //      }
+       //    }
+       //  }
+		   }
+    }
 
 
 		// console.log("length:" + csvData[1].length);
