@@ -191,10 +191,15 @@ function preprocessVirtuosoResults(results) {
       // for (const k of graphCSVData[i].keys()) {
       for (const [k, v] of graphCSVData[i]) {
         console.log(`key ${k}: value=${v}`);
-      }
 
-      console.log("(graphCSVData[i]).get(article):" + graphCSVData[i].get("article"));
-		}
+      }
+    }
+    graphCSVData[0].forEach((value, key) => {
+    console.log("key:" + key + " value:" + value);
+    console.log("graphCSVData[0])get(key):" + graphCSVData[0].get(key) );
+    graphCSVData[0].set(key, graphCSVData[0].get(key)+1);
+    console.log("graphCSVData[0])get(key):" + graphCSVData[0].get(key) );
+  });
 
 		// regular expression for finding a paragraph in the "part" field: ".*\paragraph$"
 		// for every result line in the sparql query, fill in the numbers for the graphs for each reviewer
@@ -216,8 +221,8 @@ function preprocessVirtuosoResults(results) {
   			// increment with 1 the corresponding part in graphCSVData
         // if (patternArticle.test(csvData[i][2])){
           // console.log("found article index: " + indexOfReviewer);
-          graphCSVData[0].set(graphCSVData[0].get("article"), 1);
-          console.log("new value article:" + graphCSVData[0].get("article"));
+          // graphCSVData[0].set(graphCSVData[0].get("article"), 1);
+          // console.log("new value article:" + graphCSVData[0].get("article"));
         // } //else {
        //    if (patternSection.test(csvData[i][2])){
        //      graphCSVData[indexOfReviewer]["section"]++;
