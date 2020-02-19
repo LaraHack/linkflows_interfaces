@@ -138,27 +138,50 @@ function preprocessVirtuosoResults(results) {
 		var graphCSVData = new Array(reviewer.length);
 
 		// create data structure for every reviewer
-		reviewer.forEach( (editor, i) => {
-			graphCSVData[i] = new Object();
-			graphCSVData[i]["Reviewer " + (i+1)] = editor;
-			graphCSVData[i]["article"] = 0;
-			graphCSVData[i]["section"] = 0;
-			graphCSVData[i]["paragraph"] = 0;
-			graphCSVData[i]["syntax"] = 0;
-			graphCSVData[i]["style"] = 0;
-			graphCSVData[i]["content"] = 0;
-			graphCSVData[i]["negative"] = 0;
-			graphCSVData[i]["neutral"] = 0;
-			graphCSVData[i]["positive"] = 0;
-			graphCSVData[i]["I1"] = 0;
-			graphCSVData[i]["I2"] = 0;
-			graphCSVData[i]["I3"] = 0;
-			graphCSVData[i]["I4"] = 0;
-			graphCSVData[i]["I5"] = 0;
-			graphCSVData[i]["compulsory"] = 0;
-			graphCSVData[i]["suggestion"] = 0;
-			graphCSVData[i]["no_action"] = 0;
-		});
+		// reviewer.forEach( (editor, i) => {
+		// 	graphCSVData[i] = new Object();
+		// 	graphCSVData[i]["Reviewer " + (i+1)] = editor;
+		// 	graphCSVData[i]["article"] = 0;
+		// 	graphCSVData[i]["section"] = 0;
+		// 	graphCSVData[i]["paragraph"] = 0;
+		// 	graphCSVData[i]["syntax"] = 0;
+		// 	graphCSVData[i]["style"] = 0;
+		// 	graphCSVData[i]["content"] = 0;
+		// 	graphCSVData[i]["negative"] = 0;
+		// 	graphCSVData[i]["neutral"] = 0;
+		// 	graphCSVData[i]["positive"] = 0;
+		// 	graphCSVData[i]["I1"] = 0;
+		// 	graphCSVData[i]["I2"] = 0;
+		// 	graphCSVData[i]["I3"] = 0;
+		// 	graphCSVData[i]["I4"] = 0;
+		// 	graphCSVData[i]["I5"] = 0;
+		// 	graphCSVData[i]["compulsory"] = 0;
+		// 	graphCSVData[i]["suggestion"] = 0;
+		// 	graphCSVData[i]["no_action"] = 0;
+		// });
+
+    reviewer.forEach( (editor, i) => {
+      graphCSVData[i] = new Map([
+        ["Reviewer " + (i+1), editor],
+        ["article", 0],
+        ["section", 0],
+        ["paragraph", 0],
+        ["syntax", 0],
+        ["style", 0],
+        ["content", 0],
+        ["negative", 0],
+        ["neutral", 0],
+        ["positive", 0],
+        ["I1", 0],
+        ["I2", 0],
+        ["I3", 0],
+        ["I4", 0],
+        ["I5", 0],
+        ["compulsory", 0],
+        ["suggestion", 0],
+        ["no_action", 0]
+        ]);
+    });
 
 		console.log(graphCSVData);
 
