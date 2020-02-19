@@ -183,59 +183,67 @@ function preprocessVirtuosoResults(results) {
     });
 
 		// console.log(graphCSVData);
-    console.log("LENGTH:" + graphCSVData.length);
-
-		for(var i in graphCSVData) {
-			console.log("++++++++++++++++TEST+++++++++++++++++++");
-			console.log(graphCSVData[i]);
-      // for (const k of graphCSVData[i].keys()) {
-      for (const [k, v] of graphCSVData[i]) {
-        console.log(`key ${k}: value=${v}`);
-
-      }
-    }
-    graphCSVData[0].forEach((value, key) => {
-    console.log("key:" + key + " value:" + value);
-    console.log("graphCSVData[0])get(key):" + graphCSVData[0].get(key) );
-    graphCSVData[0].set(key, graphCSVData[0].get(key)+1);
-    console.log("graphCSVData[0])get(key):" + graphCSVData[0].get(key) );
-  });
+    // console.log("LENGTH:" + graphCSVData.length);
+    //
+		// for(var i in graphCSVData) {
+		// 	console.log("++++++++++++++++TEST+++++++++++++++++++");
+		// 	console.log(graphCSVData[i]);
+    //   // for (const k of graphCSVData[i].keys()) {
+    //   for (const [k, v] of graphCSVData[i]) {
+    //     console.log(`key ${k}: value=${v}`);
+    //
+    //   }
+    // }
+  //   graphCSVData[0].forEach((value, key) => {
+  //   console.log("key:" + key + " value:" + value);
+  //   console.log("graphCSVData[0])get(key):" + graphCSVData[0].get(key) );
+  //   graphCSVData[0].set(key, graphCSVData[0].get(key)+1);
+  //   console.log("graphCSVData[0])get(key):" + graphCSVData[0].get(key) );
+  // });
 
 		// regular expression for finding a paragraph in the "part" field: ".*\paragraph$"
 		// for every result line in the sparql query, fill in the numbers for the graphs for each reviewer
-    console.log("csvData.length:" + csvData.length);
+    // console.log("csvData.length:" + csvData.length);
     // ordering in the current csvData: reviewer,reviewComment,part,aspect,posNeg,impact,actionNeeded
-    var patternArticle = /.*\article/;
-    var patternSection = /.*\section$/;
-    var patternParagraph = /.*\paragraph$/;
+    var patternArticle = /.*\#article/;
+    var patternSection = /.*\#section$/;
+    var patternParagraph = /.*\#paragraph$/;
 
-		// for (i = 1; i < csvData.length; i++) {
-		// 	// console.log("++++++++++++++++COUNTING+++++++++++++++++++");
-    //   // console.log(i + " ->" + csvData[i][0]);
-		// 	// find reviewer in graphCSVData
-    //   var indexOfReviewer = reviewer.indexOf(csvData[i][0]);
-      // if (indexOfReviewer > -1) { // if reviewer is found
-        // console.log("indexOf:" + reviewer.indexOf(csvData[i][0]));
-        // console.log("csvData[i]:" + csvData[i]);
+    // var testString = "http://purl.org/np/RAnVHrB5TSxLeOc6XTVafmd9hvosbs4c-4Ck0XRh_CgGk#articleVersion1";
+    // console.log("PATTERN++++++++++++++++++++++++" + patternSection.test(testString));
+
+
+		for (i = 1; i < csvData.length; i++) {
+			// console.log("++++++++++++++++COUNTING+++++++++++++++++++");
+      // console.log(i + " ->" + csvData[i][0]);
+			// find reviewer in graphCSVData
+      var indexOfReviewer = reviewer.indexOf(csvData[i][0]);
+      if (indexOfReviewer > -1) { // if reviewer is found
+        console.log("indexOf:" + reviewer.indexOf(csvData[i][0]));
+        console.log("csvData[i][2]:" + csvData[i][2]);
   			// check whether the part is article, section or paragraph and
   			// increment with 1 the corresponding part in graphCSVData
-        // if (patternArticle.test(csvData[i][2])){
-          // console.log("found article index: " + indexOfReviewer);
-          // graphCSVData[0].set(graphCSVData[0].get("article"), 1);
-          // console.log("new value article:" + graphCSVData[0].get("article"));
-        // } //else {
-       //    if (patternSection.test(csvData[i][2])){
-       //      graphCSVData[indexOfReviewer]["section"]++;
-       //    } else {
-       //      if (patternParagraph.test(csvData[i][2])){
-       //        graphCSVData[indexOfReviewer]["paragraph"]++;
-       //      }
-       //    }
-       //  }
-		   // }
-    // }
+        if (patternArticle.test(csvData[i][2])){
+          console.log("found article index: " + indexOfReviewer);
+          graphCSVData[indexOfReviewer].set("article", graphCSVData[indexOfReviewer].get("article")+1);
+          console.log("new value article:" + graphCSVData[indexOfReviewer].get("article"));
+        }
+        if (patternSection.test(csvData[i][2])){
+          console.log("found section index: " + indexOfReviewer);
+          graphCSVData[indexOfReviewer].set("section", graphCSVData[indexOfReviewer].get("section")+1);
+          console.log("new value section:" + graphCSVData[indexOfReviewer].get("section"));
+        }
+        if (patternParagraph.test(csvData[i][2])){
+          console.log("found paragraph index: " + indexOfReviewer);
+          graphCSVData[indexOfReviewer].set("paragraph", graphCSVData[indexOfReviewer].get("paragraph")+1);
+          console.log("new value paragraph:" + graphCSVData[indexOfReviewer].get("paragraph"));
+        }
+      }
+    }
+
+    console.log(graphCSVData);
 
 
 		// console.log("length:" + csvData[1].length);
-		return csvData;
+		// return csvData;
 }
