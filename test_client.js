@@ -93,7 +93,7 @@ function getDataFromVirtuoso () {
 	    console.log("status:" + status);
 
 			var results = preprocessVirtuosoResults(dataVirtuoso);
-			$("#testData").text(results);
+			$("#testData").text(dataVirtuoso);
 			$("#testData").show();
 	  })
 	  // jqXHR is a JS XMLHTTPRequest object
@@ -111,6 +111,8 @@ function getDataFromVirtuoso () {
 function preprocessVirtuosoResults(results) {
  	// first read CSV file with results
 	  var csvData = [];
+		console.log("in CSV");
 		csvData = $.csv.toArrays(results);
+		console.log("CSV data:" + csvData);
 		return csvData;
 }
