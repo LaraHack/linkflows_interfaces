@@ -94,20 +94,16 @@ function getDimensionsChecked() {
     });
 }
 
-getDimensionsChecked();
 console.log(checkedDimensions);
 
-// get the data to first load the initial graph with all checkboxes clicked
+getDimensionsChecked();
 $.get(serverConnection, checkedDimensions)
-.done((resultsVirtuoso, status) => {
-  console.log("data:" + resultsVirtuoso);
-  console.log("status:" + status);
+.done((dataVirtuoso, status) => {
+    console.log("data:" + dataVirtuoso);
+    console.log("status:" + status);
 
-  var resultsCounts = preprocessVirtuosoResults(resultsVirtuoso);
-  console.log("========================");
-  console.log(resultsCounts);
-  console.log("========================");
-  drawGraph(resultsCounts);
+  var results = preprocessVirtuosoResults(dataVirtuoso);
+  drawGraph(results);
 })
 .fail(function (jqXHR, textStatus, error) {
       console.log("Get error: " + error);
@@ -135,7 +131,7 @@ function preprocessVirtuosoResults(results) {
 
     reviewer.forEach( (editor, i) => {
       // var countsPerReviewer = { ["Reviewer " + (i+1)] : editor,
-      var countsPerReviewer = { "Reviewer": editor,
+      var countsPerReviewer = { "Reviewer": ["Reviewer " + (i+1)],
                     "article" : 0, "section": 0, "paragraph": 0,
                     "syntax": 0, "style": 0, "content": 0,
                     "negative": 0, "neutral": 0, "positive": 0,
@@ -223,12 +219,7 @@ function preprocessVirtuosoResults(results) {
       }
     }
 
-    console.log("==================");
-    console.log(reviewersCounts);
-    console.log("==================");
-    console.log(JSON.stringify(reviewersCounts));
-
-    return reviewersCounts;
+    return JSON.stringify(reviewersCounts);
 }
 
 // function that draws the graph
@@ -339,7 +330,7 @@ function drawGraph(dataEditors) {
    // x.domain([0, d3.max(data, function(d) {
    //   return d.total;
    // })]);
-   x.domain([0, 40]);
+   x.domain([0, 45]);
 
    // draw x axis
    inner.append("g")
