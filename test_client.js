@@ -113,7 +113,6 @@ function getDataFromVirtuoso () {
 function preprocessVirtuosoResults(results) {
  	// first read CSV file with results
 	  var csvData = [];
-		console.log("in CSV");
 		csvData = $.csv.toArrays(results);
 
 		var reviewer = [];
@@ -126,30 +125,46 @@ function preprocessVirtuosoResults(results) {
 			}
 		}
 
-		var graphCSVData = new Array(reviewer.length);
+		//var reviewersCounts = new Array(reviewer.length); // this declaration gives errors when setting values for keys
+
+    var reviewersCounts = [];
 
     reviewer.forEach( (editor, i) => {
-      graphCSVData[i] = new Map([
-        ["Reviewer " + (i+1), editor],
-        ["article", 0],
-        ["section", 0],
-        ["paragraph", 0],
-        ["syntax", 0],
-        ["style", 0],
-        ["content", 0],
-        ["negative", 0],
-        ["neutral", 0],
-        ["positive", 0],
-        ["I1", 0],
-        ["I2", 0],
-        ["I3", 0],
-        ["I4", 0],
-        ["I5", 0],
-        ["compulsory", 0],
-        ["suggestion", 0],
-        ["no_action", 0]
-        ]);
+      var countsPerReviewer = { ["Reviewer " + (i+1)] : editor,
+                    "article" : 0, "section": 0, "paragraph": 0,
+                    "syntax": 0, "style": 0, "content": 0,
+                    "negative": 0, "neutral": 0, "positive": 0,
+                    "I1": 0, "I2": 0, "I3": 0, "I4": 0, "I5": 0,
+                    "compulsory": 0, "suggestion": 0, "no_action": 0
+                    };
+      reviewersCounts.push(countsPerReviewer);
     });
+
+    // reviewersCounts[1].section = 6;
+    // reviewersCounts[0]["Reviewer 1"] = 5;
+
+    // reviewer.forEach( (editor, i) => {
+    //   graphCSVData[i] = new Map([
+    //     ["Reviewer " + (i+1), editor],
+    //     ["article", 0],
+    //     ["section", 0],
+    //     ["paragraph", 0],
+    //     ["syntax", 0],
+    //     ["style", 0],
+    //     ["content", 0],
+    //     ["negative", 0],
+    //     ["neutral", 0],
+    //     ["positive", 0],
+    //     ["I1", 0],
+    //     ["I2", 0],
+    //     ["I3", 0],
+    //     ["I4", 0],
+    //     ["I5", 0],
+    //     ["compulsory", 0],
+    //     ["suggestion", 0],
+    //     ["no_action", 0]
+    //     ]);
+    // });
 
     // article level
     var patternArticle = /.*\#article/;
@@ -179,57 +194,62 @@ function preprocessVirtuosoResults(results) {
       // if reviewer is found, then calculate counts for every dimension
       if (indexOfReviewer > -1) {
   			// check whether the part is article, section or paragraph
-        if (patternArticle.test(csvData[i][2])){
-          graphCSVData[indexOfReviewer].set("article", graphCSVData[indexOfReviewer].get("article")+1);
+        if (patternArticle.test(csvData[i][2])) {
+          reviewersCounts[indexOfReviewer].article =  reviewersCounts[indexOfReviewer].article + 1;
         }
-        if (patternSection.test(csvData[i][2])){
-          graphCSVData[indexOfReviewer].set("section", graphCSVData[indexOfReviewer].get("section")+1);
+        if (patternSection.test(csvData[i][2])) {
+          reviewersCounts[indexOfReviewer].section = reviewersCounts[indexOfReviewer].section + 1;
         }
-        if (patternParagraph.test(csvData[i][2])){
-          graphCSVData[indexOfReviewer].set("paragraph", graphCSVData[indexOfReviewer].get("paragraph")+1);
+        if (patternParagraph.test(csvData[i][2])) {
+          reviewersCounts[indexOfReviewer].paragraph = reviewersCounts[indexOfReviewer].paragraph + 1;
         }
 
         // check whether the aspect is syntax, style or content
         if (patternSyntax.test(csvData[i][3])){
-          graphCSVData[indexOfReviewer].set("syntax", graphCSVData[indexOfReviewer].get("syntax")+1);
+          reviewersCounts[indexOfReviewer].syntax = reviewersCounts[indexOfReviewer].syntax + 1;
         }
-        if (patternStyle.test(csvData[i][3])){
-          graphCSVData[indexOfReviewer].set("style", graphCSVData[indexOfReviewer].get("style")+1);
+        if (patternStyle.test(csvData[i][3])) {
+          reviewersCounts[indexOfReviewer].style = reviewersCounts[indexOfReviewer].style + 1;
         }
-        if (patternContent.test(csvData[i][3])){
-          graphCSVData[indexOfReviewer].set("content", graphCSVData[indexOfReviewer].get("content")+1);
+        if (patternContent.test(csvData[i][3])) {
+          reviewersCounts[indexOfReviewer].content = reviewersCounts[indexOfReviewer].content + 1;
         }
 
         // check whether the positivity/negativity dimension is negative, neutral or positive
-        if (patternNegative.test(csvData[i][4])){
-          graphCSVData[indexOfReviewer].set("negative", graphCSVData[indexOfReviewer].get("negative")+1);
+        if (patternNegative.test(csvData[i][4])) {
+          reviewersCounts[indexOfReviewer].negative = reviewersCounts[indexOfReviewer].negative + 1;
         }
-        if (patternNeutral.test(csvData[i][4])){
-          graphCSVData[indexOfReviewer].set("neutral", graphCSVData[indexOfReviewer].get("neutral")+1);
+        if (patternNeutral.test(csvData[i][4])) {
+          reviewersCounts[indexOfReviewer].neutral = reviewersCounts[indexOfReviewer].neutral + 1;
         }
-        if (patternPositive.test(csvData[i][4])){
-          graphCSVData[indexOfReviewer].set("positive", graphCSVData[indexOfReviewer].get("positive")+1);
+        if (patternPositive.test(csvData[i][4])) {
+          reviewersCounts[indexOfReviewer].positive = reviewersCounts[indexOfReviewer].positive + 1;
         }
 
         // check whether the impact is 1, 2, 3, 4 or 5
-        if (0 < csvData[i][5] < 6){
-          graphCSVData[indexOfReviewer].set("I"+csvData[i][5], graphCSVData[indexOfReviewer].get("I"+csvData[i][5])+1);
+        if (0 < csvData[i][5] < 6) {
+          reviewersCounts[indexOfReviewer]["I" + csvData[i][5]] = reviewersCounts[indexOfReviewer]["I" + csvData[i][5]] + 1;
         }
 
         // check whether the action needed is compulsory, suggestion or no_action
-        if (patternCompulsory.test(csvData[i][6])){
-          graphCSVData[indexOfReviewer].set("compulsory", graphCSVData[indexOfReviewer].get("compulsory")+1);
+        if (patternCompulsory.test(csvData[i][6])) {
+          reviewersCounts[indexOfReviewer].compulsory = reviewersCounts[indexOfReviewer].compulsory + 1;
         }
-        if (patternSuggestion.test(csvData[i][6])){
-          graphCSVData[indexOfReviewer].set("suggestion", graphCSVData[indexOfReviewer].get("suggestion")+1);
+        if (patternSuggestion.test(csvData[i][6])) {
+          reviewersCounts[indexOfReviewer].suggestion = reviewersCounts[indexOfReviewer].suggestion + 1;
         }
-        if (patternNoAction.test(csvData[i][6])){
-          graphCSVData[indexOfReviewer].set("no_action", graphCSVData[indexOfReviewer].get("no_action")+1);
+        if (patternNoAction.test(csvData[i][6])) {
+          reviewersCounts[indexOfReviewer].no_action = reviewersCounts[indexOfReviewer].no_action + 1;
         }
       }
     }
 
-    console.log(graphCSVData);
+    console.log(reviewersCounts);
 
-    return graphCSVData;
+    console.log("==================");
+    console.log(reviewersCounts);
+    console.log("==================");
+    console.log(JSON.stringify(reviewersCounts));
+
+    return reviewersCounts;
 }
