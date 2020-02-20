@@ -1,6 +1,8 @@
 var serverConnection1 = "http://localhost:8081/editors/csv";
 var serverConnection2 = "http://localhost:8081/editors";
 
+var serverConnection = "http://localhost:8081/sparql";
+
 var checkedDimensions = new Map([
   ["article", true],
   ["section", true],
@@ -83,14 +85,151 @@ for (const [key, value] of Object.entries(colors)) {
 //     }
 // }
 
+function getDimensionsChecked() {
+  checkedDimensions.forEach((checked, dimension) => {
+    var dimensionCamelCase = String(dimension).charAt(0).toUpperCase() + String(dimension).substr(1).toLowerCase();
+    var checkboxDimension = "checkbox".concat(dimensionCamelCase);
+    checkedDimensions[dimension] = $("#".concat(checkboxDimension)).is(":checked");
+    console.log(dimension + ":" + checkedDimensions[dimension]);
+    });
+}
+
+getDimensionsChecked();
+console.log(checkedDimensions);
+
 // get the data to first load the initial graph with all checkboxes clicked
-$.get(serverConnection1, checkedDimensions)
-.done((dataEditors, status) => {
-  drawGraph(dataEditors);
+$.get(serverConnection, checkedDimensions)
+.done((resultsVirtuoso, status) => {
+  console.log("data:" + resultsVirtuoso);
+  console.log("status:" + status);
+
+  var resultsCounts = preprocessVirtuosoResults(resultsVirtuoso);
+  console.log("========================");
+  console.log(resultsCounts);
+  console.log("========================");
+  drawGraph(resultsCounts);
 })
 .fail(function (jqXHR, textStatus, error) {
       console.log("Get error: " + error);
 });
+
+// Virtuoso results should be a CSV in the form of "reviewer","reviewComment","part","aspect","posNeg","impact","actionNeeded"
+function preprocessVirtuosoResults(results) {
+ 	// first read CSV file with results
+	  var csvData = [];
+		csvData = $.csv.toArrays(results);
+
+		var reviewer = [];
+
+		// for graph generation data needs to be in the form of
+		// Reviewer,article,section,paragraph,syntax,style,content,negative,neutral,positive,I1,I2,I3,I4,I5,compulsory,suggestion,no_action
+		for (var i = 1; i < csvData.length; i++) {
+			if (!reviewer.includes(csvData[i][0])) {
+				reviewer.push(csvData[i][0]);
+			}
+		}
+
+		//var reviewersCounts = new Array(reviewer.length); // this declaration gives errors when setting values for keys
+
+    var reviewersCounts = [];
+
+    reviewer.forEach( (editor, i) => {
+      // var countsPerReviewer = { ["Reviewer " + (i+1)] : editor,
+      var countsPerReviewer = { "Reviewer": editor,
+                    "article" : 0, "section": 0, "paragraph": 0,
+                    "syntax": 0, "style": 0, "content": 0,
+                    "negative": 0, "neutral": 0, "positive": 0,
+                    "I1": 0, "I2": 0, "I3": 0, "I4": 0, "I5": 0,
+                    "compulsory": 0, "suggestion": 0, "no_action": 0
+                    };
+      reviewersCounts.push(countsPerReviewer);
+    });
+
+    // article level
+    var patternArticle = /.*\#article/;
+    var patternSection = /.*\#section$/;
+    var patternParagraph = /.*\#paragraph$/;
+
+    // aspect
+    var patternSyntax = /.*\#SyntaxComment$/;
+    var patternStyle = /.*\#StyleComment$/;
+    var patternContent = /.*\#ContentComment$/;
+
+    // positivity/negativity
+    var patternNegative = /.*\#NegativeComment$/;
+    var patternNeutral = /.*\#NeutralComment$/;
+    var patternPositive = /.*\#PositiveComment$/;
+
+    // action needed
+    var patternCompulsory = /.*\#ActionNeededComment$/;
+    var patternSuggestion = /.*\#SuggestionComment$/;
+    var patternNoAction = /.*\#NoActionNeededComment$/;
+
+    // ordering in the current csvData: reviewer,reviewComment,part,aspect,posNeg,impact,actionNeeded
+		for (i = 1; i < csvData.length; i++) {
+			// find reviewer in graphCSVData
+      var indexOfReviewer = reviewer.indexOf(csvData[i][0]);
+
+      // if reviewer is found, then calculate counts for every dimension
+      if (indexOfReviewer > -1) {
+  			// check whether the part is article, section or paragraph
+        if (patternArticle.test(csvData[i][2])) {
+          reviewersCounts[indexOfReviewer].article =  reviewersCounts[indexOfReviewer].article + 1;
+        }
+        if (patternSection.test(csvData[i][2])) {
+          reviewersCounts[indexOfReviewer].section = reviewersCounts[indexOfReviewer].section + 1;
+        }
+        if (patternParagraph.test(csvData[i][2])) {
+          reviewersCounts[indexOfReviewer].paragraph = reviewersCounts[indexOfReviewer].paragraph + 1;
+        }
+
+        // check whether the aspect is syntax, style or content
+        if (patternSyntax.test(csvData[i][3])){
+          reviewersCounts[indexOfReviewer].syntax = reviewersCounts[indexOfReviewer].syntax + 1;
+        }
+        if (patternStyle.test(csvData[i][3])) {
+          reviewersCounts[indexOfReviewer].style = reviewersCounts[indexOfReviewer].style + 1;
+        }
+        if (patternContent.test(csvData[i][3])) {
+          reviewersCounts[indexOfReviewer].content = reviewersCounts[indexOfReviewer].content + 1;
+        }
+
+        // check whether the positivity/negativity dimension is negative, neutral or positive
+        if (patternNegative.test(csvData[i][4])) {
+          reviewersCounts[indexOfReviewer].negative = reviewersCounts[indexOfReviewer].negative + 1;
+        }
+        if (patternNeutral.test(csvData[i][4])) {
+          reviewersCounts[indexOfReviewer].neutral = reviewersCounts[indexOfReviewer].neutral + 1;
+        }
+        if (patternPositive.test(csvData[i][4])) {
+          reviewersCounts[indexOfReviewer].positive = reviewersCounts[indexOfReviewer].positive + 1;
+        }
+
+        // check whether the impact is 1, 2, 3, 4 or 5
+        if (0 < csvData[i][5] < 6) {
+          reviewersCounts[indexOfReviewer]["I" + csvData[i][5]] = reviewersCounts[indexOfReviewer]["I" + csvData[i][5]] + 1;
+        }
+
+        // check whether the action needed is compulsory, suggestion or no_action
+        if (patternCompulsory.test(csvData[i][6])) {
+          reviewersCounts[indexOfReviewer].compulsory = reviewersCounts[indexOfReviewer].compulsory + 1;
+        }
+        if (patternSuggestion.test(csvData[i][6])) {
+          reviewersCounts[indexOfReviewer].suggestion = reviewersCounts[indexOfReviewer].suggestion + 1;
+        }
+        if (patternNoAction.test(csvData[i][6])) {
+          reviewersCounts[indexOfReviewer].no_action = reviewersCounts[indexOfReviewer].no_action + 1;
+        }
+      }
+    }
+
+    console.log("==================");
+    console.log(reviewersCounts);
+    console.log("==================");
+    console.log(JSON.stringify(reviewersCounts));
+
+    return reviewersCounts;
+}
 
 // function that draws the graph
 // dataEditors is the data in JSON format received after a GET request to the server
@@ -300,19 +439,10 @@ function drawGraph(dataEditors) {
   // })
 }
 
-function getDimensionsChecked() {
-  checkedDimensions.forEach((checked, dimension) => {
-    var dimensionCamelCase = String(dimension).charAt(0).toUpperCase() + String(dimension).substr(1).toLowerCase();
-    var checkboxDimension = "checkbox".concat(dimensionCamelCase);
-    checkedDimensions[dimension] = $("#".concat(checkboxDimension)).is(":checked");
-    console.log(dimension + ":" + checkedDimensions[dimension]);
-    });
-}
-
 // sends a request to the server to draw the graph
 function getReviewComments() {
   getDimensionsChecked();
-  $.get(serverConnection1, checkedDimensions)
+  $.get(serverConnection, checkedDimensions)
   // $.put(serverConnection, checkedDimensions)
   // $.ajax({
   //   url: serverConnection2,
@@ -321,12 +451,12 @@ function getReviewComments() {
   //   success: function() {}
   // })
   // $.get(serverConnection)
-  .done((dataEditors, status) => {
-  // console.log("data:" + dataEditors);
-  // console.log("status:" + status);
+  .done((dataVirtuoso, status) => {
+	    console.log("data:" + dataVirtuoso);
+	    console.log("status:" + status);
 
-  // d3.csv("Q4.csv", function(error, data) {
-    drawGraph(dataEditors);
+		var results = preprocessVirtuosoResults(dataVirtuoso);
+    drawGraph(results);
   })
   // jqXHR is a JS XMLHTTPRequest object
   // textStatus is the error and

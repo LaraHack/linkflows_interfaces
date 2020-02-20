@@ -110,10 +110,10 @@ function getDataFromVirtuoso () {
 }
 
 // Virtuoso results should be a CSV in the form of "reviewer","reviewComment","part","aspect","posNeg","impact","actionNeeded"
-function preprocessVirtuosoResults(results) {
+function preprocessVirtuosoResults(resultsVirtuoso) {
  	// first read CSV file with results
 	  var csvData = [];
-		csvData = $.csv.toArrays(results);
+		csvData = $.csv.toArrays(resultsVirtuoso);
 
 		var reviewer = [];
 
@@ -130,7 +130,8 @@ function preprocessVirtuosoResults(results) {
     var reviewersCounts = [];
 
     reviewer.forEach( (editor, i) => {
-      var countsPerReviewer = { ["Reviewer " + (i+1)] : editor,
+      // var countsPerReviewer = { ["Reviewer " + (i+1)] : editor,
+      var countsPerReviewer = { "Reviewer": editor,
                     "article" : 0, "section": 0, "paragraph": 0,
                     "syntax": 0, "style": 0, "content": 0,
                     "negative": 0, "neutral": 0, "positive": 0,
@@ -139,32 +140,6 @@ function preprocessVirtuosoResults(results) {
                     };
       reviewersCounts.push(countsPerReviewer);
     });
-
-    // reviewersCounts[1].section = 6;
-    // reviewersCounts[0]["Reviewer 1"] = 5;
-
-    // reviewer.forEach( (editor, i) => {
-    //   graphCSVData[i] = new Map([
-    //     ["Reviewer " + (i+1), editor],
-    //     ["article", 0],
-    //     ["section", 0],
-    //     ["paragraph", 0],
-    //     ["syntax", 0],
-    //     ["style", 0],
-    //     ["content", 0],
-    //     ["negative", 0],
-    //     ["neutral", 0],
-    //     ["positive", 0],
-    //     ["I1", 0],
-    //     ["I2", 0],
-    //     ["I3", 0],
-    //     ["I4", 0],
-    //     ["I5", 0],
-    //     ["compulsory", 0],
-    //     ["suggestion", 0],
-    //     ["no_action", 0]
-    //     ]);
-    // });
 
     // article level
     var patternArticle = /.*\#article/;
@@ -243,8 +218,6 @@ function preprocessVirtuosoResults(results) {
         }
       }
     }
-
-    console.log(reviewersCounts);
 
     console.log("==================");
     console.log(reviewersCounts);
