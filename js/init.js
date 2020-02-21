@@ -99,11 +99,12 @@ console.log(checkedDimensions);
 getDimensionsChecked();
 $.get(serverConnection, checkedDimensions)
 .done((dataVirtuoso, status) => {
-    console.log("data:" + dataVirtuoso);
-    console.log("status:" + status);
+  console.log("data:" + dataVirtuoso);
+  console.log("status:" + status);
 
   var results = preprocessVirtuosoResults(dataVirtuoso);
   drawGraph(results);
+  $("#reviewCommentsContent").text(dataVirtuoso);
 })
 .fail(function (jqXHR, textStatus, error) {
       console.log("Get error: " + error);
@@ -229,8 +230,9 @@ function drawGraph(dataEditors) {
   d3.select("#graphArea").selectAll("svg").remove();
 
   // graph size
-  var margin = {top: 10, right: 100, bottom: 30, left: 100},
-      width = 960 - margin.left - margin.right,
+  var margin = {top: 10, right: 100, bottom: 30, left: 80},
+      // width = 960 - margin.left - margin.right,
+      width = 810 - margin.left - margin.right,
       height = 500 - margin.top - margin.bottom;
 
   // settings for the x axis
@@ -434,14 +436,6 @@ function drawGraph(dataEditors) {
 function getReviewComments() {
   getDimensionsChecked();
   $.get(serverConnection, checkedDimensions)
-  // $.put(serverConnection, checkedDimensions)
-  // $.ajax({
-  //   url: serverConnection2,
-  //   method: 'PUT',
-  //   data: checkedDimensions, // data as js object
-  //   success: function() {}
-  // })
-  // $.get(serverConnection)
   .done((dataVirtuoso, status) => {
 	    console.log("data:" + dataVirtuoso);
 	    console.log("status:" + status);
