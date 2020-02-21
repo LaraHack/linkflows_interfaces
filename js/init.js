@@ -32,6 +32,9 @@ checkAllCheckboxes();
 
 $("#btnShowReviewComments").click(getReviewComments);
 
+// $("#tdReviewCommentsContent").text("hello world");
+// $("#tdReviewCommentsContent").append("<div class='border border-dark rounded'>the new guy</div>");
+
 // id should be something in the form of '#myinput'
 function checkboxChecked(id) {
   if ($(id).is(':checkbox') == true) {
@@ -112,9 +115,11 @@ $.get(serverConnection, checkedDimensions)
 
   for (i = 1; i < csvData.length; i++) {
     contentReviews.push(csvData[i][7]);
-    stringContentReviews = stringContentReviews.concat(`${csvData[i][7]}` + "\n");
+    // stringContentReviews = stringContentReviews.concat(`${csvData[i][7]}`);
+    // $("#tdReviewCommentsContent").text("hello world");
+    $("#divReviewCommentsContent").append("<div class='border border-dark rounded'>" + csvData[i][7] + "</div> <br/>");
   }
-  $("#reviewCommentsContent").text(stringContentReviews);
+  // $("#reviewCommentsContent").text(stringContentReviews);
 })
 .fail(function (jqXHR, textStatus, error) {
       console.log("Get error: " + error);
@@ -143,6 +148,7 @@ function preprocessVirtuosoResults(results) {
     reviewer.forEach( (editor, i) => {
       // var countsPerReviewer = { ["Reviewer " + (i+1)] : editor,
       var countsPerReviewer = { "Reviewer": ["Reviewer " + (i+1)],
+      // var countsPerReviewer = { "Reviewer": editor,
                     "article" : 0, "section": 0, "paragraph": 0,
                     "syntax": 0, "style": 0, "content": 0,
                     "negative": 0, "neutral": 0, "positive": 0,
@@ -240,9 +246,9 @@ function drawGraph(dataEditors) {
   d3.select("#graphArea").selectAll("svg").remove();
 
   // graph size
-  var margin = {top: 10, right: 100, bottom: 30, left: 80},
+  var margin = {top: 10, right: 10, bottom: 30, left: 80},
       // width = 960 - margin.left - margin.right,
-      width = 810 - margin.left - margin.right,
+      width = 760 - margin.left - margin.right,
       height = 500 - margin.top - margin.bottom;
 
   // settings for the x axis
@@ -404,7 +410,8 @@ function drawGraph(dataEditors) {
              d3.select(this).style("fill", color(d.name))
          })
          .on("click", function(d) {
-             showReviewComments();
+             // showReviewComments();
+             // $("#reviewCommentsContent").text("graph clicked!!!");
          });
 
    // add text labels for each dimension on top of the graph
