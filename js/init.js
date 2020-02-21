@@ -104,7 +104,17 @@ $.get(serverConnection, checkedDimensions)
 
   var results = preprocessVirtuosoResults(dataVirtuoso);
   drawGraph(results);
-  $("#reviewCommentsContent").text(dataVirtuoso);
+
+  var contentReviews = [];
+  var stringContentReviews = "";
+  var csvData = [];
+  csvData = $.csv.toArrays(dataVirtuoso);
+
+  for (i = 1; i < csvData.length; i++) {
+    contentReviews.push(csvData[i][7]);
+    stringContentReviews = stringContentReviews.concat(`${csvData[i][7]}` + "\n");
+  }
+  $("#reviewCommentsContent").text(stringContentReviews);
 })
 .fail(function (jqXHR, textStatus, error) {
       console.log("Get error: " + error);
