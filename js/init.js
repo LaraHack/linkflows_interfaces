@@ -114,10 +114,19 @@ $.get(serverConnection, checkedDimensions)
   csvData = $.csv.toArrays(dataVirtuoso);
 
   for (i = 1; i < csvData.length; i++) {
+    console.log("**********************");
+    console.log(csvData[i]);
+    console.log("**********************");
     contentReviews.push(csvData[i][7]);
     // stringContentReviews = stringContentReviews.concat(`${csvData[i][7]}`);
     // $("#tdReviewCommentsContent").text("hello world");
-    $("#divReviewCommentsContent").append("<div class='border border-dark rounded'>" + csvData[i][7] + "</div> <br/>");
+    $("#divReviewCommentsContent").append("<div class='border border-dark rounded p-1'>" +
+      "<span class='legendSmall' style='background: " + colors["paragraph"] + "; width:75px;'>paragraph</span> " +
+      "<span class='legendSmall' style='background: " + colors["content"] + ";'>content</span> " +
+      "<span class='legendSmall' style='background: " + colors["negative"] + ";'>negative</span> " +
+      "<span class='legendImpactSmall' style='background: " + colors["I3"] + ";'>3</span> " +
+      "<span class='legendSmall' style='background: " + colors["suggestion"] + "; width:85px;'>suggestion</span> <br/> " +
+      csvData[i][7] + "</div> <br/>");
   }
   // $("#reviewCommentsContent").text(stringContentReviews);
 })
@@ -248,7 +257,7 @@ function drawGraph(dataEditors) {
   // graph size
   var margin = {top: 10, right: 10, bottom: 30, left: 80},
       // width = 960 - margin.left - margin.right,
-      width = 760 - margin.left - margin.right,
+      width = 716 - margin.left - margin.right,
       height = 500 - margin.top - margin.bottom;
 
   // settings for the x axis

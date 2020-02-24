@@ -17,6 +17,26 @@ span.legendImpact {
   text-align:center;
 }
 
+span.legendSmall {
+  display:inline-block;
+  font-weight:bold;
+  width:65px;
+  text-align:center;
+  vertical-align: middle;
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+
+span.legendImpactSmall {
+  display:inline-block;
+  font-weight:bold;
+  width:40px;
+  text-align:center;
+  vertical-align: middle;
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+
 div.legend {
   display:inline-block;
   font-weight:bold;
