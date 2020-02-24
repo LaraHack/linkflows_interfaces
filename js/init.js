@@ -125,7 +125,7 @@ $.get(serverConnection, checkedDimensions)
       "<span class='legendSmall' style='background: " + colors["content"] + ";'>content</span> " +
       "<span class='legendSmall' style='background: " + colors["negative"] + ";'>negative</span> " +
       "<span class='legendImpactSmall' style='background: " + colors["I3"] + ";'>3</span> " +
-      "<span class='legendSmall' style='background: " + colors["suggestion"] + "; width:85px;'>suggestion</span> <br/> " +
+      "<span class='legendSmall' style='background: " + colors["suggestion"] + "; width:83px;'>suggestion</span> <br/> " +
       csvData[i][7] + "</div> <br/>");
   }
   // $("#reviewCommentsContent").text(stringContentReviews);
@@ -255,7 +255,7 @@ function drawGraph(dataEditors) {
   d3.select("#graphArea").selectAll("svg").remove();
 
   // graph size
-  var margin = {top: 10, right: 10, bottom: 30, left: 80},
+  var margin = {top: 10, right: 10, bottom: 30, left: 78},
       // width = 960 - margin.left - margin.right,
       width = 716 - margin.left - margin.right,
       height = 500 - margin.top - margin.bottom;
