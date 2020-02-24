@@ -89,3 +89,14 @@ td.selected
 .outlined {
   border-right: 2px solid black;
 }
+
+.vertical {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+}
+
+.verticalText {
+    writing-mode: vertical-lr;
+     -ms-writing-mode: tb-rl;
+     transform: rotate(270deg);
+}

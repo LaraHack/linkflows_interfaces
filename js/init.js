@@ -114,9 +114,9 @@ $.get(serverConnection, checkedDimensions)
   csvData = $.csv.toArrays(dataVirtuoso);
 
   for (i = 1; i < csvData.length; i++) {
-    console.log("**********************");
-    console.log(csvData[i]);
-    console.log("**********************");
+    // console.log("**********************");
+    // console.log(csvData[i]);
+    // console.log("**********************");
     contentReviews.push(csvData[i][7]);
     // stringContentReviews = stringContentReviews.concat(`${csvData[i][7]}`);
     // $("#tdReviewCommentsContent").text("hello world");
@@ -125,7 +125,7 @@ $.get(serverConnection, checkedDimensions)
       "<span class='legendSmall' style='background: " + colors["content"] + ";'>content</span> " +
       "<span class='legendSmall' style='background: " + colors["negative"] + ";'>negative</span> " +
       "<span class='legendImpactSmall' style='background: " + colors["I3"] + ";'>3</span> " +
-      "<span class='legendSmall' style='background: " + colors["suggestion"] + "; width:83px;'>suggestion</span> <br/> " +
+      "<span class='legendSmall' style='background: " + colors["compulsory"] + "; width:83px;'>compulsory</span> <br/> " +
       csvData[i][7] + "</div> <br/>");
   }
   // $("#reviewCommentsContent").text(stringContentReviews);
@@ -315,6 +315,9 @@ function drawGraph(dataEditors) {
 
     var rowHeaders = d3.keys(data[0]).filter(function(key) { return key !== "Reviewer"; });
 
+    console.log("###################rowHeaders:" + rowHeaders);
+    console.log("###################rdata.length" + data.length);
+
      // set color range for the dimensions present in the data file
      var colorRange = [];
 
@@ -324,7 +327,7 @@ function drawGraph(dataEditors) {
 
      color.range(colorRange);
 
-     //map colors in the defined palette to the dimensions of the data in the csv
+     //map colors in the defined palette to the dimensions of the data
      color.domain(rowHeaders);
 
      // get data for each dimension and
@@ -339,7 +342,7 @@ function drawGraph(dataEditors) {
              }
              xBegin = xRow[ic];
              xRow[ic] += +d[name];
-             return {name: name, row: ic, xBegin: xBegin, xEnd: +d[name] + xBegin,};
+             return {reviewer: d.Reviewer, name: name, row: ic, xBegin: xBegin, xEnd: +d[name] + xBegin,};
            }
          }
        });
@@ -351,6 +354,7 @@ function drawGraph(dataEditors) {
 
    // map data onto graph axes
    var reviewers = data.map(function(d) { return d.Reviewer; });
+
    y0.domain(reviewers);
    y1.domain(d3.keys(dimensions)).rangeRoundBands([0, y0.rangeBand()]);
 
@@ -418,9 +422,24 @@ function drawGraph(dataEditors) {
          .on("mouseout", function(d) {
              d3.select(this).style("fill", color(d.name))
          })
-         .on("click", function(d) {
+         .on("click", function(d ,i) {
+           var mouse = d3.mouse(this);
              // showReviewComments();
              // $("#reviewCommentsContent").text("graph clicked!!!");
+             console.log("^^^^^^^^^^^^^^^^^^^^^^^^");
+             console.log("d:" + d);
+             console.log("d.Reviewer:" + d.reviewer);
+             console.log("d.name:" + d.name);
+             console.log("d.row:" + d.row);
+             console.log("d.rowDetails:" + d.rowDetails);
+             console.log("y0(d.Reviewer):" + d.y0);
+             console.log("select:" + d3.select(this).attr("y0"));
+              // console.log(x.rangeBand());return scope.onClick({item: d});});
+              console.log("i:" + i);
+              console.log("mouse[1]:" + mouse[1]);
+                            console.log("mouse[0]:" + mouse[0]);
+             // console.log(d3.select(this)[1]);
+             console.log("^^^^^^^^^^^^^^^^^^^^^^^^");
          });
 
    // add text labels for each dimension on top of the graph
