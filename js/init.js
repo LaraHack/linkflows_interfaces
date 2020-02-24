@@ -120,13 +120,13 @@ $.get(serverConnection, checkedDimensions)
     contentReviews.push(csvData[i][7]);
     // stringContentReviews = stringContentReviews.concat(`${csvData[i][7]}`);
     // $("#tdReviewCommentsContent").text("hello world");
-    $("#divReviewCommentsContent").append("<div class='border border-dark rounded p-1'>" +
-      "<span class='legendSmall' style='background: " + colors["paragraph"] + "; width:75px;'>paragraph</span> " +
-      "<span class='legendSmall' style='background: " + colors["content"] + ";'>content</span> " +
-      "<span class='legendSmall' style='background: " + colors["negative"] + ";'>negative</span> " +
-      "<span class='legendImpactSmall' style='background: " + colors["I3"] + ";'>3</span> " +
-      "<span class='legendSmall' style='background: " + colors["compulsory"] + "; width:83px;'>compulsory</span> <br/> " +
-      csvData[i][7] + "</div> <br/>");
+    // $("#divReviewCommentsContent").append("<div class='border border-dark rounded p-1'>" +
+    //   "<span class='legendSmall' style='background: " + colors["paragraph"] + "; width:75px;'>paragraph</span> " +
+    //   "<span class='legendSmall' style='background: " + colors["content"] + ";'>content</span> " +
+    //   "<span class='legendSmall' style='background: " + colors["negative"] + ";'>negative</span> " +
+    //   "<span class='legendImpactSmall' style='background: " + colors["I3"] + ";'>3</span> " +
+    //   "<span class='legendSmall' style='background: " + colors["compulsory"] + "; width:83px;'>compulsory</span> <br/> " +
+    //   csvData[i][7] + "</div> <br/>");
   }
   // $("#reviewCommentsContent").text(stringContentReviews);
 })
@@ -315,9 +315,6 @@ function drawGraph(dataEditors) {
 
     var rowHeaders = d3.keys(data[0]).filter(function(key) { return key !== "Reviewer"; });
 
-    console.log("###################rowHeaders:" + rowHeaders);
-    console.log("###################rdata.length" + data.length);
-
      // set color range for the dimensions present in the data file
      var colorRange = [];
 
@@ -423,28 +420,27 @@ function drawGraph(dataEditors) {
              d3.select(this).style("fill", color(d.name))
          })
          .on("click", function(d ,i) {
-           var mouse = d3.mouse(this);
              // showReviewComments();
              // $("#reviewCommentsContent").text("graph clicked!!!");
              console.log("^^^^^^^^^^^^^^^^^^^^^^^^");
-             console.log("d:" + d);
              console.log("d.Reviewer:" + d.reviewer);
              console.log("d.name:" + d.name);
              console.log("d.row:" + d.row);
-             console.log("d.rowDetails:" + d.rowDetails);
-             console.log("y0(d.Reviewer):" + d.y0);
-             console.log("select:" + d3.select(this).attr("y0"));
-              // console.log(x.rangeBand());return scope.onClick({item: d});});
-              console.log("i:" + i);
-              console.log("mouse[1]:" + mouse[1]);
-                            console.log("mouse[0]:" + mouse[0]);
-             // console.log(d3.select(this)[1]);
              console.log("^^^^^^^^^^^^^^^^^^^^^^^^");
+             $("#divIntroContentReviewComments").remove();
+             // $("#divReviewCommentsContent").empty();
+             $("#divReviewCommentsContent").append("<div class='border border-dark rounded p-1'>" +
+               "<span class='legendSmall' style='background: " + colors["paragraph"] + "; width:75px;'>paragraph</span> " +
+               "<span class='legendSmall' style='background: " + colors["content"] + ";'>content</span> " +
+               "<span class='legendSmall' style='background: " + colors["negative"] + ";'>negative</span> " +
+               "<span class='legendImpactSmall' style='background: " + colors["I3"] + ";'>3</span> " +
+               "<span class='legendSmall' style='background: " + colors["compulsory"] + "; width:83px;'>compulsory</span> <br/> " +
+               "BLA-BLA" + "</div> <br/>");
          });
 
    // add text labels for each dimension on top of the graph
    grouped_stackedbar.selectAll("text")
-     .data(function(d) { console.log(d.rowDetails); return d.rowDetails; })
+     .data(function(d) { return d.rowDetails; })
        .enter().append("text")
          .attr("x", function(d) {
            return x(d.xBegin) + (x(d.xEnd) - x(d.xBegin))/2;
@@ -495,136 +491,3 @@ function getReviewComments() {
         console.log("Get error: " + error);
     });
 }
-
-  // d3.csv("data.csv", function(error, data) {
-  // d3.json(dataEditors, function(error, data) {
-  //   // get the reviewers
-  //   var rowHeaders = d3.keys(data[0]).filter(function(key) { return key !== "Reviewer"; });
-  //
-  //   // set color range for the dimensions present in the data file
-  //   var colorRange = [];
-  //
-  //   for (var i = 0; i < rowHeaders.length; i++) {
-  //     colorRange[i] = colors[rowHeaders[i]];
-  //   }
-  //
-  //   color.range(colorRange);
-  //
-  //   //map colors in the defined palette to the dimensions of the data in the csv
-  //   color.domain(rowHeaders);
-  //
-  //   // get data for each dimension and
-  //   // calculate the coordonates for the beginning and the end of each for the x axis
-  //   data.forEach(function(d) {
-  //     var xRow = new Array();
-  //     d.rowDetails = rowHeaders.map(function(name) {
-  //       for (ic in dimensions) {
-  //         if($.inArray(name, dimensions[ic]) >= 0){
-  //           if (!xRow[ic]){
-  //             xRow[ic] = 0;
-  //           }
-  //           xBegin = xRow[ic];
-  //           xRow[ic] += +d[name];
-  //           return {name: name, row: ic, xBegin: xBegin, xEnd: +d[name] + xBegin,};
-  //         }
-  //       }
-  //     });
-  //     // get maximum number of review comments for each reviewer
-  //     d.total = d3.max(d.rowDetails, function(d) {
-  //       return d.xEnd;
-  //     });
-  //   });
-  //
-  //   // map data onto graph axes
-  //   var reviewers = data.map(function(d) { return d.Reviewer; });
-  //   y0.domain(reviewers);
-  //   y1.domain(d3.keys(dimensions)).rangeRoundBands([0, y0.rangeBand()]);
-  //
-  //   x.domain([0, d3.max(data, function(d) {
-  //     return d.total;
-  //   })]);
-  //
-  //   // draw x axis
-  //   inner.append("g")
-  //     .attr("class", "x axis")
-  //     .attr("transform", "translate(0," + height + ")")
-  //     .style("opacity", "0")
-  //     .call(xAxis) ;
-  //
-  //   // draw y axis
-  //   inner.append("g")
-  //       .attr("class", "y axis")
-  //       .call(yAxis)
-  //       .append("text")
-  //         .attr("transform", "rotate(0)")
-  //         .attr("y", 6)
-  //         .attr("dy", ".20em")
-  //         .style("text-anchor", "end")
-  //         .text(""); // .text("reviewers");
-  //
-  //   inner.select('.x').transition().duration(500).delay(1300).style("opacity","1");
-  //
-  //   // add grouped stacked bar and add Reviewers
-  //   var grouped_stackedbar = inner.selectAll(".grouped_stackedbar")
-  //     .data(data)
-  //   .enter().append("g")
-  //     .attr("class", "g")
-  //     .attr("transform", function(d) {
-  //       return "translate(0," + y0(d.Reviewer) + ")"; });
-  //
-  //   // draw stacked bars for each dimension of each Reviewer
-  //   grouped_stackedbar.selectAll("rect")
-  //     .data(function(d) { return d.rowDetails; })
-  //       .enter().append("rect")
-  //         .attr("height", y1.rangeBand())
-  //         .attr("y", function(d) {
-  //           return y1(d.row);
-  //         })
-  //         .attr("x", function(d) {
-  //           return x(d.xBegin);
-  //         })
-  //         .attr("width", function(d) {
-  //           return x(d.xEnd) - x(d.xBegin);
-  //         })
-  //         .style("fill", function(d) { return color(d.name); })
-  //         .on("mouseover", function(d) {
-  //             d3.select(this).style("fill", d3.rgb(color(d.name)).darker(2));
-  //         })
-  //         .on("mouseout", function(d) {
-  //             d3.select(this).style("fill", color(d.name))
-  //         });
-  //
-  //   // add text labels for each dimension on top of the graph
-  //   grouped_stackedbar.selectAll("text")
-  //     .data(function(d) { console.log(d.rowDetails); return d.rowDetails; })
-  //       .enter().append("text")
-  //         .attr("x", function(d) {
-  //           return x(d.xBegin) + (x(d.xEnd) - x(d.xBegin))/2;
-  //         })
-  //         .attr("y", function(d) {
-  //           return y1(d.row);
-  //         })
-  //         .attr("dy", "1.2em")
-  //         .style("font-size", "14px")
-  //         .style("fill", function(d) {
-  //           if (d.name == "I3" || d.name == "I4" || d.name == "I5")
-  //             return "white";
-  //           return "black";
-  //         })
-  //         .text(function(d,i) {
-  //           return (d.xEnd-d.xBegin) !== 0 ? (d.xEnd-d.xBegin) : "";
-  //         })
-  //         .on("mouseover", function(d) {
-  //             d3.select(this).style("fill", "white");
-  //             d3.select(this).style("font-weight", "bold");
-  //         })
-  //         .on("mouseout", function(d) {
-  //           d3.select(this).style("font-weight", "");
-  //           d3.select(this).style("fill", function(d) {
-  //             if (d.name == "I3" || d.name == "I4" || d.name == "I5")
-  //               return "white";
-  //             return "black";
-  //           });
-  //         });
-  //       });
-  //     });
