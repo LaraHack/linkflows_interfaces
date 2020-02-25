@@ -23,6 +23,18 @@ var checkedDimensions = new Map([
   ["no_action", true]
 ]);
 
+// var resultsVirtuoso;
+var reviewer = [];
+var csvData = [];
+
+// definition of dimensions used in the grouped stacked chart
+var dimensions = {
+  "part" : ["article","section","paragraph"],
+  "aspect" : ["syntax","style","content"],
+  "positivity_negativity" : ["negative", "neutral", "positive"],
+  "impact" : ["I1", "I2", "I3", "I4", "I5"],
+  "action_needed" : ["compulsory", "suggestion", "no_action"]
+}
 
 function checkAllCheckboxes() {
   $('input[type="checkbox"]').prop("checked", true);
@@ -99,48 +111,54 @@ function getDimensionsChecked() {
 
 console.log(checkedDimensions);
 
+$("#divReviewCommentsContent").empty();
+$("#divReviewCommentsContent").append("<div id='divIntroContentReviewComments' style='text-align:center; color: #0275d8; font-size: large; border: #0275d8;'> <br/>Click on a rectangle in the graph to show the content of the review comments here</div>");
+
 getDimensionsChecked();
 $.get(serverConnection, checkedDimensions)
-.done((dataVirtuoso, status) => {
-  console.log("data:" + dataVirtuoso);
+.done((resultsVirtuoso, status) => {
+  // resultsVirtuoso = dataVirtuoso;
+  console.log("data:" + resultsVirtuoso);
   console.log("status:" + status);
 
-  var results = preprocessVirtuosoResults(dataVirtuoso);
+  var results = preprocessVirtuosoResults(resultsVirtuoso);
   drawGraph(results);
 
-  var contentReviews = [];
-  var stringContentReviews = "";
-  var csvData = [];
-  csvData = $.csv.toArrays(dataVirtuoso);
-
-  for (i = 1; i < csvData.length; i++) {
-    // console.log("**********************");
-    // console.log(csvData[i]);
-    // console.log("**********************");
-    contentReviews.push(csvData[i][7]);
-    // stringContentReviews = stringContentReviews.concat(`${csvData[i][7]}`);
-    // $("#tdReviewCommentsContent").text("hello world");
-    // $("#divReviewCommentsContent").append("<div class='border border-dark rounded p-1'>" +
-    //   "<span class='legendSmall' style='background: " + colors["paragraph"] + "; width:75px;'>paragraph</span> " +
-    //   "<span class='legendSmall' style='background: " + colors["content"] + ";'>content</span> " +
-    //   "<span class='legendSmall' style='background: " + colors["negative"] + ";'>negative</span> " +
-    //   "<span class='legendImpactSmall' style='background: " + colors["I3"] + ";'>3</span> " +
-    //   "<span class='legendSmall' style='background: " + colors["compulsory"] + "; width:83px;'>compulsory</span> <br/> " +
-    //   csvData[i][7] + "</div> <br/>");
-  }
+  // var contentReviews = [];
+  // var stringContentReviews = "";
+  // var csvData = [];
+  // csvData = $.csv.toArrays(resultsVirtuoso);
+  //
+  // for (i = 1; i < csvData.length; i++) {
+  //   // console.log("**********************");
+  //   // console.log(csvData[i]);
+  //   // console.log("**********************");
+  //   contentReviews.push(csvData[i][7]);
+  //   // stringContentReviews = stringContentReviews.concat(`${csvData[i][7]}`);
+  //   // $("#tdReviewCommentsContent").text("hello world");
+  //   // $("#divReviewCommentsContent").append("<div class='border border-dark rounded p-1'>" +
+  //   //   "<span class='legendSmall' style='background: " + colors["paragraph"] + "; width:75px;'>paragraph</span> " +
+  //   //   "<span class='legendSmall' style='background: " + colors["content"] + ";'>content</span> " +
+  //   //   "<span class='legendSmall' style='background: " + colors["negative"] + ";'>negative</span> " +
+  //   //   "<span class='legendImpactSmall' style='background: " + colors["I3"] + ";'>3</span> " +
+  //   //   "<span class='legendSmall' style='background: " + colors["compulsory"] + "; width:83px;'>compulsory</span> <br/> " +
+  //   //   csvData[i][7] + "</div> <br/>");
+  // }
   // $("#reviewCommentsContent").text(stringContentReviews);
 })
 .fail(function (jqXHR, textStatus, error) {
       console.log("Get error: " + error);
+      $("#divIntroContentReviewComments").remove();
+      $("#divReviewCommentsContent").append("<div id='divError' style='text-align:center; color: red; font-size: large; border: #0275d8;'> <br/>Error retrieving the data. Please try again later and if the problem persists, please write an email to c.i.bucur@vu.nl </div>");
 });
 
 // Virtuoso results should be a CSV in the form of "reviewer","reviewComment","part","aspect","posNeg","impact","actionNeeded"
 function preprocessVirtuosoResults(results) {
  	// first read CSV file with results
-	  var csvData = [];
+	  // var csvData = [];
 		csvData = $.csv.toArrays(results);
 
-		var reviewer = [];
+		// var reviewer = [];
 
 		// for graph generation data needs to be in the form of
 		// Reviewer,article,section,paragraph,syntax,style,content,negative,neutral,positive,I1,I2,I3,I4,I5,compulsory,suggestion,no_action
@@ -295,14 +313,14 @@ function drawGraph(dataEditors) {
 
   var xBegin;
 
-  // definition of dimensions used in the grouped stacked chart
-  var dimensions = {
-    "part" : ["article","section","paragraph"],
-    "aspect" : ["syntax","style","content"],
-    "positivity_negativity" : ["negative", "neutral", "positive"],
-    "impact" : ["I1", "I2", "I3", "I4", "I5"],
-    "action_needed" : ["compulsory", "suggestion", "no_action"]
-  }
+  // // definition of dimensions used in the grouped stacked chart
+  // var dimensions = {
+  //   "part" : ["article","section","paragraph"],
+  //   "aspect" : ["syntax","style","content"],
+  //   "positivity_negativity" : ["negative", "neutral", "positive"],
+  //   "impact" : ["I1", "I2", "I3", "I4", "I5"],
+  //   "action_needed" : ["compulsory", "suggestion", "no_action"]
+  // }
 
   console.log("DATA EDITORS:" + dataEditors);
   var data = JSON.parse(dataEditors);
@@ -427,15 +445,114 @@ function drawGraph(dataEditors) {
              console.log("d.name:" + d.name);
              console.log("d.row:" + d.row);
              console.log("^^^^^^^^^^^^^^^^^^^^^^^^");
+
              $("#divIntroContentReviewComments").remove();
-             // $("#divReviewCommentsContent").empty();
-             $("#divReviewCommentsContent").append("<div class='border border-dark rounded p-1'>" +
-               "<span class='legendSmall' style='background: " + colors["paragraph"] + "; width:75px;'>paragraph</span> " +
-               "<span class='legendSmall' style='background: " + colors["content"] + ";'>content</span> " +
-               "<span class='legendSmall' style='background: " + colors["negative"] + ";'>negative</span> " +
-               "<span class='legendImpactSmall' style='background: " + colors["I3"] + ";'>3</span> " +
-               "<span class='legendSmall' style='background: " + colors["compulsory"] + "; width:83px;'>compulsory</span> <br/> " +
-               "BLA-BLA" + "</div> <br/>");
+             $("#divReviewCommentsContent").empty();
+
+             var dataToShow = [];
+             var reviewerId = ((d.reviewer).toString()).split(" ").pop();
+
+             for (var i = 1; i < csvData.length; i++) {
+                if (reviewer[reviewerId-1] == csvData[i][0]) {
+                    dataToShow.push(csvData[i]);
+                }
+                console.log("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS" + reviewerId);
+                console.log(csvData[i]);
+              }
+
+              for (var i = 0; i < reviewer.length; i++) {
+                console.log("%%%%%%%%%%%%%%%%%%%%%%%%"+ reviewer[i]);
+              }
+
+              // article level
+              var patternArticle = /.*\#article/;
+              var patternSection = /.*\#section$/;
+              var patternParagraph = /.*\#paragraph$/;
+              var articleLevel = "";
+
+              // aspect
+              var patternSyntax = /.*\#SyntaxComment$/;
+              var patternStyle = /.*\#StyleComment$/;
+              var patternContent = /.*\#ContentComment$/;
+              var aspect = "";
+
+              // positivity/negativity
+              var patternNegative = /.*\#NegativeComment$/;
+              var patternNeutral = /.*\#NeutralComment$/;
+              var patternPositive = /.*\#PositiveComment$/;
+              var pos_neg = "";
+
+              // impact
+              var impact = "";
+
+              // action needed
+              var patternCompulsory = /.*\#ActionNeededComment$/;
+              var patternSuggestion = /.*\#SuggestionComment$/;
+              var patternNoAction = /.*\#NoActionNeededComment$/;
+              var actionNeeded = "";
+
+              for (var i = 0; i < dataToShow.length; i++) {
+                console.log("TO SHOW:"+ dataToShow[i][2]);
+
+                // check whether the part is article, section or paragraph
+                if (patternArticle.test(dataToShow[i][2])) {
+                  articleLevel = "article";
+                }
+                if (patternSection.test(dataToShow[i][2])) {
+                  articleLevel = "section";
+                }
+                if (patternParagraph.test(dataToShow[i][2])) {
+                  articleLevel = "paragraph";
+                }
+
+                // check whether the aspect is syntax, style or content
+                if (patternSyntax.test(dataToShow[i][3])){
+                  aspect = "syntax";
+                }
+                if (patternStyle.test(dataToShow[i][3])) {
+                  aspect = "style";
+                }
+                if (patternContent.test(csvData[i][3])) {
+                  aspect = "content";
+                }
+
+                // check whether the positivity/negativity dimension is negative, neutral or positive
+                if (patternNegative.test(dataToShow[i][4])) {
+                  pos_neg = "negative";
+                }
+                if (patternNeutral.test(dataToShow[i][4])) {
+                  pos_neg = "neutral";
+                }
+                if (patternPositive.test(dataToShow[i][4])) {
+                  pos_neg = "positive";
+                }
+
+                // check whether the impact is 1, 2, 3, 4 or 5
+                if (0 < dataToShow[i][5] < 6) {
+                  impact = "I" + dataToShow[i][5];
+                }
+
+                // check whether the action needed is compulsory, suggestion or no_action
+                if (patternCompulsory.test(dataToShow[i][6])) {
+                  actionNeeded = "compulsory";
+                }
+                if (patternSuggestion.test(dataToShow[i][6])) {
+                  actionNeeded = "suggestion";
+                }
+                if (patternNoAction.test(dataToShow[i][6])) {
+                  actionNeeded = "no_action";
+                }
+
+                $("#divReviewCommentsContent").append("<div class='border border-dark rounded p-1'>" +
+                  "<span class='legendSmall' style='background: " + colors[articleLevel] + "; width:75px;'>" + articleLevel + "</span> " +
+                  "<span class='legendSmall' style='background: " + colors[aspect] + ";'>" + aspect + "</span> " +
+                  "<span class='legendSmall' style='background: " + colors[pos_neg] + ";'>" + pos_neg + "</span> " +
+                  "<span class='legendImpactSmall' style='background: " + colors[impact] + "; color:" + (dataToShow[i][5] > 2 ? "white" : "black") + ";'>" + dataToShow[i][5] + "</span> " +
+                  "<span class='legendSmall' style='background: " + colors[actionNeeded] + "; width:83px;'>" + actionNeeded + "</span> <br/> " +
+                  dataToShow[i][7] + "</div> <br/>");
+
+              }
+
          });
 
    // add text labels for each dimension on top of the graph
@@ -476,6 +593,11 @@ function drawGraph(dataEditors) {
 // sends a request to the server to draw the graph
 function getReviewComments() {
   getDimensionsChecked();
+  $("#divReviewCommentsContent").empty();
+  $("#divReviewCommentsContent").append("<div id='divIntroContentReviewComments' style='text-align:center; color: #0275d8; font-size: large; border: #0275d8;'> <br/>Click on a rectangle in the graph to show the content of the review comments here</div>");
+
+  // var newResults = getDataForGraph();
+  // drawGraph(newResults);
   $.get(serverConnection, checkedDimensions)
   .done((dataVirtuoso, status) => {
 	    console.log("data:" + dataVirtuoso);
@@ -490,4 +612,116 @@ function getReviewComments() {
   .fail(function (jqXHR, textStatus, error) {
         console.log("Get error: " + error);
     });
+}
+
+function getDataForGraph() {
+  var csvData = [];
+  csvData = $.csv.toArrays(resultsVirtuoso);
+
+  // var reviewer = [];
+
+  // for graph generation data needs to be in the form of
+  // Reviewer,article,section,paragraph,syntax,style,content,negative,neutral,positive,I1,I2,I3,I4,I5,compulsory,suggestion,no_action
+  // for (var i = 1; i < csvData.length; i++) {
+  //   if (!reviewer.includes(csvData[i][0])) {
+  //     reviewer.push(csvData[i][0]);
+  //   }
+  // }
+
+  //var reviewersCounts = new Array(reviewer.length); // this declaration gives errors when setting values for keys
+
+  var reviewersCounts = [];
+
+  reviewer.forEach( (editor, i) => {
+    // var countsPerReviewer = { ["Reviewer " + (i+1)] : editor,
+    var countsPerReviewer = { "Reviewer": ["Reviewer " + (i+1)],
+    // var countsPerReviewer = { "Reviewer": editor,
+                  "article" : 0, "section": 0, "paragraph": 0,
+                  "syntax": 0, "style": 0, "content": 0,
+                  "negative": 0, "neutral": 0, "positive": 0,
+                  "I1": 0, "I2": 0, "I3": 0, "I4": 0, "I5": 0,
+                  "compulsory": 0, "suggestion": 0, "no_action": 0
+                  };
+    reviewersCounts.push(countsPerReviewer);
+  });
+
+  // article level
+  var patternArticle = /.*\#article/;
+  var patternSection = /.*\#section$/;
+  var patternParagraph = /.*\#paragraph$/;
+
+  // aspect
+  var patternSyntax = /.*\#SyntaxComment$/;
+  var patternStyle = /.*\#StyleComment$/;
+  var patternContent = /.*\#ContentComment$/;
+
+  // positivity/negativity
+  var patternNegative = /.*\#NegativeComment$/;
+  var patternNeutral = /.*\#NeutralComment$/;
+  var patternPositive = /.*\#PositiveComment$/;
+
+  // action needed
+  var patternCompulsory = /.*\#ActionNeededComment$/;
+  var patternSuggestion = /.*\#SuggestionComment$/;
+  var patternNoAction = /.*\#NoActionNeededComment$/;
+
+  // ordering in the current csvData: reviewer,reviewComment,part,aspect,posNeg,impact,actionNeeded
+  for (i = 1; i < csvData.length; i++) {
+    // find reviewer in graphCSVData
+    var indexOfReviewer = reviewer.indexOf(csvData[i][0]);
+
+    // if reviewer is found, then calculate counts for every dimension
+    if (indexOfReviewer > -1) {
+      // check whether the part is article, section or paragraph
+      if (patternArticle.test(csvData[i][2]) && checkedDimensions["article"]) {
+        reviewersCounts[indexOfReviewer].article =  reviewersCounts[indexOfReviewer].article + 1;
+      }
+      if (patternSection.test(csvData[i][2]) && checkedDimensions["section"]) {
+        reviewersCounts[indexOfReviewer].section = reviewersCounts[indexOfReviewer].section + 1;
+      }
+      if (patternParagraph.test(csvData[i][2]) && checkedDimensions["paragraph"]) {
+        reviewersCounts[indexOfReviewer].paragraph = reviewersCounts[indexOfReviewer].paragraph + 1;
+      }
+
+      // check whether the aspect is syntax, style or content
+      if (patternSyntax.test(csvData[i][3]) && checkedDimensions["syntax"]){
+        reviewersCounts[indexOfReviewer].syntax = reviewersCounts[indexOfReviewer].syntax + 1;
+      }
+      if (patternStyle.test(csvData[i][3]) && checkedDimensions["style"]) {
+        reviewersCounts[indexOfReviewer].style = reviewersCounts[indexOfReviewer].style + 1;
+      }
+      if (patternContent.test(csvData[i][3]) && checkedDimensions["content"]) {
+        reviewersCounts[indexOfReviewer].content = reviewersCounts[indexOfReviewer].content + 1;
+      }
+
+      // check whether the positivity/negativity dimension is negative, neutral or positive
+      if (patternNegative.test(csvData[i][4]) && checkedDimensions["negative"]) {
+        reviewersCounts[indexOfReviewer].negative = reviewersCounts[indexOfReviewer].negative + 1;
+      }
+      if (patternNeutral.test(csvData[i][4]) && checkedDimensions["neutral"]) {
+        reviewersCounts[indexOfReviewer].neutral = reviewersCounts[indexOfReviewer].neutral + 1;
+      }
+      if (patternPositive.test(csvData[i][4]) && checkedDimensions["positive"]) {
+        reviewersCounts[indexOfReviewer].positive = reviewersCounts[indexOfReviewer].positive + 1;
+      }
+
+      // check whether the impact is 1, 2, 3, 4 or 5
+      if (0 < csvData[i][5] < 6 && checkedDimensions["I"+ csvData[i][5]]) {
+        reviewersCounts[indexOfReviewer]["I" + csvData[i][5]] = reviewersCounts[indexOfReviewer]["I" + csvData[i][5]] + 1;
+      }
+
+      // check whether the action needed is compulsory, suggestion or no_action
+      if (patternCompulsory.test(csvData[i][6]) && checkedDimensions["compulsory"]) {
+        reviewersCounts[indexOfReviewer].compulsory = reviewersCounts[indexOfReviewer].compulsory + 1;
+      }
+      if (patternSuggestion.test(csvData[i][6]) && checkedDimensions["suggestion"]) {
+        reviewersCounts[indexOfReviewer].suggestion = reviewersCounts[indexOfReviewer].suggestion + 1;
+      }
+      if (patternNoAction.test(csvData[i][6]) && checkedDimensions["no_action"]) {
+        reviewersCounts[indexOfReviewer].no_action = reviewersCounts[indexOfReviewer].no_action + 1;
+      }
+    }
+  }
+
+  return JSON.stringify(reviewersCounts);
 }
