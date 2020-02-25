@@ -36,6 +36,33 @@ var dimensions = {
   "action_needed" : ["compulsory", "suggestion", "no_action"]
 }
 
+// article level
+var patternArticle = /.*\#article/;
+var patternSection = /.*\#section$/;
+var patternParagraph = /.*\#paragraph$/;
+var articleLevel = "";
+
+// aspect
+var patternSyntax = /.*\#SyntaxComment$/;
+var patternStyle = /.*\#StyleComment$/;
+var patternContent = /.*\#ContentComment$/;
+var aspect = "";
+
+// positivity/negativity
+var patternNegative = /.*\#NegativeComment$/;
+var patternNeutral = /.*\#NeutralComment$/;
+var patternPositive = /.*\#PositiveComment$/;
+var pos_neg = "";
+
+// impact
+var impact = "";
+
+// action needed
+var patternCompulsory = /.*\#ActionNeededComment$/;
+var patternSuggestion = /.*\#SuggestionComment$/;
+var patternNoAction = /.*\#NoActionNeededComment$/;
+var actionNeeded = "";
+
 function checkAllCheckboxes() {
   $('input[type="checkbox"]').prop("checked", true);
 }
@@ -43,9 +70,6 @@ function checkAllCheckboxes() {
 checkAllCheckboxes();
 
 $("#btnShowReviewComments").click(getReviewComments);
-
-// $("#tdReviewCommentsContent").text("hello world");
-// $("#tdReviewCommentsContent").append("<div class='border border-dark rounded'>the new guy</div>");
 
 // id should be something in the form of '#myinput'
 function checkboxChecked(id) {
@@ -123,28 +147,6 @@ $.get(serverConnection, checkedDimensions)
 
   var results = preprocessVirtuosoResults(resultsVirtuoso);
   drawGraph(results);
-
-  // var contentReviews = [];
-  // var stringContentReviews = "";
-  // var csvData = [];
-  // csvData = $.csv.toArrays(resultsVirtuoso);
-  //
-  // for (i = 1; i < csvData.length; i++) {
-  //   // console.log("**********************");
-  //   // console.log(csvData[i]);
-  //   // console.log("**********************");
-  //   contentReviews.push(csvData[i][7]);
-  //   // stringContentReviews = stringContentReviews.concat(`${csvData[i][7]}`);
-  //   // $("#tdReviewCommentsContent").text("hello world");
-  //   // $("#divReviewCommentsContent").append("<div class='border border-dark rounded p-1'>" +
-  //   //   "<span class='legendSmall' style='background: " + colors["paragraph"] + "; width:75px;'>paragraph</span> " +
-  //   //   "<span class='legendSmall' style='background: " + colors["content"] + ";'>content</span> " +
-  //   //   "<span class='legendSmall' style='background: " + colors["negative"] + ";'>negative</span> " +
-  //   //   "<span class='legendImpactSmall' style='background: " + colors["I3"] + ";'>3</span> " +
-  //   //   "<span class='legendSmall' style='background: " + colors["compulsory"] + "; width:83px;'>compulsory</span> <br/> " +
-  //   //   csvData[i][7] + "</div> <br/>");
-  // }
-  // $("#reviewCommentsContent").text(stringContentReviews);
 })
 .fail(function (jqXHR, textStatus, error) {
       console.log("Get error: " + error);
@@ -184,26 +186,6 @@ function preprocessVirtuosoResults(results) {
                     };
       reviewersCounts.push(countsPerReviewer);
     });
-
-    // article level
-    var patternArticle = /.*\#article/;
-    var patternSection = /.*\#section$/;
-    var patternParagraph = /.*\#paragraph$/;
-
-    // aspect
-    var patternSyntax = /.*\#SyntaxComment$/;
-    var patternStyle = /.*\#StyleComment$/;
-    var patternContent = /.*\#ContentComment$/;
-
-    // positivity/negativity
-    var patternNegative = /.*\#NegativeComment$/;
-    var patternNeutral = /.*\#NeutralComment$/;
-    var patternPositive = /.*\#PositiveComment$/;
-
-    // action needed
-    var patternCompulsory = /.*\#ActionNeededComment$/;
-    var patternSuggestion = /.*\#SuggestionComment$/;
-    var patternNoAction = /.*\#NoActionNeededComment$/;
 
     // ordering in the current csvData: reviewer,reviewComment,part,aspect,posNeg,impact,actionNeeded
 		for (i = 1; i < csvData.length; i++) {
@@ -313,23 +295,10 @@ function drawGraph(dataEditors) {
 
   var xBegin;
 
-  // // definition of dimensions used in the grouped stacked chart
-  // var dimensions = {
-  //   "part" : ["article","section","paragraph"],
-  //   "aspect" : ["syntax","style","content"],
-  //   "positivity_negativity" : ["negative", "neutral", "positive"],
-  //   "impact" : ["I1", "I2", "I3", "I4", "I5"],
-  //   "action_needed" : ["compulsory", "suggestion", "no_action"]
-  // }
-
   console.log("DATA EDITORS:" + dataEditors);
   var data = JSON.parse(dataEditors);
   // d3.csv(dataEditors, (error, data) => {
     // d3.json(dataEditors, (error, data) => {
-    // console.log("_____________________");
-    // console.log("json data:");
-    // console.log(data);
-    // console.log("_____________________");
 
     var rowHeaders = d3.keys(data[0]).filter(function(key) { return key !== "Reviewer"; });
 
@@ -438,157 +407,61 @@ function drawGraph(dataEditors) {
              d3.select(this).style("fill", color(d.name))
          })
          .on("click", function(d ,i) {
+          // empty contents of div where the content of the review comments is shown
+           $("#divIntroContentReviewComments").remove();
+           $("#divReviewCommentsContent").empty();
 
-             $("#divIntroContentReviewComments").remove();
-             $("#divReviewCommentsContent").empty();
+           var dataToShow = [];
+           var reviewerId = ((d.reviewer).toString()).split(" ").pop();
+           var resultsNoPrefixes = noPrefixesInResults();
 
-             var dataToShow = [];
-             var reviewerId = ((d.reviewer).toString()).split(" ").pop();
-             var resultsNoPrefixes = noPrefixesInResults();
-
-             for (var i = 1; i < resultsNoPrefixes.length; i++) {
-                if (reviewer[reviewerId-1] == resultsNoPrefixes[i][0]) {
-                  switch (d.row) {
-                    case "part":
-                      // the rectangle checked referres to the part of article targeted by the review comment
-                      if (resultsNoPrefixes[i][2] == d.name) {
-                        dataToShow.push(resultsNoPrefixes[i]);
-                      }
-                      break;
-                    case "aspect":
-                      // the rectangle checked referres to the aspect of the review comment
-                      if (resultsNoPrefixes[i][3] == d.name) {
-                        dataToShow.push(resultsNoPrefixes[i]);
-                      }
-                      break;
-                    case "positivity_negativity":
-                      // the rectangle checked referres to the positivity_negativity of the review comment
-                      if (resultsNoPrefixes[i][4] == d.name) {
-                        dataToShow.push(resultsNoPrefixes[i]);
-                      }
-                      break;
-                    case "impact":
-                      // the rectangle checked referres to the impact of the review comment
-                      if (("I" + resultsNoPrefixes[i][5]) == d.name) {
-                        dataToShow.push(resultsNoPrefixes[i]);
-                      }
-                      break;
-                    case "action_needed":
-                    // the rectangle checked referres to the impact of the review comment
-                      if (resultsNoPrefixes[i][6] == d.name) {
-                        dataToShow.push(resultsNoPrefixes[i]);
-                      }
-                    }
+           for (var i = 1; i < resultsNoPrefixes.length; i++) {
+             if (reviewer[reviewerId-1] == resultsNoPrefixes[i][0]) {
+               switch (d.row) {
+                 case "part":
+                  // the rectangle checked referres to the part of article targeted by the review comment
+                  if (resultsNoPrefixes[i][2] == d.name) {
+                    dataToShow.push(resultsNoPrefixes[i]);
+                  }
+                  break;
+                case "aspect":
+                  // the rectangle checked referres to the aspect of the review comment
+                  if (resultsNoPrefixes[i][3] == d.name) {
+                    dataToShow.push(resultsNoPrefixes[i]);
+                  }
+                  break;
+                case "positivity_negativity":
+                  // the rectangle checked referres to the positivity_negativity of the review comment
+                  if (resultsNoPrefixes[i][4] == d.name) {
+                    dataToShow.push(resultsNoPrefixes[i]);
+                  }
+                  break;
+                case "impact":
+                  // the rectangle checked referres to the impact of the review comment
+                  if (("I" + resultsNoPrefixes[i][5]) == d.name) {
+                    dataToShow.push(resultsNoPrefixes[i]);
+                  }
+                  break;
+                case "action_needed":
+                // the rectangle checked referres to the impact of the review comment
+                  if (resultsNoPrefixes[i][6] == d.name) {
+                    dataToShow.push(resultsNoPrefixes[i]);
                   }
                 }
+              }
+            }
 
-                for (var i = 0; i < dataToShow.length; i++) {
-                  console.log("dataToShow[" + i + "]=" + dataToShow[i]);
-                  $("#divReviewCommentsContent").append("<div class='border border-dark rounded p-1'>" +
-                    "<span class='legendSmall' style='background: " + colors[dataToShow[i][2]] + "; width:75px;'>" + dataToShow[i][2] + "</span> " +
-                    "<span class='legendSmall' style='background: " + colors[dataToShow[i][3]] + ";'>" + dataToShow[i][3] + "</span> " +
-                    "<span class='legendSmall' style='background: " + colors[dataToShow[i][4]] + ";'>" + dataToShow[i][4] + "</span> " +
-                    "<span class='legendImpactSmall' style='background: " + colors[("I" + dataToShow[i][5])] + "; color:" + (dataToShow[i][5] > 2 ? "white" : "black") + ";'>" + dataToShow[i][5] + "</span> " +
-                    "<span class='legendSmall' style='background: " + colors[dataToShow[i][6]] + "; width:83px;'>" + dataToShow[i][6] + "</span> <br/> " +
-                    dataToShow[i][7] + "</div> <br/>");
-                }
-                // console.log("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS" + reviewerId);
-                // console.log(csvData[i]);
-              // }
-
-              // for (var i = 0; i < reviewer.length; i++) {
-              //   console.log("%%%%%%%%%%%%%%%%%%%%%%%%"+ reviewer[i]);
-              // }
-
-              // article level
-              // var patternArticle = /.*\#article/;
-              // var patternSection = /.*\#section$/;
-              // var patternParagraph = /.*\#paragraph$/;
-              // var articleLevel = "";
-              //
-              // // aspect
-              // var patternSyntax = /.*\#SyntaxComment$/;
-              // var patternStyle = /.*\#StyleComment$/;
-              // var patternContent = /.*\#ContentComment$/;
-              // var aspect = "";
-              //
-              // // positivity/negativity
-              // var patternNegative = /.*\#NegativeComment$/;
-              // var patternNeutral = /.*\#NeutralComment$/;
-              // var patternPositive = /.*\#PositiveComment$/;
-              // var pos_neg = "";
-              //
-              // // impact
-              // var impact = "";
-              //
-              // // action needed
-              // var patternCompulsory = /.*\#ActionNeededComment$/;
-              // var patternSuggestion = /.*\#SuggestionComment$/;
-              // var patternNoAction = /.*\#NoActionNeededComment$/;
-              // var actionNeeded = "";
-              //
-              // for (var i = 0; i < dataToShow.length; i++) {
-              //   console.log("TO SHOW:"+ dataToShow[i][2]);
-              //
-              //   // check whether the part is article, section or paragraph
-              //   if (patternArticle.test(dataToShow[i][2])) {
-              //     articleLevel = "article";
-              //   }
-              //   if (patternSection.test(dataToShow[i][2])) {
-              //     articleLevel = "section";
-              //   }
-              //   if (patternParagraph.test(dataToShow[i][2])) {
-              //     articleLevel = "paragraph";
-              //   }
-              //
-              //   // check whether the aspect is syntax, style or content
-              //   if (patternSyntax.test(dataToShow[i][3])){
-              //     aspect = "syntax";
-              //   }
-              //   if (patternStyle.test(dataToShow[i][3])) {
-              //     aspect = "style";
-              //   }
-              //   if (patternContent.test(csvData[i][3])) {
-              //     aspect = "content";
-              //   }
-              //
-              //   // check whether the positivity/negativity dimension is negative, neutral or positive
-              //   if (patternNegative.test(dataToShow[i][4])) {
-              //     pos_neg = "negative";
-              //   }
-              //   if (patternNeutral.test(dataToShow[i][4])) {
-              //     pos_neg = "neutral";
-              //   }
-              //   if (patternPositive.test(dataToShow[i][4])) {
-              //     pos_neg = "positive";
-              //   }
-              //
-              //   // check whether the impact is 1, 2, 3, 4 or 5
-              //   if (0 < dataToShow[i][5] < 6) {
-              //     impact = "I" + dataToShow[i][5];
-              //   }
-              //
-              //   // check whether the action needed is compulsory, suggestion or no_action
-              //   if (patternCompulsory.test(dataToShow[i][6])) {
-              //     actionNeeded = "compulsory";
-              //   }
-              //   if (patternSuggestion.test(dataToShow[i][6])) {
-              //     actionNeeded = "suggestion";
-              //   }
-              //   if (patternNoAction.test(dataToShow[i][6])) {
-              //     actionNeeded = "no_action";
-              //   }
-
-                // $("#divReviewCommentsContent").append("<div class='border border-dark rounded p-1'>" +
-                //   "<span class='legendSmall' style='background: " + colors[articleLevel] + "; width:75px;'>" + articleLevel + "</span> " +
-                //   "<span class='legendSmall' style='background: " + colors[aspect] + ";'>" + aspect + "</span> " +
-                //   "<span class='legendSmall' style='background: " + colors[pos_neg] + ";'>" + pos_neg + "</span> " +
-                //   "<span class='legendImpactSmall' style='background: " + colors[impact] + "; color:" + (dataToShow[i][5] > 2 ? "white" : "black") + ";'>" + dataToShow[i][5] + "</span> " +
-                //   "<span class='legendSmall' style='background: " + colors[actionNeeded] + "; width:83px;'>" + actionNeeded + "</span> <br/> " +
-                //   dataToShow[i][7] + "</div> <br/>");
-
-
-         });
+            for (var i = 0; i < dataToShow.length; i++) {
+              console.log("dataToShow[" + i + "]=" + dataToShow[i]);
+              $("#divReviewCommentsContent").append("<div class='border border-dark rounded p-1'>" +
+                "<span class='legendSmall' style='background: " + colors[dataToShow[i][2]] + "; width:75px;'>" + dataToShow[i][2] + "</span> " +
+                "<span class='legendSmall' style='background: " + colors[dataToShow[i][3]] + ";'>" + dataToShow[i][3] + "</span> " +
+                "<span class='legendSmall' style='background: " + colors[dataToShow[i][4]] + ";'>" + dataToShow[i][4] + "</span> " +
+                "<span class='legendImpactSmall' style='background: " + colors[("I" + dataToShow[i][5])] + "; color:" + (dataToShow[i][5] > 2 ? "white" : "black") + ";'>" + dataToShow[i][5] + "</span> " +
+                "<span class='legendSmall' style='background: " + colors[dataToShow[i][6]] + "; width:83px;'>" + dataToShow[i][6] + "</span> <br/> " +
+                dataToShow[i][7] + "</div> <br/>");
+            }
+           });
 
    // add text labels for each dimension on top of the graph
    grouped_stackedbar.selectAll("text")
@@ -680,26 +553,6 @@ function getDataForGraph() {
     reviewersCounts.push(countsPerReviewer);
   });
 
-  // article level
-  var patternArticle = /.*\#article/;
-  var patternSection = /.*\#section$/;
-  var patternParagraph = /.*\#paragraph$/;
-
-  // aspect
-  var patternSyntax = /.*\#SyntaxComment$/;
-  var patternStyle = /.*\#StyleComment$/;
-  var patternContent = /.*\#ContentComment$/;
-
-  // positivity/negativity
-  var patternNegative = /.*\#NegativeComment$/;
-  var patternNeutral = /.*\#NeutralComment$/;
-  var patternPositive = /.*\#PositiveComment$/;
-
-  // action needed
-  var patternCompulsory = /.*\#ActionNeededComment$/;
-  var patternSuggestion = /.*\#SuggestionComment$/;
-  var patternNoAction = /.*\#NoActionNeededComment$/;
-
   // ordering in the current csvData: reviewer,reviewComment,part,aspect,posNeg,impact,actionNeeded
   for (i = 1; i < csvData.length; i++) {
     // find reviewer in graphCSVData
@@ -763,33 +616,6 @@ function getDataForGraph() {
 
 function noPrefixesInResults() {
   var resultsNoPrefixes = [];
-
-  // article level
-  var patternArticle = /.*\#article/;
-  var patternSection = /.*\#section$/;
-  var patternParagraph = /.*\#paragraph$/;
-  var articleLevel = "";
-
-  // aspect
-  var patternSyntax = /.*\#SyntaxComment$/;
-  var patternStyle = /.*\#StyleComment$/;
-  var patternContent = /.*\#ContentComment$/;
-  var aspect = "";
-
-  // positivity/negativity
-  var patternNegative = /.*\#NegativeComment$/;
-  var patternNeutral = /.*\#NeutralComment$/;
-  var patternPositive = /.*\#PositiveComment$/;
-  var pos_neg = "";
-
-  // impact
-  var impact = "";
-
-  // action needed
-  var patternCompulsory = /.*\#ActionNeededComment$/;
-  var patternSuggestion = /.*\#SuggestionComment$/;
-  var patternNoAction = /.*\#NoActionNeededComment$/;
-  var actionNeeded = "";
 
   for (var i = 1; i < csvData.length; i++) {
     var resultItem = csvData[i];
