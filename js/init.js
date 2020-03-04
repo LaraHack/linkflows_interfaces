@@ -89,6 +89,14 @@ var actionNeeded = "";
  *****************************
  */
 
+
+$("#divHeaderNavbar").load("include/navbar.html");
+
+$("#divHeaderNavs").load("include/navs.html", function () {
+  $("#aGraphReviewers").removeClass("nav-link").addClass("nav-link active");
+});
+
+
 // all dimensions are selected
 checkAllCheckboxes();
 
