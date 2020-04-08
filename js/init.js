@@ -31,6 +31,7 @@ var checkedDimensions = new Map([
 // variables for the Virtuoso retrieved data
 var reviewer = [];
 var csvResultsVirtuoso = [];
+var countsResultsVirtuoso = [];
 
 // definition of dimensions used in the grouped stacked chart
 var dimensions = {
@@ -120,14 +121,15 @@ getDimensionsChecked();
 $.get(serverConnection, checkedDimensions)
 .done((resultsVirtuoso, status) => {
   // resultsVirtuoso = dataVirtuoso;
-  console.log("data:" + resultsVirtuoso);
-  console.log("status:" + status);
+  // console.log("data:" + resultsVirtuoso);
+  // console.log("status:" + status);
 
   // preprocess results from Virtuoso
-  var results = preprocessVirtuosoResults(resultsVirtuoso);
+  countsResultsVirtuoso = preprocessVirtuosoResults(resultsVirtuoso);
+  console.log("COUNTS:" + countsResultsVirtuoso);
 
   // draw the graph for the retrieved, preprocessed results
-  drawGraph(results);
+  drawGraph(countsResultsVirtuoso);
 })
 // failure to retrieve Virtuoso results
 .fail(function (jqXHR, textStatus, error) {
