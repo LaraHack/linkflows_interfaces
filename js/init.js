@@ -30,7 +30,7 @@ var checkedDimensions = new Map([
 
 // variables for the Virtuoso retrieved data
 
-// keys: the ORCID id of the reviewer, values: the number of review comments of that reviewer
+// one element in the form of {ORCiD: "xxx", reviewerNo: "Reviewer Y", noReviewComments: "Z"}
 var reviewers = new Map();
 var csvResultsVirtuoso = [];
 var countsResultsVirtuoso = [];
@@ -182,18 +182,17 @@ function preprocessVirtuosoResults(results) {
  	// first read CSV file with results
 		csvResultsVirtuoso = $.csv.toArrays(results);
 
+    console.log("results length: " + csvResultsVirtuoso.length);
+
 		// for graph generation data needs to be in the form of
 		// Reviewer,article,section,paragraph,syntax,style,content,negative,neutral,positive,I1,I2,I3,I4,I5,compulsory,suggestion,no_action
 		for (var i = 1; i < csvResultsVirtuoso.length; i++) {
       var ORCIDiD = csvResultsVirtuoso[i][0];
 
-			if (!reviewers.has()) { // if reviewer not in the list, add it
-        console.log("not found!");
-        reviewers.set(ORCIDiD, 50);
+			if (!reviewers.has(ORCIDiD)) { // if reviewer not in the list, add it
+        reviewers.set(ORCIDiD, 1);
 			} else { // if reviewer already added, add one more review comment
-        // reviewers.set(ORCIDiD, reviewers.get(ORCIDiD) + 1);
-        console.log("found it!");
-        reviewers.set(ORCIDiD, 70);
+        reviewers.set(ORCIDiD, reviewers.get(ORCIDiD) + 1);
       }
 		}
 
@@ -201,22 +200,8 @@ function preprocessVirtuosoResults(results) {
         console.log(`reviewer[${key}] = ${value}`);
     });
 
-    var reviewersCounts = [];
-    reviewers.forEach( (value, key, i) => {
-      // var countsPerReviewer = { ["Reviewer " + (i+1)] : editor,
-      var countsPerReviewer = { "Reviewer": ["Reviewer " + (i+1)],
-      // var countsPerReviewer = { "Reviewer": one_reviewer,
-                    "article" : 0, "section": 0, "paragraph": 0,
-                    "syntax": 0, "style": 0, "content": 0,
-                    "negative": 0, "neutral": 0, "positive": 0,
-                    "I1": 0, "I2": 0, "I3": 0, "I4": 0, "I5": 0,
-                    "compulsory": 0, "suggestion": 0, "no_action": 0
-                    };
-      reviewersCounts.push(countsPerReviewer);
-    });
-
     // get counts for graph for every reviewer
-    // var reviewersCounts = [];
+    var reviewersCounts = [];
     // reviewers.forEach( (one_reviewer, i) => {
     //   // var countsPerReviewer = { ["Reviewer " + (i+1)] : editor,
     //   var countsPerReviewer = { "Reviewer": ["Reviewer " + (i+1)],
