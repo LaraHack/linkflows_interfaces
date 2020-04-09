@@ -216,6 +216,61 @@ function preprocessVirtuosoResults(results) {
       console.log(`reviewers[${key}] = ${value}`);
     }
 
+    Object.keys(reviewers).forEach( (key, index) => {
+      console.log("reviewer " + key + " = " + reviewers[key] + " -> " + index);
+    });
+
+    reviewers.forEach( (key, value, self) => {
+        console.log("NEW:" + key + value + self);
+    });
+
+    // var reviewers2 = new Map();
+    //
+    // for (var i = 1; i < csvResultsVirtuoso.length; i++) {
+    //   var ORCiD = csvResultsVirtuoso[i][0];
+    //
+		// 	// if (!reviewers.includes(ORCIDiD)) { // if reviewer not in the list, add it
+    //   if (!reviewers2.has(ORCiD)) {
+    //     reviewers2.set(ORCiD, 1);
+		// 	} else { // if reviewer already added, add one more review comment
+    //     reviewers2.set(ORCiD, reviewers2.get(ORCiD) + 1);
+    //     // console.log(`reviewers[${ORCIDiD}] = ${reviewers[ORCIDiD]}`);
+    //   }
+		// }
+    //
+    // reviewers2.forEach((value, key, i) => {
+    //   console.log(`reviewers2: ${value}, ${key }, ${i}`);
+    // });
+
+
+//     let strangerThings = [{
+//   name: 'Dustin',
+//   age: 13
+// }, {
+//   name: 'Mike',
+//   age: 12
+// },
+// {
+//   name: 'Eleven',
+//   age: 11
+// }];
+//
+// let characters = ['Dustin', 'Mike'];
+//
+// strangerThings.forEach( (role, index) => {
+//   console.log("name=" + role.name + " index=" + index);
+// });
+//
+// for (var i = 0; i < characters.length; i++) {
+//   if (characters[i] in Object.values(strangerThings).name) console.log(characters[i]);
+//   console.log(i);
+// }
+//
+// console.log(Object.values(strangerThings).name);
+
+
+
+
     //
     // console.log("reviewers[0]=" + [...reviewers][2][1]);
 
