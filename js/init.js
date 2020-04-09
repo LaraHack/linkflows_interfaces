@@ -29,7 +29,9 @@ var checkedDimensions = new Map([
 ]);
 
 // variables for the Virtuoso retrieved data
-var reviewer = [];
+
+// keys: the ORCID id of the reviewer, values: the number of review comments of that reviewer
+var reviewers = new Map();
 var csvResultsVirtuoso = [];
 var countsResultsVirtuoso = [];
 
@@ -183,14 +185,24 @@ function preprocessVirtuosoResults(results) {
 		// for graph generation data needs to be in the form of
 		// Reviewer,article,section,paragraph,syntax,style,content,negative,neutral,positive,I1,I2,I3,I4,I5,compulsory,suggestion,no_action
 		for (var i = 1; i < csvResultsVirtuoso.length; i++) {
-			if (!reviewer.includes(csvResultsVirtuoso[i][0])) {
-				reviewer.push(csvResultsVirtuoso[i][0]);
-			}
+      var ORCIDiD = csvResultsVirtuoso[i][0];
+
+			if (!reviewers.has()) { // if reviewer not in the list, add it
+        console.log("not found!");
+        reviewers.set(ORCIDiD, 50);
+			} else { // if reviewer already added, add one more review comment
+        // reviewers.set(ORCIDiD, reviewers.get(ORCIDiD) + 1);
+        console.log("found it!");
+        reviewers.set(ORCIDiD, 70);
+      }
 		}
 
-    // get counts for graph for every reviewer
+    reviewers.forEach((value, key) => {
+        console.log(`reviewer[${key}] = ${value}`);
+    });
+
     var reviewersCounts = [];
-    reviewer.forEach( (one_reviewer, i) => {
+    reviewers.forEach( (value, key, i) => {
       // var countsPerReviewer = { ["Reviewer " + (i+1)] : editor,
       var countsPerReviewer = { "Reviewer": ["Reviewer " + (i+1)],
       // var countsPerReviewer = { "Reviewer": one_reviewer,
@@ -203,70 +215,85 @@ function preprocessVirtuosoResults(results) {
       reviewersCounts.push(countsPerReviewer);
     });
 
-    // ordering in the current csvResultsVirtuoso: reviewer,reviewComment,part,aspect,posNeg,impact,actionNeeded
-		for (i = 1; i < csvResultsVirtuoso.length; i++) {
-			// find reviewer in resultsVirtuoso
-      var indexOfReviewer = reviewer.indexOf(csvResultsVirtuoso[i][0]);
+    // get counts for graph for every reviewer
+    // var reviewersCounts = [];
+    // reviewers.forEach( (one_reviewer, i) => {
+    //   // var countsPerReviewer = { ["Reviewer " + (i+1)] : editor,
+    //   var countsPerReviewer = { "Reviewer": ["Reviewer " + (i+1)],
+    //   // var countsPerReviewer = { "Reviewer": one_reviewer,
+    //                 "article" : 0, "section": 0, "paragraph": 0,
+    //                 "syntax": 0, "style": 0, "content": 0,
+    //                 "negative": 0, "neutral": 0, "positive": 0,
+    //                 "I1": 0, "I2": 0, "I3": 0, "I4": 0, "I5": 0,
+    //                 "compulsory": 0, "suggestion": 0, "no_action": 0
+    //                 };
+    //   reviewersCounts.push(countsPerReviewer);
+    // });
 
-      // if reviewer is found, then calculate counts for every dimension
-      if (indexOfReviewer > -1) {
-  			// check whether the part is article, section or paragraph
-        if (patternArticle.test(csvResultsVirtuoso[i][2])) {
-          reviewersCounts[indexOfReviewer].article =  reviewersCounts[indexOfReviewer].article + 1;
-        }
-        if (patternSection.test(csvResultsVirtuoso[i][2])) {
-          reviewersCounts[indexOfReviewer].section = reviewersCounts[indexOfReviewer].section + 1;
-        }
-        if (patternParagraph.test(csvResultsVirtuoso[i][2])) {
-          reviewersCounts[indexOfReviewer].paragraph = reviewersCounts[indexOfReviewer].paragraph + 1;
-        }
-
-        // check whether the aspect is syntax, style or content
-        if (patternSyntax.test(csvResultsVirtuoso[i][3])){
-          reviewersCounts[indexOfReviewer].syntax = reviewersCounts[indexOfReviewer].syntax + 1;
-        }
-        if (patternStyle.test(csvResultsVirtuoso[i][3])) {
-          reviewersCounts[indexOfReviewer].style = reviewersCounts[indexOfReviewer].style + 1;
-        }
-        if (patternContent.test(csvResultsVirtuoso[i][3])) {
-          reviewersCounts[indexOfReviewer].content = reviewersCounts[indexOfReviewer].content + 1;
-        }
-
-        // check whether the positivity/negativity dimension is negative, neutral or positive
-        if (patternNegative.test(csvResultsVirtuoso[i][4])) {
-          reviewersCounts[indexOfReviewer].negative = reviewersCounts[indexOfReviewer].negative + 1;
-        }
-        if (patternNeutral.test(csvResultsVirtuoso[i][4])) {
-          reviewersCounts[indexOfReviewer].neutral = reviewersCounts[indexOfReviewer].neutral + 1;
-        }
-        if (patternPositive.test(csvResultsVirtuoso[i][4])) {
-          reviewersCounts[indexOfReviewer].positive = reviewersCounts[indexOfReviewer].positive + 1;
-        }
-
-        // check whether the impact is 1, 2, 3, 4 or 5
-        if (0 < csvResultsVirtuoso[i][5] < 6) {
-          reviewersCounts[indexOfReviewer]["I" + csvResultsVirtuoso[i][5]] = reviewersCounts[indexOfReviewer]["I" + csvResultsVirtuoso[i][5]] + 1;
-        }
-
-        // check whether the action needed is compulsory, suggestion or no_action
-        if (patternCompulsory.test(csvResultsVirtuoso[i][6])) {
-          reviewersCounts[indexOfReviewer].compulsory = reviewersCounts[indexOfReviewer].compulsory + 1;
-        }
-        if (patternSuggestion.test(csvResultsVirtuoso[i][6])) {
-          reviewersCounts[indexOfReviewer].suggestion = reviewersCounts[indexOfReviewer].suggestion + 1;
-        }
-        if (patternNoAction.test(csvResultsVirtuoso[i][6])) {
-          reviewersCounts[indexOfReviewer].no_action = reviewersCounts[indexOfReviewer].no_action + 1;
-        }
-      }
-    }
+    // // ordering in the current csvResultsVirtuoso: reviewer,reviewComment,part,aspect,posNeg,impact,actionNeeded
+		// for (i = 1; i < csvResultsVirtuoso.length; i++) {
+		// 	// find reviewer in resultsVirtuoso
+    //   var indexOfReviewer = reviewer.indexOf(csvResultsVirtuoso[i][0]);
+    //
+    //   // if reviewer is found, then calculate counts for every dimension
+    //   if (indexOfReviewer > -1) {
+  	// 		// check whether the part is article, section or paragraph
+    //     if (patternArticle.test(csvResultsVirtuoso[i][2])) {
+    //       reviewersCounts[indexOfReviewer].article =  reviewersCounts[indexOfReviewer].article + 1;
+    //     }
+    //     if (patternSection.test(csvResultsVirtuoso[i][2])) {
+    //       reviewersCounts[indexOfReviewer].section = reviewersCounts[indexOfReviewer].section + 1;
+    //     }
+    //     if (patternParagraph.test(csvResultsVirtuoso[i][2])) {
+    //       reviewersCounts[indexOfReviewer].paragraph = reviewersCounts[indexOfReviewer].paragraph + 1;
+    //     }
+    //
+    //     // check whether the aspect is syntax, style or content
+    //     if (patternSyntax.test(csvResultsVirtuoso[i][3])){
+    //       reviewersCounts[indexOfReviewer].syntax = reviewersCounts[indexOfReviewer].syntax + 1;
+    //     }
+    //     if (patternStyle.test(csvResultsVirtuoso[i][3])) {
+    //       reviewersCounts[indexOfReviewer].style = reviewersCounts[indexOfReviewer].style + 1;
+    //     }
+    //     if (patternContent.test(csvResultsVirtuoso[i][3])) {
+    //       reviewersCounts[indexOfReviewer].content = reviewersCounts[indexOfReviewer].content + 1;
+    //     }
+    //
+    //     // check whether the positivity/negativity dimension is negative, neutral or positive
+    //     if (patternNegative.test(csvResultsVirtuoso[i][4])) {
+    //       reviewersCounts[indexOfReviewer].negative = reviewersCounts[indexOfReviewer].negative + 1;
+    //     }
+    //     if (patternNeutral.test(csvResultsVirtuoso[i][4])) {
+    //       reviewersCounts[indexOfReviewer].neutral = reviewersCounts[indexOfReviewer].neutral + 1;
+    //     }
+    //     if (patternPositive.test(csvResultsVirtuoso[i][4])) {
+    //       reviewersCounts[indexOfReviewer].positive = reviewersCounts[indexOfReviewer].positive + 1;
+    //     }
+    //
+    //     // check whether the impact is 1, 2, 3, 4 or 5
+    //     if (0 < csvResultsVirtuoso[i][5] < 6) {
+    //       reviewersCounts[indexOfReviewer]["I" + csvResultsVirtuoso[i][5]] = reviewersCounts[indexOfReviewer]["I" + csvResultsVirtuoso[i][5]] + 1;
+    //     }
+    //
+    //     // check whether the action needed is compulsory, suggestion or no_action
+    //     if (patternCompulsory.test(csvResultsVirtuoso[i][6])) {
+    //       reviewersCounts[indexOfReviewer].compulsory = reviewersCounts[indexOfReviewer].compulsory + 1;
+    //     }
+    //     if (patternSuggestion.test(csvResultsVirtuoso[i][6])) {
+    //       reviewersCounts[indexOfReviewer].suggestion = reviewersCounts[indexOfReviewer].suggestion + 1;
+    //     }
+    //     if (patternNoAction.test(csvResultsVirtuoso[i][6])) {
+    //       reviewersCounts[indexOfReviewer].no_action = reviewersCounts[indexOfReviewer].no_action + 1;
+    //     }
+    //   }
+    // }
 
     return JSON.stringify(reviewersCounts);
 }
 
 // function that draws the graph
-// dataEditors is the data in JSON format received after a GET request to the server
-function drawGraph(dataEditors) {
+// dataReviewers is the data in JSON format received after a GET request to the server
+function drawGraph(dataReviewers) {
   // remove the progress bar before drawing the graph
   $("#divProgressBar").remove();
 
@@ -314,10 +341,10 @@ function drawGraph(dataEditors) {
 
   var xBegin;
 
-  console.log("DATA EDITORS:" + dataEditors);
-  var data = JSON.parse(dataEditors);
-  // d3.csv(dataEditors, (error, data) => {
-    // d3.json(dataEditors, (error, data) => {
+  console.log("DATA REVIEWERS:" + dataReviewers);
+  var data = JSON.parse(dataReviewers);
+  // d3.csv(dataReviewers, (error, data) => {
+    // d3.json(dataReviewers, (error, data) => {
 
     var rowHeaders = d3.keys(data[0]).filter(function(key) { return key !== "Reviewer"; });
 
@@ -364,6 +391,7 @@ function drawGraph(dataEditors) {
    // x.domain([0, d3.max(data, function(d) {
    //   return d.total;
    // })]);
+   // TODO: add max of the initial retrieved data from all reviewers
    x.domain([0, 45]);
 
    // draw x axis
@@ -432,7 +460,7 @@ function drawGraph(dataEditors) {
            $("#divReviewCommentsContent").empty();
 
            var dataToShow = [];
-           var reviewerId = ((d.reviewer).toString()).split(" ").pop();
+           var reviewerId = ((d.reviewer).toString()).split(" ").pop(); // does this change d.reviewer data?!
            var resultsNoPrefixes = noPrefixesInVirtuosoResults();
 
            for (var i = 1; i < resultsNoPrefixes.length; i++) {
