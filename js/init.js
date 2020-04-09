@@ -192,10 +192,8 @@ function preprocessVirtuosoResults(results) {
 			// if (!reviewers.includes(ORCIDiD)) { // if reviewer not in the list, add it
       if (!(ORCIDiD in reviewers)) {
         reviewers[ORCIDiD] = 1;
-        // console.log(`reviewers[${ORCIDiD}] = 1`);
 			} else { // if reviewer already added, add one more review comment
         reviewers[ORCIDiD] = reviewers[ORCIDiD] + 1;
-        // console.log(`reviewers[${ORCIDiD}] = ${reviewers[ORCIDiD]}`);
       }
 		}
     console.log("length reviewers=" + Object.keys(reviewers).length);
@@ -220,27 +218,24 @@ function preprocessVirtuosoResults(results) {
       console.log("reviewer " + key + " = " + reviewers[key] + " -> " + index);
     });
 
-    reviewers.forEach( (key, value, self) => {
-        console.log("NEW:" + key + value + self);
-    });
+    var reviewers2 = new Map();
 
-    // var reviewers2 = new Map();
-    //
-    // for (var i = 1; i < csvResultsVirtuoso.length; i++) {
-    //   var ORCiD = csvResultsVirtuoso[i][0];
-    //
-		// 	// if (!reviewers.includes(ORCIDiD)) { // if reviewer not in the list, add it
-    //   if (!reviewers2.has(ORCiD)) {
-    //     reviewers2.set(ORCiD, 1);
-		// 	} else { // if reviewer already added, add one more review comment
-    //     reviewers2.set(ORCiD, reviewers2.get(ORCiD) + 1);
-    //     // console.log(`reviewers[${ORCIDiD}] = ${reviewers[ORCIDiD]}`);
-    //   }
-		// }
-    //
-    // reviewers2.forEach((value, key, i) => {
-    //   console.log(`reviewers2: ${value}, ${key }, ${i}`);
-    // });
+    for (var i = 1; i < csvResultsVirtuoso.length; i++) {
+      var ORCiD = csvResultsVirtuoso[i][0];
+
+			// if (!reviewers.includes(ORCIDiD)) { // if reviewer not in the list, add it
+      if (!reviewers2.has(ORCiD)) {
+        reviewers2.set(ORCiD, 1);
+			} else { // if reviewer already added, add one more review comment
+        reviewers2.set(ORCiD, reviewers2.get(ORCiD) + 1);
+        // console.log(`reviewers[${ORCIDiD}] = ${reviewers[ORCIDiD]}`);
+      }
+		}
+
+    let index = 0;
+    reviewers2.forEach((value, key) => {
+      console.log(`reviewers2: ${value}, ${key }, ${index++}`);
+    });
 
 
 //     let strangerThings = [{
