@@ -31,7 +31,7 @@ var checkedDimensions = new Map([
 // variables for the Virtuoso retrieved data
 
 // one element in the form of {ORCiD: "xxx", reviewerNo: "Reviewer Y", noReviewComments: "Z"}
-var reviewers = new Map();
+var reviewers = [];
 var csvResultsVirtuoso = [];
 var countsResultsVirtuoso = [];
 
@@ -189,16 +189,35 @@ function preprocessVirtuosoResults(results) {
 		for (var i = 1; i < csvResultsVirtuoso.length; i++) {
       var ORCIDiD = csvResultsVirtuoso[i][0];
 
-			if (!reviewers.has(ORCIDiD)) { // if reviewer not in the list, add it
-        reviewers.set(ORCIDiD, 1);
+			// if (!reviewers.includes(ORCIDiD)) { // if reviewer not in the list, add it
+      if (!(ORCIDiD in reviewers)) {
+        reviewers[ORCIDiD] = 1;
+        // console.log(`reviewers[${ORCIDiD}] = 1`);
 			} else { // if reviewer already added, add one more review comment
-        reviewers.set(ORCIDiD, reviewers.get(ORCIDiD) + 1);
+        reviewers[ORCIDiD] = reviewers[ORCIDiD] + 1;
+        // console.log(`reviewers[${ORCIDiD}] = ${reviewers[ORCIDiD]}`);
       }
 		}
+    console.log("length reviewers=" + Object.keys(reviewers).length);
 
-    reviewers.forEach((value, key) => {
-        console.log(`reviewer[${key}] = ${value}`);
-    });
+    // reviewers.forEach((value, i) => {
+    //   console.log(value, i);
+    // })
+
+    // reviewers.forEach( value => {
+    //     console.log(`reviewer = ${value}`);
+    // });
+    // reviewers.forEach((value, index, self) => {
+    //   console.log("forEach:" + value, index, self);
+    // });
+
+    for (var key in reviewers) {
+      var value = reviewers[key];
+      console.log(`reviewers[${key}] = ${value}`);
+    }
+
+    //
+    // console.log("reviewers[0]=" + [...reviewers][2][1]);
 
     // get counts for graph for every reviewer
     var reviewersCounts = [];
