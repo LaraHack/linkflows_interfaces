@@ -179,8 +179,8 @@ $.get(serverConnection, checkedDimensions)
       }
 
       // draw the graph for the retrieved, preprocessed results
-      // drawGraph(JSON.stringify(reviewersCounts));
-      drawGraph(reviewersCounts);
+      drawGraph(JSON.stringify(reviewersCounts));
+      // drawGraph(reviewersCounts);
       }
   }
 })
@@ -413,8 +413,8 @@ function calculateCountsReviewers(results, reviewersList, reviewersCounts) {
 
 // function that draws the graph
 // dataReviewers is the data in JSON format received after a GET request to the server
-// function drawGraph(dataReviewers) {
-function drawGraph(data) {
+function drawGraph(dataReviewers) {
+// function drawGraph(data) {
   // remove the progress bar before drawing the graph
   $("#divProgressBar").remove();
 
@@ -462,18 +462,20 @@ function drawGraph(data) {
 
   var xBegin;
 
-  // console.log("DATA REVIEWERS:" + dataReviewers);
-  // var data = JSON.parse(dataReviewers);
+  console.log("DATA REVIEWERS:" + dataReviewers);
+  var data = JSON.parse(dataReviewers);
   // d3.csv(dataReviewers, (error, data) => {
     // d3.json(dataReviewers, (error, data) => {
 
     var rowHeaders = d3.keys(data[0]).filter(function(key) { return key !== "reviewer"; });
     console.log("%%%%%%%%%%%%rowHeaders=" + rowHeaders);
+    rowHeaders.splice(0, 1);
+    console.log("%%%%%%%%%%%%rowHeaders=" + rowHeaders);
 
      // set color range for the dimensions present in the data file
      var colorRange = [];
 
-     for (var i = 1; i < rowHeaders.length; i++) { // first rowHeader is ORCiD
+     for (var i = 0; i < rowHeaders.length; i++) {
        colorRange[i] = colors[rowHeaders[i]];
        console.log("colorRange[" + i + "]=" + colorRange[i]);
      }
