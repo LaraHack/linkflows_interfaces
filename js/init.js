@@ -160,11 +160,26 @@ $.get(serverConnection, checkedDimensions)
       //     console.log("key=" + key + "; value=" + (reviewersCounts[i])[key]);
 
       // calculate counts for all reviewers
-      countsResults = calculateCountsReviewers(resultsNoPrefixes, reviewers, reviewersCounts);
+      calculateCountsReviewers(resultsNoPrefixes, reviewers, reviewersCounts);
       // console.log("COUNTS:" + countsResults);
 
+      for (var j = 0; j < reviewersCounts.length; j++) {
+        console.log("reviewersCounts[" + j + "].article=" + reviewersCounts[j].article +
+          "; reviewersCounts[" + j + "].section=" + reviewersCounts[j].section +
+          "; reviewersCounts[" + j + "].paragraph=" + reviewersCounts[j].paragraph +
+          "; reviewersCounts[" + j + "].syntax=" + reviewersCounts[j].syntax +
+          "; reviewersCounts[" + j + "].style=" + reviewersCounts[j].style +
+          "; reviewersCounts[" + j + "].content=" + reviewersCounts[j].content +
+          "; reviewersCounts[" + j + "].negative=" + reviewersCounts[j].negative +
+          "; reviewersCounts[" + j + "].neutral=" + reviewersCounts[j].neutral +
+          "; reviewersCounts[" + j + "].positive=" + reviewersCounts[j].positive +
+          "; reviewersCounts[" + j + "].compulsory=" + reviewersCounts[j].compulsory +
+          "; reviewersCounts[" + j + "].suggestion=" + reviewersCounts[j].suggestion +
+          "; reviewersCounts[" + j + "].no_action=" + reviewersCounts[j].no_action);
+      }
+
       // draw the graph for the retrieved, preprocessed results
-      // drawGraph(countsResults);
+      drawGraph(reviewersCounts);
       }
   }
 })
@@ -306,9 +321,10 @@ function initReviewersCounts(reviewers) {
 
     // for graph generation data needs to be in the form of
     // Reviewer,article,section,paragraph,syntax,style,content,negative,neutral,positive,I1,I2,I3,I4,I5,compulsory,suggestion,no_action
-    Object.keys(reviewers).forEach( (ORCIDiD, index) => {
+    Object.keys(reviewers).forEach( (ORCiD, index) => {
       // console.log("reviewer " + key + " = " + reviewers[key] + " -> " + index);
-      var countsPerReviewer = { "Reviewer": "Reviewer " + (index + 1),
+      var countsPerReviewer = { "ORCiD": ORCiD,
+                    "reviewer": "Reviewer " + (index + 1),
                     "article" : 0, "section": 0, "paragraph": 0,
                     "syntax": 0, "style": 0, "content": 0,
                     "negative": 0, "neutral": 0, "positive": 0,
@@ -325,71 +341,71 @@ function initReviewersCounts(reviewers) {
 // preprocess results retrieved from the Virtuoso sparql endpoint
 // Virtuoso results contain the following fields: "reviewer","reviewComment","part","aspect","posNeg","impact","actionNeeded", "reviewCommentContent"
 function calculateCountsReviewers(results, reviewersList, reviewersCounts) {
-  // ordering in the current csvResultsVirtuoso: reviewer,reviewComment,part,aspect,posNeg,impact,actionNeeded
   console.log("results.length=" + results.length);
-  for (i = 0; i < results.length; i++) {
+  for (var i = 0; i < results.length; i++) {
     var resultItem = results[i];
     console.log("resultItem=[" + i + "]=" + resultItem);
-  	// find reviewer in reviewersList
-    var indexOfReviewer = reviewersList.indexOf(resultItem[0]);
 
-    // if reviewer is found, then calculate counts for every dimension
-    if (indexOfReviewer > -1) {
+    for (var j = 0; j < reviewersCounts.length; j++) {
+      if (resultItem[0] == reviewersCounts[j].ORCiD) {
+        console.log("FOUND IT!!!");
+        // if reviewer is found, then calculate counts for every dimension
 
-      console.log(i + " -> " + resultItem[2] + "=" + checkedDimensions[resultItem[2]] +
-      "; " + resultItem[3] + "=" + checkedDimensions[resultItem[3]] +
-      "; " + resultItem[4] + "=" + checkedDimensions[resultItem[4]] +
-      "; " + resultItem[5] + "=" + checkedDimensions["I" + resultItem[5]] +
-      "; " + resultItem[6] + "=" + checkedDimensions[resultItem[6]] );
+        // console.log(i + " -> " + resultItem[2] + "=" + checkedDimensions[resultItem[2]] +
+        // "; " + resultItem[3] + "=" + checkedDimensions[resultItem[3]] +
+        // "; " + resultItem[4] + "=" + checkedDimensions[resultItem[4]] +
+        // "; " + resultItem[5] + "=" + checkedDimensions["I" + resultItem[5]] +
+        // "; " + resultItem[6] + "=" + checkedDimensions[resultItem[6]] );
 
-      // // check whether the part is article, section or paragraph
-      // if (csvResultsVirtuosoNoPrefixes[i][2] == "article" && checkedDimensions["article"]) {
-      //   reviewersCounts[indexOfReviewer].article =  reviewersCounts[indexOfReviewer].article + 1;
-      // }
-      // if (csvResultsVirtuosoNoPrefixes[i][2] == "section" && checkedDimensions["section"]) {
-      //   reviewersCounts[indexOfReviewer].section = reviewersCounts[indexOfReviewer].section + 1;
-      // }
-      // if (csvResultsVirtuosoNoPrefixes[i][2] == "paragraph" && checkedDimensions["paragraph"]) {
-      //   reviewersCounts[indexOfReviewer].paragraph = reviewersCounts[indexOfReviewer].paragraph + 1;
-      // }
-      //
-      // // check whether the aspect is syntax, style or content
-      // if (csvResultsVirtuosoNoPrefixes[i][3] == "syntax" && checkedDimensions["syntax"]){
-      //   reviewersCounts[indexOfReviewer].syntax = reviewersCounts[indexOfReviewer].syntax + 1;
-      // }
-      // if (csvResultsVirtuosoNoPrefixes[i][3] == "style" && checkedDimensions["style"]) {
-      //   reviewersCounts[indexOfReviewer].style = reviewersCounts[indexOfReviewer].style + 1;
-      // }
-      // if (csvResultsVirtuosoNoPrefixes[i][3] == "content" && checkedDimensions["content"]) {
-      //   reviewersCounts[indexOfReviewer].content = reviewersCounts[indexOfReviewer].content + 1;
-      // }
-      //
-      // // check whether the positivity/negativity dimension is negative, neutral or positive
-      // if (csvResultsVirtuosoNoPrefixes[i][4] == "negative" && checkedDimensions["negative"]) {
-      //   reviewersCounts[indexOfReviewer].negative = reviewersCounts[indexOfReviewer].negative + 1;
-      // }
-      // if (csvResultsVirtuosoNoPrefixes[i][4] == "neutral"  && checkedDimensions["neutral"]) {
-      //   reviewersCounts[indexOfReviewer].neutral = reviewersCounts[indexOfReviewer].neutral + 1;
-      // }
-      // if (csvResultsVirtuosoNoPrefixes[i][4] == "positive" && checkedDimensions["positive"]) {
-      //   reviewersCounts[indexOfReviewer].positive = reviewersCounts[indexOfReviewer].positive + 1;
-      // }
-      //
-      // // check whether the impact is 1, 2, 3, 4 or 5
-      // if (0 < csvResultsVirtuosoNoPrefixes[i][5] < 6 && checkedDimensions["I"+ csvResultsVirtuosoNoPrefixes[i][5]]) {
-      //   reviewersCounts[indexOfReviewer]["I" + csvResultsVirtuosoNoPrefixes[i][5]] = reviewersCounts[indexOfReviewer]["I" + csvResultsVirtuosoNoPrefixes[i][5]] + 1;
-      // }
-      //
-      // // check whether the action needed is compulsory, suggestion or no_action
-      // if (csvResultsVirtuosoNoPrefixes[i][6] == "compulsory" && checkedDimensions["compulsory"]) {
-      //   reviewersCounts[indexOfReviewer].compulsory = reviewersCounts[indexOfReviewer].compulsory + 1;
-      // }
-      // if (csvResultsVirtuosoNoPrefixes[i][6] == "suggestion" && checkedDimensions["suggestion"]) {
-      //   reviewersCounts[indexOfReviewer].suggestion = reviewersCounts[indexOfReviewer].suggestion + 1;
-      // }
-      // if (csvResultsVirtuosoNoPrefixes[i][6] == "no_action" && checkedDimensions["no_action"]) {
-      //   reviewersCounts[indexOfReviewer].no_action = reviewersCounts[indexOfReviewer].no_action + 1;
-      // }
+        // check whether the part is article, section or paragraph
+        if (resultItem[2] == "article" && checkedDimensions["article"]) {
+          reviewersCounts[j].article =  reviewersCounts[j].article + 1;
+        }
+        if (resultItem[2] == "section" && checkedDimensions["section"]) {
+          reviewersCounts[j].section = reviewersCounts[j].section + 1;
+        }
+        if (resultItem[2] == "paragraph" && checkedDimensions["paragraph"]) {
+          reviewersCounts[j].paragraph = reviewersCounts[j].paragraph + 1;
+        }
+
+        // check whether the aspect is syntax, style or content
+        if (resultItem[3] == "syntax" && checkedDimensions["syntax"]){
+          reviewersCounts[j].syntax = reviewersCounts[j].syntax + 1;
+        }
+        if (resultItem[3] == "style" && checkedDimensions["style"]) {
+          reviewersCounts[j].style = reviewersCounts[j].style + 1;
+        }
+        if (resultItem[3] == "content" && checkedDimensions["content"]) {
+          reviewersCounts[j].content = reviewersCounts[j].content + 1;
+        }
+
+        // check whether the positivity/negativity dimension is negative, neutral or positive
+        if (resultItem[4] == "negative" && checkedDimensions["negative"]) {
+          reviewersCounts[j].negative = reviewersCounts[j].negative + 1;
+        }
+        if (resultItem[4] == "neutral"  && checkedDimensions["neutral"]) {
+          reviewersCounts[j].neutral = reviewersCounts[j].neutral + 1;
+        }
+        if (resultItem[4] == "positive" && checkedDimensions["positive"]) {
+          reviewersCounts[j].positive = reviewersCounts[j].positive + 1;
+        }
+
+        // check whether the impact is 1, 2, 3, 4 or 5
+        if (0 < resultItem[5] < 6 && checkedDimensions["I"+ resultItem[5]]) {
+          reviewersCounts[j]["I" + resultItem[5]] = reviewersCounts[j]["I" + resultItem[5]] + 1;
+        }
+
+        // check whether the action needed is compulsory, suggestion or no_action
+        if (resultItem[6] == "compulsory" && checkedDimensions["compulsory"]) {
+          reviewersCounts[j].compulsory = reviewersCounts[j].compulsory + 1;
+        }
+        if (resultItem[6] == "suggestion" && checkedDimensions["suggestion"]) {
+          reviewersCounts[j].suggestion = reviewersCounts[j].suggestion + 1;
+        }
+        if (resultItem[6] == "no_action" && checkedDimensions["no_action"]) {
+          reviewersCounts[j].no_action = reviewersCounts[j].no_action + 1;
+        }
+      }
     }
   }
 }
@@ -450,7 +466,7 @@ function drawGraph(dataReviewers) {
   // d3.csv(dataReviewers, (error, data) => {
     // d3.json(dataReviewers, (error, data) => {
 
-    var rowHeaders = d3.keys(data[0]).filter(function(key) { return key !== "Reviewer"; });
+    var rowHeaders = d3.keys(data[0]).filter(function(key) { return key !== "reviewer"; });
 
      // set color range for the dimensions present in the data file
      var colorRange = [];
