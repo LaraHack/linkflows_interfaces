@@ -30,10 +30,19 @@ var checkedDimensions = new Map([
 
 // variables for the Virtuoso retrieved data
 
-// one element in the form of {ORCiD: "xxx", reviewerNo: "Reviewer Y", noReviewComments: "Z"}
-var reviewers = [];
+// array containing the results retrieved from Virtuoso
 var csvResultsVirtuoso = [];
-var countsResultsVirtuoso = [];
+
+// array containing all reviewers of the selected paper
+// one element in the form of {ORCiDk: Xk}, where
+// ORCiDk = ORCiD of reviewer k, Xk = total number of review comments of reviewer k
+var reviewers = [];
+
+// for graph generation data needs to be in the form
+// Reviewer,article,section,paragraph,syntax,style,content,negative,neutral,positive,I1,I2,I3,I4,I5,compulsory,suggestion,no_action
+var countsResults = [];
+
+// END of variables for the Virtuoso retrieved data
 
 // definition of dimensions used in the grouped stacked chart
 var dimensions = {
@@ -127,11 +136,11 @@ $.get(serverConnection, checkedDimensions)
   console.log("status:" + status);
 
   // preprocess results from Virtuoso
-  countsResultsVirtuoso = preprocessVirtuosoResults(resultsVirtuoso);
-  console.log("COUNTS:" + countsResultsVirtuoso);
+  countsResults = preprocessVirtuosoResults(resultsVirtuoso);
+  console.log("COUNTS:" + countsResults);
 
   // draw the graph for the retrieved, preprocessed results
-  drawGraph(countsResultsVirtuoso);
+  drawGraph(countsResults);
 })
 // failure to retrieve Virtuoso results
 .fail(function (jqXHR, textStatus, error) {
@@ -179,63 +188,47 @@ function getDimensionsChecked() {
 // preprocess results retrieved from the Virtuoso sparql endpoint
 // Virtuoso results contain the following fields: "reviewer","reviewComment","part","aspect","posNeg","impact","actionNeeded", "reviewCommentContent"
 function preprocessVirtuosoResults(results) {
- 	// first read CSV file with results
+ 	  // read the results retrieved from Virtuoso from the CSV form to an array
 		csvResultsVirtuoso = $.csv.toArrays(results);
-
     console.log("results length: " + csvResultsVirtuoso.length);
 
-		// for graph generation data needs to be in the form of
-		// Reviewer,article,section,paragraph,syntax,style,content,negative,neutral,positive,I1,I2,I3,I4,I5,compulsory,suggestion,no_action
-		for (var i = 1; i < csvResultsVirtuoso.length; i++) {
-      var ORCIDiD = csvResultsVirtuoso[i][0];
+    // extract all reviewers of the selected paper and their total number of review comments
+    reviewers = getTotalReviewersAndNoComments(csvResultsVirtuoso);
 
-			// if (!reviewers.includes(ORCIDiD)) { // if reviewer not in the list, add it
-      if (!(ORCIDiD in reviewers)) {
-        reviewers[ORCIDiD] = 1;
-			} else { // if reviewer already added, add one more review comment
-        reviewers[ORCIDiD] = reviewers[ORCIDiD] + 1;
+    // if paper contains at least a reviewer
+    if (Object.keys(reviewers).length) {
+      // create initial empty count array for every reviewer 
+      var initCounts = initReviewersCounts(reviewers);
+
+      if (initCounts != -1) {
+        console.log("initCounts.length=" + initCounts.length);
+        for (var i = 0; i < initCounts.length; i++) {
+          console.log("initCounts[" + i + "] =" + initCounts[i]);
+          for (key in initCounts[i])
+            console.log("key=" + key + "; value=" + (initCounts[i])[key]);
+        }
       }
-		}
-    console.log("length reviewers=" + Object.keys(reviewers).length);
-
-    // reviewers.forEach((value, i) => {
-    //   console.log(value, i);
-    // })
-
-    // reviewers.forEach( value => {
-    //     console.log(`reviewer = ${value}`);
-    // });
-    // reviewers.forEach((value, index, self) => {
-    //   console.log("forEach:" + value, index, self);
-    // });
-
-    for (var key in reviewers) {
-      var value = reviewers[key];
-      console.log(`reviewers[${key}] = ${value}`);
     }
+    // console.log("length reviewers=" + Object.keys(reviewers).length);
 
-    Object.keys(reviewers).forEach( (key, index) => {
-      console.log("reviewer " + key + " = " + reviewers[key] + " -> " + index);
-    });
-
-    var reviewers2 = new Map();
-
-    for (var i = 1; i < csvResultsVirtuoso.length; i++) {
-      var ORCiD = csvResultsVirtuoso[i][0];
-
-			// if (!reviewers.includes(ORCIDiD)) { // if reviewer not in the list, add it
-      if (!reviewers2.has(ORCiD)) {
-        reviewers2.set(ORCiD, 1);
-			} else { // if reviewer already added, add one more review comment
-        reviewers2.set(ORCiD, reviewers2.get(ORCiD) + 1);
-        // console.log(`reviewers[${ORCIDiD}] = ${reviewers[ORCIDiD]}`);
-      }
-		}
-
-    let index = 0;
-    reviewers2.forEach((value, key) => {
-      console.log(`reviewers2: ${value}, ${key }, ${index++}`);
-    });
+    // var reviewers2 = new Map();
+    //
+    // for (var i = 1; i < csvResultsVirtuoso.length; i++) {
+    //   var ORCiD = csvResultsVirtuoso[i][0];
+    //
+		// 	// if (!reviewers.includes(ORCIDiD)) { // if reviewer not in the list, add it
+    //   if (!reviewers2.has(ORCiD)) {
+    //     reviewers2.set(ORCiD, 1);
+		// 	} else { // if reviewer already added, add one more review comment
+    //     reviewers2.set(ORCiD, reviewers2.get(ORCiD) + 1);
+    //     // console.log(`reviewers[${ORCIDiD}] = ${reviewers[ORCIDiD]}`);
+    //   }
+		// }
+    //
+    // let index = 0;
+    // reviewers2.forEach((value, key) => {
+    //   console.log(`reviewers2: ${value}, ${key }, ${index++}`);
+    // });
 
 
 //     let strangerThings = [{
@@ -344,6 +337,50 @@ function preprocessVirtuosoResults(results) {
 
     return JSON.stringify(reviewersCounts);
 }
+
+// get an array containing the reviewers (identified by their ORCiD) and their total number of review comments
+// the array is in the form {ORCiD1: X1}, {ORCiD2: X2}, ..., {ORCiDk: Xk}, where
+// Xk is the maxim number of review comments of the reviewer identified with ORCiDk
+// k is the total number of reviewers for the selected article
+function getTotalReviewersAndNoComments(results) {
+  var reviewersAndNoComments = [];
+
+  for (var i = 1; i < results.length; i++) {
+    var ORCIDiD = results[i][0];
+    // if (!reviewers.includes(ORCIDiD)) { // if reviewer not in the list, add it
+    if (!(ORCIDiD in reviewersAndNoComments)) {
+      reviewersAndNoComments[ORCIDiD] = 1;
+    } else { // if reviewer already added, add one more review comment
+      reviewersAndNoComments[ORCIDiD] = reviewersAndNoComments[ORCIDiD] + 1;
+    }
+  }
+  return reviewersAndNoComments;
+}
+
+// create empty reviewer counts for every reviewer => helper function for drawing
+function initReviewersCounts(reviewers) {
+  // if array of reviewers exists and it is not empty
+  if (Array.isArray(reviewers) && Object.keys(reviewers).length) {
+    var reviewersCounts = [];
+
+    // for graph generation data needs to be in the form of
+    // Reviewer,article,section,paragraph,syntax,style,content,negative,neutral,positive,I1,I2,I3,I4,I5,compulsory,suggestion,no_action
+    Object.keys(reviewers).forEach( (ORCIDiD, index) => {
+      // console.log("reviewer " + key + " = " + reviewers[key] + " -> " + index);
+      var countsPerReviewer = { "Reviewer": ["Reviewer " + (index + 1)],
+                    "article" : 0, "section": 0, "paragraph": 0,
+                    "syntax": 0, "style": 0, "content": 0,
+                    "negative": 0, "neutral": 0, "positive": 0,
+                    "I1": 0, "I2": 0, "I3": 0, "I4": 0, "I5": 0,
+                    "compulsory": 0, "suggestion": 0, "no_action": 0
+      };
+      reviewersCounts.push(countsPerReviewer);
+    });
+    return reviewersCounts;
+  }
+  return -1;
+}
+
 
 // function that draws the graph
 // dataReviewers is the data in JSON format received after a GET request to the server
