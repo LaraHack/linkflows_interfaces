@@ -153,21 +153,20 @@ $.get(serverConnection, checkedDimensions)
     var reviewersCounts = initReviewersCounts(reviewers);
 
     if (reviewersCounts != -1) {
-      console.log("initCounts.length=" + reviewersCounts.length);
-      for (var i = 0; i < reviewersCounts.length; i++) {
-        console.log("initCounts[" + i + "] =" + reviewersCounts[i]);
-        for (key in reviewersCounts[i])
-          console.log("key=" + key + "; value=" + (reviewersCounts[i])[key]);
+      // console.log("initCounts.length=" + reviewersCounts.length);
+      // for (var i = 0; i < reviewersCounts.length; i++) {
+      //   console.log("initCounts[" + i + "] =" + reviewersCounts[i]);
+      //   for (key in reviewersCounts[i])
+      //     console.log("key=" + key + "; value=" + (reviewersCounts[i])[key]);
+
+      // calculate counts for all reviewers
+      countsResults = calculateCountsReviewers(resultsNoPrefixes, reviewers, reviewersCounts);
+      // console.log("COUNTS:" + countsResults);
+
+      // draw the graph for the retrieved, preprocessed results
+      // drawGraph(countsResults);
       }
-    }
   }
-
-  // preprocess results from Virtuoso
-  // countsResults = calculateCountsReviewers(resultsNoPrefixes, reviewers, reviewersCounts);
-  // console.log("COUNTS:" + countsResults);
-
-  // draw the graph for the retrieved, preprocessed results
-  // drawGraph(countsResults);
 })
 // failure to retrieve Virtuoso results
 .fail(function (jqXHR, textStatus, error) {
@@ -216,7 +215,7 @@ function getDimensionsChecked() {
 function noPrefixesInVirtuosoResults(results) {
   var noPrefixes = [];
 
-  for (var i = 1; i < results.length; i++) {
+  for (var i = 1; i < results.length; i++) { // first line contains the headers, it will be omitted
     var resultItem = results[i].slice();
 
     // get the comment number without the sparql prefix
@@ -286,15 +285,16 @@ function noPrefixesInVirtuosoResults(results) {
 function getTotalReviewersAndNrComments(results) {
   var reviewersAndNoComments = [];
 
-  for (var i = 1; i < results.length; i++) {
-    var ORCIDiD = results[i][0];
+  for (var i = 0; i < results.length; i++) {
+    var ORCiD = results[i][0];
 
-    if (!(ORCIDiD in reviewersAndNoComments)) {
-      reviewersAndNoComments[ORCIDiD] = 1;
+    if (!(ORCiD in reviewersAndNoComments)) {
+      reviewersAndNoComments[ORCiD] = 1;
     } else { // if reviewer already added, add one more review comment
-      reviewersAndNoComments[ORCIDiD] = reviewersAndNoComments[ORCIDiD] + 1;
+      reviewersAndNoComments[ORCiD] = reviewersAndNoComments[ORCiD] + 1;
     }
   }
+
   return reviewersAndNoComments;
 }
 
@@ -327,62 +327,69 @@ function initReviewersCounts(reviewers) {
 function calculateCountsReviewers(results, reviewersList, reviewersCounts) {
   // ordering in the current csvResultsVirtuoso: reviewer,reviewComment,part,aspect,posNeg,impact,actionNeeded
   console.log("results.length=" + results.length);
-  for (i = 1; i < results.length; i++) {
+  for (i = 0; i < results.length; i++) {
     var resultItem = results[i];
-    console.log("resultItem=" + resultItem);
-  	// find reviewer in resultsVirtuoso
+    console.log("resultItem=[" + i + "]=" + resultItem);
+  	// find reviewer in reviewersList
     var indexOfReviewer = reviewersList.indexOf(resultItem[0]);
 
     // if reviewer is found, then calculate counts for every dimension
     if (indexOfReviewer > -1) {
-  		// check whether the part is article, section or paragraph
-      if (patternArticle.test(resultItem[2])) {
-        reviewersCounts[indexOfReviewer].article =  reviewersCounts[indexOfReviewer].article + 1;
-      }
-      if (patternSection.test(resultItem[2])) {
-        reviewersCounts[indexOfReviewer].section = reviewersCounts[indexOfReviewer].section + 1;
-      }
-      if (patternParagraph.test(resultItem[2])) {
-        reviewersCounts[indexOfReviewer].paragraph = reviewersCounts[indexOfReviewer].paragraph + 1;
-      }
 
-      // check whether the aspect is syntax, style or content
-      if (patternSyntax.test(resultItem[3])){
-        reviewersCounts[indexOfReviewer].syntax = reviewersCounts[indexOfReviewer].syntax + 1;
-      }
-      if (patternStyle.test(resultItem[3])) {
-        reviewersCounts[indexOfReviewer].style = reviewersCounts[indexOfReviewer].style + 1;
-      }
-      if (patternContent.test(resultItem[3])) {
-        reviewersCounts[indexOfReviewer].content = reviewersCounts[indexOfReviewer].content + 1;
-      }
+      console.log(i + " -> " + resultItem[2] + "=" + checkedDimensions[resultItem[2]] +
+      "; " + resultItem[3] + "=" + checkedDimensions[resultItem[3]] +
+      "; " + resultItem[4] + "=" + checkedDimensions[resultItem[4]] +
+      "; " + resultItem[5] + "=" + checkedDimensions["I" + resultItem[5]] +
+      "; " + resultItem[6] + "=" + checkedDimensions[resultItem[6]] );
 
-      // check whether the positivity/negativity dimension is negative, neutral or positive
-      if (patternNegative.test(resultItem[4])) {
-        reviewersCounts[indexOfReviewer].negative = reviewersCounts[indexOfReviewer].negative + 1;
-      }
-      if (patternNeutral.test(resultItem[4])) {
-        reviewersCounts[indexOfReviewer].neutral = reviewersCounts[indexOfReviewer].neutral + 1;
-      }
-      if (patternPositive.test(resultItem[4])) {
-        reviewersCounts[indexOfReviewer].positive = reviewersCounts[indexOfReviewer].positive + 1;
-      }
-
-      // check whether the impact is 1, 2, 3, 4 or 5
-      if (0 < resultItem[5] < 6) {
-        reviewersCounts[indexOfReviewer]["I" + resultItem[5]] = reviewersCounts[indexOfReviewer]["I" + resultItem[5]] + 1;
-      }
-
-      // check whether the action needed is compulsory, suggestion or no_action
-      if (patternCompulsory.test(resultItem[6])) {
-        reviewersCounts[indexOfReviewer].compulsory = reviewersCounts[indexOfReviewer].compulsory + 1;
-      }
-      if (patternSuggestion.test(resultItem[6])) {
-        reviewersCounts[indexOfReviewer].suggestion = reviewersCounts[indexOfReviewer].suggestion + 1;
-      }
-      if (patternNoAction.test(resultItem[6])) {
-        reviewersCounts[indexOfReviewer].no_action = reviewersCounts[indexOfReviewer].no_action + 1;
-      }
+      // // check whether the part is article, section or paragraph
+      // if (csvResultsVirtuosoNoPrefixes[i][2] == "article" && checkedDimensions["article"]) {
+      //   reviewersCounts[indexOfReviewer].article =  reviewersCounts[indexOfReviewer].article + 1;
+      // }
+      // if (csvResultsVirtuosoNoPrefixes[i][2] == "section" && checkedDimensions["section"]) {
+      //   reviewersCounts[indexOfReviewer].section = reviewersCounts[indexOfReviewer].section + 1;
+      // }
+      // if (csvResultsVirtuosoNoPrefixes[i][2] == "paragraph" && checkedDimensions["paragraph"]) {
+      //   reviewersCounts[indexOfReviewer].paragraph = reviewersCounts[indexOfReviewer].paragraph + 1;
+      // }
+      //
+      // // check whether the aspect is syntax, style or content
+      // if (csvResultsVirtuosoNoPrefixes[i][3] == "syntax" && checkedDimensions["syntax"]){
+      //   reviewersCounts[indexOfReviewer].syntax = reviewersCounts[indexOfReviewer].syntax + 1;
+      // }
+      // if (csvResultsVirtuosoNoPrefixes[i][3] == "style" && checkedDimensions["style"]) {
+      //   reviewersCounts[indexOfReviewer].style = reviewersCounts[indexOfReviewer].style + 1;
+      // }
+      // if (csvResultsVirtuosoNoPrefixes[i][3] == "content" && checkedDimensions["content"]) {
+      //   reviewersCounts[indexOfReviewer].content = reviewersCounts[indexOfReviewer].content + 1;
+      // }
+      //
+      // // check whether the positivity/negativity dimension is negative, neutral or positive
+      // if (csvResultsVirtuosoNoPrefixes[i][4] == "negative" && checkedDimensions["negative"]) {
+      //   reviewersCounts[indexOfReviewer].negative = reviewersCounts[indexOfReviewer].negative + 1;
+      // }
+      // if (csvResultsVirtuosoNoPrefixes[i][4] == "neutral"  && checkedDimensions["neutral"]) {
+      //   reviewersCounts[indexOfReviewer].neutral = reviewersCounts[indexOfReviewer].neutral + 1;
+      // }
+      // if (csvResultsVirtuosoNoPrefixes[i][4] == "positive" && checkedDimensions["positive"]) {
+      //   reviewersCounts[indexOfReviewer].positive = reviewersCounts[indexOfReviewer].positive + 1;
+      // }
+      //
+      // // check whether the impact is 1, 2, 3, 4 or 5
+      // if (0 < csvResultsVirtuosoNoPrefixes[i][5] < 6 && checkedDimensions["I"+ csvResultsVirtuosoNoPrefixes[i][5]]) {
+      //   reviewersCounts[indexOfReviewer]["I" + csvResultsVirtuosoNoPrefixes[i][5]] = reviewersCounts[indexOfReviewer]["I" + csvResultsVirtuosoNoPrefixes[i][5]] + 1;
+      // }
+      //
+      // // check whether the action needed is compulsory, suggestion or no_action
+      // if (csvResultsVirtuosoNoPrefixes[i][6] == "compulsory" && checkedDimensions["compulsory"]) {
+      //   reviewersCounts[indexOfReviewer].compulsory = reviewersCounts[indexOfReviewer].compulsory + 1;
+      // }
+      // if (csvResultsVirtuosoNoPrefixes[i][6] == "suggestion" && checkedDimensions["suggestion"]) {
+      //   reviewersCounts[indexOfReviewer].suggestion = reviewersCounts[indexOfReviewer].suggestion + 1;
+      // }
+      // if (csvResultsVirtuosoNoPrefixes[i][6] == "no_action" && checkedDimensions["no_action"]) {
+      //   reviewersCounts[indexOfReviewer].no_action = reviewersCounts[indexOfReviewer].no_action + 1;
+      // }
     }
   }
 }
