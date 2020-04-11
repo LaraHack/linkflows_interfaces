@@ -31,7 +31,10 @@ var checkedDimensions = new Map([
 // variables for the Virtuoso retrieved data
 
 // array containing the results retrieved from Virtuoso
-var csvResultsVirtuoso = [];
+var resultsVirtuoso = [];
+
+// array containing the results retrieved from Virtuoso, without the prefixes
+var resultsNoPrefixes = [];
 
 // array containing all reviewers of the selected paper
 // one element in the form of {ORCiDk: Xk}, where
@@ -130,17 +133,41 @@ getDimensionsChecked();
 
 // get data from Virtuoso for the selected article
 $.get(serverConnection, checkedDimensions)
-.done((resultsVirtuoso, status) => {
-  // resultsVirtuoso = dataVirtuoso;
-  console.log("data:" + resultsVirtuoso);
+.done((csvResultsVirtuoso, status) => {
+  console.log("data:" + csvResultsVirtuoso);
   console.log("status:" + status);
 
+  // TODO: extra check here if the results are empty or not
+  // create array with all results retrieved from the SPARQL endpoint
+  resultsVirtuoso = $.csv.toArrays(csvResultsVirtuoso);
+
+  // remove the prefixes for the results, easier to handle
+  resultsNoPrefixes = noPrefixesInVirtuosoResults(resultsVirtuoso);
+  console.log("NO PREFIXES:" + resultsNoPrefixes);
+
+  // extract all reviewers of the selected paper and their total number of review comments
+  reviewers = getTotalReviewersAndNrComments(resultsNoPrefixes);
+
+  if (Object.keys(reviewers).length) {
+    // create initial empty count array for every reviewer
+    var reviewersCounts = initReviewersCounts(reviewers);
+
+    if (reviewersCounts != -1) {
+      console.log("initCounts.length=" + reviewersCounts.length);
+      for (var i = 0; i < reviewersCounts.length; i++) {
+        console.log("initCounts[" + i + "] =" + reviewersCounts[i]);
+        for (key in reviewersCounts[i])
+          console.log("key=" + key + "; value=" + (reviewersCounts[i])[key]);
+      }
+    }
+  }
+
   // preprocess results from Virtuoso
-  countsResults = preprocessVirtuosoResults(resultsVirtuoso);
-  console.log("COUNTS:" + countsResults);
+  // countsResults = calculateCountsReviewers(resultsNoPrefixes, reviewers, reviewersCounts);
+  // console.log("COUNTS:" + countsResults);
 
   // draw the graph for the retrieved, preprocessed results
-  drawGraph(countsResults);
+  // drawGraph(countsResults);
 })
 // failure to retrieve Virtuoso results
 .fail(function (jqXHR, textStatus, error) {
@@ -185,169 +212,83 @@ function getDimensionsChecked() {
     });
 }
 
-// preprocess results retrieved from the Virtuoso sparql endpoint
-// Virtuoso results contain the following fields: "reviewer","reviewComment","part","aspect","posNeg","impact","actionNeeded", "reviewCommentContent"
-function preprocessVirtuosoResults(results) {
- 	  // read the results retrieved from Virtuoso from the CSV form to an array
-		csvResultsVirtuoso = $.csv.toArrays(results);
-    console.log("results length: " + csvResultsVirtuoso.length);
+// preprocessing the results got from Virtuoso
+function noPrefixesInVirtuosoResults(results) {
+  var noPrefixes = [];
 
-    // extract all reviewers of the selected paper and their total number of review comments
-    reviewers = getTotalReviewersAndNoComments(csvResultsVirtuoso);
+  for (var i = 1; i < results.length; i++) {
+    var resultItem = results[i].slice();
 
-    // if paper contains at least a reviewer
-    if (Object.keys(reviewers).length) {
-      // create initial empty count array for every reviewer 
-      var initCounts = initReviewersCounts(reviewers);
+    // get the comment number without the sparql prefix
+    resultItem[1] = resultItem[1].split("#").pop();
 
-      if (initCounts != -1) {
-        console.log("initCounts.length=" + initCounts.length);
-        for (var i = 0; i < initCounts.length; i++) {
-          console.log("initCounts[" + i + "] =" + initCounts[i]);
-          for (key in initCounts[i])
-            console.log("key=" + key + "; value=" + (initCounts[i])[key]);
-        }
-      }
-    }
-    // console.log("length reviewers=" + Object.keys(reviewers).length);
+     // check whether the part is article, section or paragraph
+     if (patternArticle.test(results[i][2])) {
+       // resultItem[i][2] = "article";
+       resultItem[2] = "article";
+     }
+     if (patternSection.test(results[i][2])) {
+       resultItem[2] = "section";
+     }
+     if (patternParagraph.test(results[i][2])) {
+       resultItem[2] = "paragraph";
+     }
 
-    // var reviewers2 = new Map();
-    //
-    // for (var i = 1; i < csvResultsVirtuoso.length; i++) {
-    //   var ORCiD = csvResultsVirtuoso[i][0];
-    //
-		// 	// if (!reviewers.includes(ORCIDiD)) { // if reviewer not in the list, add it
-    //   if (!reviewers2.has(ORCiD)) {
-    //     reviewers2.set(ORCiD, 1);
-		// 	} else { // if reviewer already added, add one more review comment
-    //     reviewers2.set(ORCiD, reviewers2.get(ORCiD) + 1);
-    //     // console.log(`reviewers[${ORCIDiD}] = ${reviewers[ORCIDiD]}`);
-    //   }
-		// }
-    //
-    // let index = 0;
-    // reviewers2.forEach((value, key) => {
-    //   console.log(`reviewers2: ${value}, ${key }, ${index++}`);
-    // });
+     // check whether the aspect is syntax, style or content
+     if (patternSyntax.test(results[i][3])){
+       resultItem[3] = "syntax";
+     }
+     if (patternStyle.test(results[i][3])) {
+       resultItem[3] = "style";
+     }
+     if (patternContent.test(results[i][3])) {
+       resultItem[3] = "content";
+     }
 
+     // check whether the positivity/negativity dimension is negative, neutral or positive
+     if (patternNegative.test(results[i][4])) {
+       resultItem[4] = "negative";
+     }
+     if (patternNeutral.test(results[i][4])) {
+       resultItem[4] = "neutral";
+     }
+     if (patternPositive.test(results[i][4])) {
+       resultItem[4] = "positive";
+     }
 
-//     let strangerThings = [{
-//   name: 'Dustin',
-//   age: 13
-// }, {
-//   name: 'Mike',
-//   age: 12
-// },
-// {
-//   name: 'Eleven',
-//   age: 11
-// }];
-//
-// let characters = ['Dustin', 'Mike'];
-//
-// strangerThings.forEach( (role, index) => {
-//   console.log("name=" + role.name + " index=" + index);
-// });
-//
-// for (var i = 0; i < characters.length; i++) {
-//   if (characters[i] in Object.values(strangerThings).name) console.log(characters[i]);
-//   console.log(i);
-// }
-//
-// console.log(Object.values(strangerThings).name);
+     // check whether the impact is 1, 2, 3, 4 or 5
+     // if (0 < results[i][5] < 6) {
+     //   impact = "I" + results[i][5];
+     // }
 
+     // check whether the action needed is compulsory, suggestion or no_action
+     if (patternCompulsory.test(results[i][6])) {
+       resultItem[6] = "compulsory";
+     }
+     if (patternSuggestion.test(results[i][6])) {
+       resultItem[6] = "suggestion";
+     }
+     if (patternNoAction.test(results[i][6])) {
+       resultItem[6] = "no_action";
+     }
 
+     noPrefixes.push(resultItem);
 
+   }
 
-    //
-    // console.log("reviewers[0]=" + [...reviewers][2][1]);
-
-    // get counts for graph for every reviewer
-    var reviewersCounts = [];
-    // reviewers.forEach( (one_reviewer, i) => {
-    //   // var countsPerReviewer = { ["Reviewer " + (i+1)] : editor,
-    //   var countsPerReviewer = { "Reviewer": ["Reviewer " + (i+1)],
-    //   // var countsPerReviewer = { "Reviewer": one_reviewer,
-    //                 "article" : 0, "section": 0, "paragraph": 0,
-    //                 "syntax": 0, "style": 0, "content": 0,
-    //                 "negative": 0, "neutral": 0, "positive": 0,
-    //                 "I1": 0, "I2": 0, "I3": 0, "I4": 0, "I5": 0,
-    //                 "compulsory": 0, "suggestion": 0, "no_action": 0
-    //                 };
-    //   reviewersCounts.push(countsPerReviewer);
-    // });
-
-    // // ordering in the current csvResultsVirtuoso: reviewer,reviewComment,part,aspect,posNeg,impact,actionNeeded
-		// for (i = 1; i < csvResultsVirtuoso.length; i++) {
-		// 	// find reviewer in resultsVirtuoso
-    //   var indexOfReviewer = reviewer.indexOf(csvResultsVirtuoso[i][0]);
-    //
-    //   // if reviewer is found, then calculate counts for every dimension
-    //   if (indexOfReviewer > -1) {
-  	// 		// check whether the part is article, section or paragraph
-    //     if (patternArticle.test(csvResultsVirtuoso[i][2])) {
-    //       reviewersCounts[indexOfReviewer].article =  reviewersCounts[indexOfReviewer].article + 1;
-    //     }
-    //     if (patternSection.test(csvResultsVirtuoso[i][2])) {
-    //       reviewersCounts[indexOfReviewer].section = reviewersCounts[indexOfReviewer].section + 1;
-    //     }
-    //     if (patternParagraph.test(csvResultsVirtuoso[i][2])) {
-    //       reviewersCounts[indexOfReviewer].paragraph = reviewersCounts[indexOfReviewer].paragraph + 1;
-    //     }
-    //
-    //     // check whether the aspect is syntax, style or content
-    //     if (patternSyntax.test(csvResultsVirtuoso[i][3])){
-    //       reviewersCounts[indexOfReviewer].syntax = reviewersCounts[indexOfReviewer].syntax + 1;
-    //     }
-    //     if (patternStyle.test(csvResultsVirtuoso[i][3])) {
-    //       reviewersCounts[indexOfReviewer].style = reviewersCounts[indexOfReviewer].style + 1;
-    //     }
-    //     if (patternContent.test(csvResultsVirtuoso[i][3])) {
-    //       reviewersCounts[indexOfReviewer].content = reviewersCounts[indexOfReviewer].content + 1;
-    //     }
-    //
-    //     // check whether the positivity/negativity dimension is negative, neutral or positive
-    //     if (patternNegative.test(csvResultsVirtuoso[i][4])) {
-    //       reviewersCounts[indexOfReviewer].negative = reviewersCounts[indexOfReviewer].negative + 1;
-    //     }
-    //     if (patternNeutral.test(csvResultsVirtuoso[i][4])) {
-    //       reviewersCounts[indexOfReviewer].neutral = reviewersCounts[indexOfReviewer].neutral + 1;
-    //     }
-    //     if (patternPositive.test(csvResultsVirtuoso[i][4])) {
-    //       reviewersCounts[indexOfReviewer].positive = reviewersCounts[indexOfReviewer].positive + 1;
-    //     }
-    //
-    //     // check whether the impact is 1, 2, 3, 4 or 5
-    //     if (0 < csvResultsVirtuoso[i][5] < 6) {
-    //       reviewersCounts[indexOfReviewer]["I" + csvResultsVirtuoso[i][5]] = reviewersCounts[indexOfReviewer]["I" + csvResultsVirtuoso[i][5]] + 1;
-    //     }
-    //
-    //     // check whether the action needed is compulsory, suggestion or no_action
-    //     if (patternCompulsory.test(csvResultsVirtuoso[i][6])) {
-    //       reviewersCounts[indexOfReviewer].compulsory = reviewersCounts[indexOfReviewer].compulsory + 1;
-    //     }
-    //     if (patternSuggestion.test(csvResultsVirtuoso[i][6])) {
-    //       reviewersCounts[indexOfReviewer].suggestion = reviewersCounts[indexOfReviewer].suggestion + 1;
-    //     }
-    //     if (patternNoAction.test(csvResultsVirtuoso[i][6])) {
-    //       reviewersCounts[indexOfReviewer].no_action = reviewersCounts[indexOfReviewer].no_action + 1;
-    //     }
-    //   }
-    // }
-
-    return JSON.stringify(reviewersCounts);
+   return noPrefixes;
 }
 
 // get an array containing the reviewers (identified by their ORCiD) and their total number of review comments
 // the array is in the form {ORCiD1: X1}, {ORCiD2: X2}, ..., {ORCiDk: Xk}, where
 // Xk is the maxim number of review comments of the reviewer identified with ORCiDk
 // k is the total number of reviewers for the selected article
-function getTotalReviewersAndNoComments(results) {
+function getTotalReviewersAndNrComments(results) {
   var reviewersAndNoComments = [];
 
   for (var i = 1; i < results.length; i++) {
     var ORCIDiD = results[i][0];
-    // if (!reviewers.includes(ORCIDiD)) { // if reviewer not in the list, add it
+
     if (!(ORCIDiD in reviewersAndNoComments)) {
       reviewersAndNoComments[ORCIDiD] = 1;
     } else { // if reviewer already added, add one more review comment
@@ -367,7 +308,7 @@ function initReviewersCounts(reviewers) {
     // Reviewer,article,section,paragraph,syntax,style,content,negative,neutral,positive,I1,I2,I3,I4,I5,compulsory,suggestion,no_action
     Object.keys(reviewers).forEach( (ORCIDiD, index) => {
       // console.log("reviewer " + key + " = " + reviewers[key] + " -> " + index);
-      var countsPerReviewer = { "Reviewer": ["Reviewer " + (index + 1)],
+      var countsPerReviewer = { "Reviewer": "Reviewer " + (index + 1),
                     "article" : 0, "section": 0, "paragraph": 0,
                     "syntax": 0, "style": 0, "content": 0,
                     "negative": 0, "neutral": 0, "positive": 0,
@@ -379,6 +320,71 @@ function initReviewersCounts(reviewers) {
     return reviewersCounts;
   }
   return -1;
+}
+
+// preprocess results retrieved from the Virtuoso sparql endpoint
+// Virtuoso results contain the following fields: "reviewer","reviewComment","part","aspect","posNeg","impact","actionNeeded", "reviewCommentContent"
+function calculateCountsReviewers(results, reviewersList, reviewersCounts) {
+  // ordering in the current csvResultsVirtuoso: reviewer,reviewComment,part,aspect,posNeg,impact,actionNeeded
+  console.log("results.length=" + results.length);
+  for (i = 1; i < results.length; i++) {
+    var resultItem = results[i];
+    console.log("resultItem=" + resultItem);
+  	// find reviewer in resultsVirtuoso
+    var indexOfReviewer = reviewersList.indexOf(resultItem[0]);
+
+    // if reviewer is found, then calculate counts for every dimension
+    if (indexOfReviewer > -1) {
+  		// check whether the part is article, section or paragraph
+      if (patternArticle.test(resultItem[2])) {
+        reviewersCounts[indexOfReviewer].article =  reviewersCounts[indexOfReviewer].article + 1;
+      }
+      if (patternSection.test(resultItem[2])) {
+        reviewersCounts[indexOfReviewer].section = reviewersCounts[indexOfReviewer].section + 1;
+      }
+      if (patternParagraph.test(resultItem[2])) {
+        reviewersCounts[indexOfReviewer].paragraph = reviewersCounts[indexOfReviewer].paragraph + 1;
+      }
+
+      // check whether the aspect is syntax, style or content
+      if (patternSyntax.test(resultItem[3])){
+        reviewersCounts[indexOfReviewer].syntax = reviewersCounts[indexOfReviewer].syntax + 1;
+      }
+      if (patternStyle.test(resultItem[3])) {
+        reviewersCounts[indexOfReviewer].style = reviewersCounts[indexOfReviewer].style + 1;
+      }
+      if (patternContent.test(resultItem[3])) {
+        reviewersCounts[indexOfReviewer].content = reviewersCounts[indexOfReviewer].content + 1;
+      }
+
+      // check whether the positivity/negativity dimension is negative, neutral or positive
+      if (patternNegative.test(resultItem[4])) {
+        reviewersCounts[indexOfReviewer].negative = reviewersCounts[indexOfReviewer].negative + 1;
+      }
+      if (patternNeutral.test(resultItem[4])) {
+        reviewersCounts[indexOfReviewer].neutral = reviewersCounts[indexOfReviewer].neutral + 1;
+      }
+      if (patternPositive.test(resultItem[4])) {
+        reviewersCounts[indexOfReviewer].positive = reviewersCounts[indexOfReviewer].positive + 1;
+      }
+
+      // check whether the impact is 1, 2, 3, 4 or 5
+      if (0 < resultItem[5] < 6) {
+        reviewersCounts[indexOfReviewer]["I" + resultItem[5]] = reviewersCounts[indexOfReviewer]["I" + resultItem[5]] + 1;
+      }
+
+      // check whether the action needed is compulsory, suggestion or no_action
+      if (patternCompulsory.test(resultItem[6])) {
+        reviewersCounts[indexOfReviewer].compulsory = reviewersCounts[indexOfReviewer].compulsory + 1;
+      }
+      if (patternSuggestion.test(resultItem[6])) {
+        reviewersCounts[indexOfReviewer].suggestion = reviewersCounts[indexOfReviewer].suggestion + 1;
+      }
+      if (patternNoAction.test(resultItem[6])) {
+        reviewersCounts[indexOfReviewer].no_action = reviewersCounts[indexOfReviewer].no_action + 1;
+      }
+    }
+  }
 }
 
 
@@ -774,71 +780,4 @@ function getDataForGraph() {
   }
 
   return JSON.stringify(reviewersCounts);
-}
-
-// preprocessing the results got from Virtuoso
-function noPrefixesInVirtuosoResults() {
-  var resultsNoPrefixes = [];
-
-  for (var i = 1; i < csvResultsVirtuoso.length; i++) {
-    var resultItem = csvResultsVirtuoso[i].slice();
-
-    // get the comment number without the sparql prefix
-    resultItem[1] = resultItem[1].split("#").pop();
-
-     // check whether the part is article, section or paragraph
-     if (patternArticle.test(csvResultsVirtuoso[i][2])) {
-       // resultItem[i][2] = "article";
-       resultItem[2] = "article";
-     }
-     if (patternSection.test(csvResultsVirtuoso[i][2])) {
-       resultItem[2] = "section";
-     }
-     if (patternParagraph.test(csvResultsVirtuoso[i][2])) {
-       resultItem[2] = "paragraph";
-     }
-
-     // check whether the aspect is syntax, style or content
-     if (patternSyntax.test(csvResultsVirtuoso[i][3])){
-       resultItem[3] = "syntax";
-     }
-     if (patternStyle.test(csvResultsVirtuoso[i][3])) {
-       resultItem[3] = "style";
-     }
-     if (patternContent.test(csvResultsVirtuoso[i][3])) {
-       resultItem[3] = "content";
-     }
-
-     // check whether the positivity/negativity dimension is negative, neutral or positive
-     if (patternNegative.test(csvResultsVirtuoso[i][4])) {
-       resultItem[4] = "negative";
-     }
-     if (patternNeutral.test(csvResultsVirtuoso[i][4])) {
-       resultItem[4] = "neutral";
-     }
-     if (patternPositive.test(csvResultsVirtuoso[i][4])) {
-       resultItem[4] = "positive";
-     }
-
-     // check whether the impact is 1, 2, 3, 4 or 5
-     // if (0 < csvResultsVirtuoso[i][5] < 6) {
-     //   impact = "I" + csvResultsVirtuoso[i][5];
-     // }
-
-     // check whether the action needed is compulsory, suggestion or no_action
-     if (patternCompulsory.test(csvResultsVirtuoso[i][6])) {
-       resultItem[6] = "compulsory";
-     }
-     if (patternSuggestion.test(csvResultsVirtuoso[i][6])) {
-       resultItem[6] = "suggestion";
-     }
-     if (patternNoAction.test(csvResultsVirtuoso[i][6])) {
-       resultItem[6] = "no_action";
-     }
-
-     resultsNoPrefixes.push(resultItem);
-
-   }
-
-   return resultsNoPrefixes;
 }
