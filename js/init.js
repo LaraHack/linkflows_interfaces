@@ -41,7 +41,10 @@ var resultsNoPrefixes = [];
 // ORCiDk = ORCiD of reviewer k, Xk = total number of review comments of reviewer k
 var reviewers = [];
 
-// for graph generation data needs to be in the form
+// maximum number of comments made by the reviewers, necessary for the x axis of the graph
+var maxNrComments = 0;
+
+// for graph generation data nee  ds to be in the form
 // Reviewer,article,section,paragraph,syntax,style,content,negative,neutral,positive,I1,I2,I3,I4,I5,compulsory,suggestion,no_action
 var countsResults = [];
 
@@ -147,6 +150,8 @@ $.get(serverConnection, checkedDimensions)
 
   // extract all reviewers of the selected paper and their total number of review comments
   reviewers = getTotalReviewersAndNrComments(resultsNoPrefixes);
+  maxNrComments = setMaxNrComments(reviewers);
+  console.log("_________________________maxNrComments=" + maxNrComments);
 
   if (Object.keys(reviewers).length) {
     // create initial empty count array for every reviewer
@@ -312,6 +317,21 @@ function getTotalReviewersAndNrComments(results) {
   }
 
   return reviewersAndNoComments;
+}
+
+// get the m
+function setMaxNrComments(reviewers) {
+  var max = 0;
+
+  // if array of reviewers exists and it is not empty
+  if (Array.isArray(reviewers) && Object.keys(reviewers).length) {
+
+    Object.keys(reviewers).forEach( (ORCiD, index) => {
+      (reviewers[ORCiD] > max ? (max = reviewers[ORCiD]) : max);
+    });
+  }
+
+  return max;
 }
 
 // create empty reviewer counts for every reviewer => helper function for drawing
@@ -522,8 +542,8 @@ function drawGraph(data) {
    x.domain([0, d3.max(data, function(d) {
      return d.total;
    })]);
-   // TODO: add max of the initial retrieved data from all reviewers
-   x.domain([0, 45]);
+   // max number shown on x axis, divisible by 5
+   x.domain([0, Math.ceil(maxNrComments/5) * 5]);
 
    // draw x axis
    inner.append("g")
