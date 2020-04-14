@@ -179,8 +179,8 @@ $.get(serverConnection, checkedDimensions)
       }
 
       // draw the graph for the retrieved, preprocessed results
-      drawGraph(JSON.stringify(reviewersCounts));
-      // drawGraph(reviewersCounts);
+      // drawGraph(JSON.stringify(reviewersCounts));
+      drawGraph(reviewersCounts);
       }
   }
 })
@@ -413,8 +413,8 @@ function calculateCountsReviewers(results, reviewersList, reviewersCounts) {
 
 // function that draws the graph
 // dataReviewers is the data in JSON format received after a GET request to the server
-function drawGraph(dataReviewers) {
-// function drawGraph(data) {
+// function drawGraph(dataReviewers) {
+function drawGraph(data) {
   // remove the progress bar before drawing the graph
   $("#divProgressBar").remove();
 
@@ -462,22 +462,24 @@ function drawGraph(dataReviewers) {
 
   var xBegin;
 
-  console.log("DATA REVIEWERS:" + dataReviewers);
-  var data = JSON.parse(dataReviewers);
+  // console.log("DATA REVIEWERS:" + dataReviewers);
+  // var data = JSON.parse(dataReviewers);
   // d3.csv(dataReviewers, (error, data) => {
     // d3.json(dataReviewers, (error, data) => {
 
-    var rowHeaders = d3.keys(data[0]).filter(function(key) { return key !== "reviewer"; });
-    console.log("%%%%%%%%%%%%rowHeaders=" + rowHeaders);
-    rowHeaders.splice(0, 1);
-    console.log("%%%%%%%%%%%%rowHeaders=" + rowHeaders);
+    // get all dimension headers present in the counts, except for the reviewer and the ORCiD
+    // rowHeaders=article,section,paragraph,syntax,style,content,negative,neutral,positive,I1,I2,I3,I4,I5,compulsory,suggestion,no_action
+    var rowHeaders = d3.keys(data[0]).filter(function(key) { return ((key !== "reviewer") && (key != "ORCiD")) });
+    // console.log("%%%%%%%%%%%%rowHeaders=" + rowHeaders);
+    // rowHeaders.splice(0, 1);
+    // console.log("%%%%%%%%%%%%rowHeaders=" + rowHeaders);
 
      // set color range for the dimensions present in the data file
      var colorRange = [];
 
      for (var i = 0; i < rowHeaders.length; i++) {
        colorRange[i] = colors[rowHeaders[i]];
-       console.log("colorRange[" + i + "]=" + colorRange[i]);
+       // console.log("colorRange[" + i + "]=" + colorRange[i]);
      }
 
      color.range(colorRange);
@@ -485,37 +487,41 @@ function drawGraph(dataReviewers) {
      // map colors in the defined palette to the dimensions of the data
      color.domain(rowHeaders);
 
-     // get data for each dimension and
-     // calculate the coordonates for the beginning and the end of each for the x axis
-     data.forEach(function(d) {
+     // get data for each dimension of one reviewer at a time and
+     // calculate the coordonates for the beginning and the end of each dimension for the x axis
+     data.forEach((reviewerCounts) => {
+       console.log("&&&&&&&&&&&&&&& d=" + JSON.stringify(reviewerCounts));
+
        var xRow = new Array();
-       d.rowDetails = rowHeaders.map(function(name) {
-         for (ic in dimensions) {
-           if($.inArray(name, dimensions[ic]) >= 0){
-             if (!xRow[ic]){
-               xRow[ic] = 0;
+       reviewerCounts.rowDetails = rowHeaders.map((nameDimension) => {
+         // console.log("!!!!!!!!!!NAME=" + nameDimension);
+         for (dim in dimensions) {
+           if($.inArray(nameDimension, dimensions[dim]) >= 0){
+             console.log("!!!!!!!!!!NAME=" + nameDimension + "; dim=" + dim + "; dimensions[ic]=" + dimensions[dim]);
+             if (!xRow[dim]){
+               xRow[dim] = 0;
              }
-             xBegin = xRow[ic];
-             xRow[ic] += +d[name];
-             return {reviewer: d.Reviewer, name: name, row: ic, xBegin: xBegin, xEnd: +d[name] + xBegin,};
+             xBegin = xRow[dim];
+             xRow[dim] += +reviewerCounts[nameDimension];
+             return {ORCiD: reviewerCounts.ORCiD, reviewer: reviewerCounts.reviewer, name: nameDimension, row: dim, xBegin: xBegin, xEnd: +reviewerCounts[nameDimension] + xBegin,};
            }
          }
        });
        // get maximum number of review comments for each reviewer
-       d.total = d3.max(d.rowDetails, function(d) {
-         return d.xEnd;
+       reviewerCounts.total = d3.max(reviewerCounts.rowDetails, function(reviewerCounts) {
+         return reviewerCounts.xEnd;
        });
      });
 
    // map data onto graph axes
-   var reviewers = data.map(function(d) { return d.Reviewer; });
+   var reviewers = data.map((d) => { return d.reviewer; });
 
    y0.domain(reviewers);
    y1.domain(d3.keys(dimensions)).rangeRoundBands([0, y0.rangeBand()]);
 
-   // x.domain([0, d3.max(data, function(d) {
-   //   return d.total;
-   // })]);
+   x.domain([0, d3.max(data, function(d) {
+     return d.total;
+   })]);
    // TODO: add max of the initial retrieved data from all reviewers
    x.domain([0, 45]);
 
@@ -555,7 +561,7 @@ function drawGraph(dataReviewers) {
    .enter().append("g")
      .attr("class", "g")
      .attr("transform", function(d) {
-       return "translate(0," + y0(d.Reviewer) + ")"; });
+       return "translate(0," + y0(d.reviewer) + ")"; });
 
    // draw stacked bars for each dimension of each Reviewer
    grouped_stackedbar.selectAll("rect")
