@@ -137,8 +137,8 @@ getDimensionsChecked();
 // get data from Virtuoso for the selected article
 $.get(serverConnection, checkedDimensions)
 .done((csvResultsVirtuoso, status) => {
-  console.log("data:" + csvResultsVirtuoso);
-  console.log("status:" + status);
+  // console.log("data:" + csvResultsVirtuoso);
+  // console.log("status:" + status);
 
   // TODO: extra check here if the results are empty or not
   // create array with all results retrieved from the SPARQL endpoint
@@ -151,7 +151,6 @@ $.get(serverConnection, checkedDimensions)
   // extract all reviewers of the selected paper and their total number of review comments
   reviewers = getTotalReviewersAndNrComments(resultsNoPrefixes);
   maxNrComments = setMaxNrComments(reviewers);
-  console.log("_________________________maxNrComments=" + maxNrComments);
 
   if (Object.keys(reviewers).length) {
     // create initial empty count array for every reviewer
@@ -319,7 +318,8 @@ function getTotalReviewersAndNrComments(results) {
   return reviewersAndNoComments;
 }
 
-// get the m
+// get the maximum number of comments of all reviewers
+// useful for drawing the x axis
 function setMaxNrComments(reviewers) {
   var max = 0;
 
@@ -359,8 +359,8 @@ function initReviewersCounts(reviewers) {
   return -1;
 }
 
-// preprocess results retrieved from the Virtuoso sparql endpoint
-// Virtuoso results contain the following fields: "reviewer","reviewComment","part","aspect","posNeg","impact","actionNeeded", "reviewCommentContent"
+// calculate the number of review comments for each dimension based on the retrieved results (no prefixes)
+// results contain the following fields: "reviewer","reviewComment","part","aspect","posNeg","impact","actionNeeded", "reviewCommentContent"
 function calculateCountsReviewers(results, reviewersList, reviewersCounts) {
   console.log("results.length=" + results.length);
   for (var i = 0; i < results.length; i++) {
@@ -369,61 +369,67 @@ function calculateCountsReviewers(results, reviewersList, reviewersCounts) {
 
     for (var j = 0; j < reviewersCounts.length; j++) {
       if (resultItem[0] == reviewersCounts[j].ORCiD) {
-        // if reviewer is found, then calculate counts for every dimension
+        // if reviewer is found, then calculate counts for every dimension that is checked
+        if (checkedDimensions[csvResultsVirtuosoNoPrefixes[i][2]] &&
+            checkedDimensions[csvResultsVirtuosoNoPrefixes[i][3]] &&
+            checkedDimensions[csvResultsVirtuosoNoPrefixes[i][4]] &&
+            checkedDimensions["I" + csvResultsVirtuosoNoPrefixes[i][5]] &&
+            checkedDimensions[csvResultsVirtuosoNoPrefixes[i][6]]) {
 
-        // console.log(i + " -> " + resultItem[2] + "=" + checkedDimensions[resultItem[2]] +
-        // "; " + resultItem[3] + "=" + checkedDimensions[resultItem[3]] +
-        // "; " + resultItem[4] + "=" + checkedDimensions[resultItem[4]] +
-        // "; " + resultItem[5] + "=" + checkedDimensions["I" + resultItem[5]] +
-        // "; " + resultItem[6] + "=" + checkedDimensions[resultItem[6]] );
+          // console.log(i + " -> " + resultItem[2] + "=" + checkedDimensions[resultItem[2]] +
+          // "; " + resultItem[3] + "=" + checkedDimensions[resultItem[3]] +
+          // "; " + resultItem[4] + "=" + checkedDimensions[resultItem[4]] +
+          // "; " + resultItem[5] + "=" + checkedDimensions["I" + resultItem[5]] +
+          // "; " + resultItem[6] + "=" + checkedDimensions[resultItem[6]] );
 
-        // check whether the part is article, section or paragraph
-        if (resultItem[2] == "article" && checkedDimensions["article"]) {
-          reviewersCounts[j].article =  reviewersCounts[j].article + 1;
-        }
-        if (resultItem[2] == "section" && checkedDimensions["section"]) {
-          reviewersCounts[j].section = reviewersCounts[j].section + 1;
-        }
-        if (resultItem[2] == "paragraph" && checkedDimensions["paragraph"]) {
-          reviewersCounts[j].paragraph = reviewersCounts[j].paragraph + 1;
-        }
+          // check whether the part is article, section or paragraph
+          if (resultItem[2] == "article" && checkedDimensions["article"]) {
+            reviewersCounts[j].article =  reviewersCounts[j].article + 1;
+          }
+          if (resultItem[2] == "section" && checkedDimensions["section"]) {
+            reviewersCounts[j].section = reviewersCounts[j].section + 1;
+          }
+          if (resultItem[2] == "paragraph" && checkedDimensions["paragraph"]) {
+            reviewersCounts[j].paragraph = reviewersCounts[j].paragraph + 1;
+          }
 
-        // check whether the aspect is syntax, style or content
-        if (resultItem[3] == "syntax" && checkedDimensions["syntax"]){
-          reviewersCounts[j].syntax = reviewersCounts[j].syntax + 1;
-        }
-        if (resultItem[3] == "style" && checkedDimensions["style"]) {
-          reviewersCounts[j].style = reviewersCounts[j].style + 1;
-        }
-        if (resultItem[3] == "content" && checkedDimensions["content"]) {
-          reviewersCounts[j].content = reviewersCounts[j].content + 1;
-        }
+          // check whether the aspect is syntax, style or content
+          if (resultItem[3] == "syntax" && checkedDimensions["syntax"]){
+            reviewersCounts[j].syntax = reviewersCounts[j].syntax + 1;
+          }
+          if (resultItem[3] == "style" && checkedDimensions["style"]) {
+            reviewersCounts[j].style = reviewersCounts[j].style + 1;
+          }
+          if (resultItem[3] == "content" && checkedDimensions["content"]) {
+            reviewersCounts[j].content = reviewersCounts[j].content + 1;
+          }
 
-        // check whether the positivity/negativity dimension is negative, neutral or positive
-        if (resultItem[4] == "negative" && checkedDimensions["negative"]) {
-          reviewersCounts[j].negative = reviewersCounts[j].negative + 1;
-        }
-        if (resultItem[4] == "neutral"  && checkedDimensions["neutral"]) {
-          reviewersCounts[j].neutral = reviewersCounts[j].neutral + 1;
-        }
-        if (resultItem[4] == "positive" && checkedDimensions["positive"]) {
-          reviewersCounts[j].positive = reviewersCounts[j].positive + 1;
-        }
+          // check whether the positivity/negativity dimension is negative, neutral or positive
+          if (resultItem[4] == "negative" && checkedDimensions["negative"]) {
+            reviewersCounts[j].negative = reviewersCounts[j].negative + 1;
+          }
+          if (resultItem[4] == "neutral"  && checkedDimensions["neutral"]) {
+            reviewersCounts[j].neutral = reviewersCounts[j].neutral + 1;
+          }
+          if (resultItem[4] == "positive" && checkedDimensions["positive"]) {
+            reviewersCounts[j].positive = reviewersCounts[j].positive + 1;
+          }
 
-        // check whether the impact is 1, 2, 3, 4 or 5
-        if (0 < resultItem[5] < 6 && checkedDimensions["I"+ resultItem[5]]) {
-          reviewersCounts[j]["I" + resultItem[5]] = reviewersCounts[j]["I" + resultItem[5]] + 1;
-        }
+          // check whether the impact is 1, 2, 3, 4 or 5
+          if (0 < resultItem[5] < 6 && checkedDimensions["I"+ resultItem[5]]) {
+            reviewersCounts[j]["I" + resultItem[5]] = reviewersCounts[j]["I" + resultItem[5]] + 1;
+          }
 
-        // check whether the action needed is compulsory, suggestion or no_action
-        if (resultItem[6] == "compulsory" && checkedDimensions["compulsory"]) {
-          reviewersCounts[j].compulsory = reviewersCounts[j].compulsory + 1;
-        }
-        if (resultItem[6] == "suggestion" && checkedDimensions["suggestion"]) {
-          reviewersCounts[j].suggestion = reviewersCounts[j].suggestion + 1;
-        }
-        if (resultItem[6] == "no_action" && checkedDimensions["no_action"]) {
-          reviewersCounts[j].no_action = reviewersCounts[j].no_action + 1;
+          // check whether the action needed is compulsory, suggestion or no_action
+          if (resultItem[6] == "compulsory" && checkedDimensions["compulsory"]) {
+            reviewersCounts[j].compulsory = reviewersCounts[j].compulsory + 1;
+          }
+          if (resultItem[6] == "suggestion" && checkedDimensions["suggestion"]) {
+            reviewersCounts[j].suggestion = reviewersCounts[j].suggestion + 1;
+          }
+          if (resultItem[6] == "no_action" && checkedDimensions["no_action"]) {
+            reviewersCounts[j].no_action = reviewersCounts[j].no_action + 1;
+          }
         }
       }
     }
@@ -490,9 +496,6 @@ function drawGraph(data) {
     // get all dimension headers present in the counts, except for the reviewer and the ORCiD
     // rowHeaders=article,section,paragraph,syntax,style,content,negative,neutral,positive,I1,I2,I3,I4,I5,compulsory,suggestion,no_action
     var rowHeaders = d3.keys(data[0]).filter(function(key) { return ((key !== "reviewer") && (key != "ORCiD")) });
-    // console.log("%%%%%%%%%%%%rowHeaders=" + rowHeaders);
-    // rowHeaders.splice(0, 1);
-    // console.log("%%%%%%%%%%%%rowHeaders=" + rowHeaders);
 
      // set color range for the dimensions present in the data file
      var colorRange = [];
@@ -510,14 +513,14 @@ function drawGraph(data) {
      // get data for each dimension of one reviewer at a time and
      // calculate the coordonates for the beginning and the end of each dimension for the x axis
      data.forEach((reviewerCounts) => {
-       console.log("&&&&&&&&&&&&&&& d=" + JSON.stringify(reviewerCounts));
+       // console.log("&&&&&&&&&&&&&&& d=" + JSON.stringify(reviewerCounts));
 
        var xRow = new Array();
        reviewerCounts.rowDetails = rowHeaders.map((nameDimension) => {
          // console.log("!!!!!!!!!!NAME=" + nameDimension);
          for (dim in dimensions) {
            if($.inArray(nameDimension, dimensions[dim]) >= 0){
-             console.log("!!!!!!!!!!NAME=" + nameDimension + "; dim=" + dim + "; dimensions[ic]=" + dimensions[dim]);
+             // console.log("!!!!!!!!!!NAME=" + nameDimension + "; dim=" + dim + "; dimensions[ic]=" + dimensions[dim]);
              if (!xRow[dim]){
                xRow[dim] = 0;
              }
@@ -611,7 +614,7 @@ function drawGraph(data) {
            $("#divReviewCommentsContent").empty();
 
            var dataToShow = [];
-           console.log("@@@@@@@@@@@@@@@@@@@@d.reviewer=" + d.reviewer + ", d.ORCiD=" + d.ORCiD);
+           // console.log("@@@@@@@@@@@@@@@@@@@@d.reviewer=" + d.reviewer + ", d.ORCiD=" + d.ORCiD);
            // var reviewerId = ((d.reviewer).toString()).split(" ").pop(); // does this change d.reviewer data?!
            // var resultsNoPrefixes = noPrefixesInVirtuosoResults();
 
