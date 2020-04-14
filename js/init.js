@@ -140,6 +140,8 @@ $.get(serverConnection, checkedDimensions)
   // console.log("data:" + csvResultsVirtuoso);
   // console.log("status:" + status);
 
+  // TODO: add timeout error
+
   // TODO: extra check here if the results are empty or not
   // create array with all results retrieved from the SPARQL endpoint
   resultsVirtuoso = $.csv.toArrays(csvResultsVirtuoso);
@@ -370,11 +372,11 @@ function calculateCountsReviewers(results, reviewersList, reviewersCounts) {
     for (var j = 0; j < reviewersCounts.length; j++) {
       if (resultItem[0] == reviewersCounts[j].ORCiD) {
         // if reviewer is found, then calculate counts for every dimension that is checked
-        if (checkedDimensions[csvResultsVirtuosoNoPrefixes[i][2]] &&
-            checkedDimensions[csvResultsVirtuosoNoPrefixes[i][3]] &&
-            checkedDimensions[csvResultsVirtuosoNoPrefixes[i][4]] &&
-            checkedDimensions["I" + csvResultsVirtuosoNoPrefixes[i][5]] &&
-            checkedDimensions[csvResultsVirtuosoNoPrefixes[i][6]]) {
+        if (checkedDimensions[resultItem[2]] &&
+            checkedDimensions[resultItem[3]] &&
+            checkedDimensions[resultItem[4]] &&
+            checkedDimensions["I" + resultItem[5]] &&
+            checkedDimensions[resultItem[6]]) {
 
           // console.log(i + " -> " + resultItem[2] + "=" + checkedDimensions[resultItem[2]] +
           // "; " + resultItem[3] + "=" + checkedDimensions[resultItem[3]] +
