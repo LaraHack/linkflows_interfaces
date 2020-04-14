@@ -585,46 +585,48 @@ function drawGraph(data) {
              d3.select(this).style("fill", color(d.name))
          })
          // when a rectangle is clicked, the content of the review comments of the respective rectangle are shown
-         .on("click", function(d ,i) {
+         .on("click", function(d, i) {
           // empty contents of div where the content of the review comments is shown
            $("#divIntroContentReviewComments").remove();
            $("#divReviewCommentsContent").empty();
 
            var dataToShow = [];
-           var reviewerId = ((d.reviewer).toString()).split(" ").pop(); // does this change d.reviewer data?!
-           var resultsNoPrefixes = noPrefixesInVirtuosoResults();
+           console.log("@@@@@@@@@@@@@@@@@@@@d.reviewer=" + d.reviewer + ", d.ORCiD=" + d.ORCiD);
+           // var reviewerId = ((d.reviewer).toString()).split(" ").pop(); // does this change d.reviewer data?!
+           // var resultsNoPrefixes = noPrefixesInVirtuosoResults();
 
-           for (var i = 1; i < resultsNoPrefixes.length; i++) {
-             if (reviewer[reviewerId-1] == resultsNoPrefixes[i][0]) {
+           for (var i = 0; i < resultsNoPrefixes.length; i++) {
+             // if (reviewer[reviewerId-1] == resultsNoPrefixes[i][0]) {
+             if (d.ORCiD == resultsNoPrefixes[i][0]) {
                switch (d.row) {
                  case "part":
                   // the rectangle checked referres to the part of article targeted by the review comment
                   if (resultsNoPrefixes[i][2] == d.name) {
-                    dataToShow.push(resultsNoPrefixes[i]);
+                    dataToShow.push(resultsNoPrefixes[i].slice());
                   }
                   break;
                 case "aspect":
                   // the rectangle checked referres to the aspect of the review comment
                   if (resultsNoPrefixes[i][3] == d.name) {
-                    dataToShow.push(resultsNoPrefixes[i]);
+                    dataToShow.push(resultsNoPrefixes[i].slice());
                   }
                   break;
                 case "positivity_negativity":
                   // the rectangle checked referres to the positivity_negativity of the review comment
                   if (resultsNoPrefixes[i][4] == d.name) {
-                    dataToShow.push(resultsNoPrefixes[i]);
+                    dataToShow.push(resultsNoPrefixes[i].slice());
                   }
                   break;
                 case "impact":
                   // the rectangle checked referres to the impact of the review comment
                   if (("I" + resultsNoPrefixes[i][5]) == d.name) {
-                    dataToShow.push(resultsNoPrefixes[i]);
+                    dataToShow.push(resultsNoPrefixes[i].slice());
                   }
                   break;
                 case "action_needed":
                 // the rectangle checked referres to the impact of the review comment
                   if (resultsNoPrefixes[i][6] == d.name) {
-                    dataToShow.push(resultsNoPrefixes[i]);
+                    dataToShow.push(resultsNoPrefixes[i].slice());
                   }
                 }
               }
