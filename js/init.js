@@ -363,8 +363,11 @@ function initReviewersCounts(reviewers) {
 
 // reset reviewer counts for every reviewer to 0 => helper function for drawing
 function resetReviewersCounts(reviewersCounts) {
+  console.log("&&&&&&&&&&&&&&& reviewersCounts.length" + Object.keys(reviewersCounts).length);
+
   // if reviewerCounts exists and it is not empty
   if (Array.isArray(reviewersCounts) && reviewersCounts.length) {
+    console.log("&&&&&&&&&&&&&&& d=" + JSON.stringify(reviewerCounts));
 
     // for graph generation data needs to be in the form of
     // Reviewer,article,section,paragraph,syntax,style,content,negative,neutral,positive,I1,I2,I3,I4,I5,compulsory,suggestion,no_action
@@ -389,8 +392,9 @@ function resetReviewersCounts(reviewersCounts) {
       reviewer["no_action"] = 0;
     });
   return reviewersCounts;
+  } else {
+    initReviewersCounts(reviewersCounts);
   }
-  return -1;
 }
 
 // calculate the number of review comments for each dimension based on the retrieved results (no prefixes)
@@ -740,143 +744,32 @@ function drawGraph(data) {
 // sends a request to the server to draw the graph
 function getReviewComments() {
   getDimensionsChecked();
+
+  for (let i = 0; i < resultsNoPrefixes.length; i++) {
+    console.log("@@@@@@@@@@@@@@@@@@results[" + i + "]=" + resultsNoPrefixes[i]);
+  }
+
   $("#divReviewCommentsContent").empty();
   $("#divReviewCommentsContent").append("<div id='divIntroContentReviewComments' style='text-align:center; color: #0275d8; font-size: large; border: #0275d8;'> <br/> Click on a rectangle in the graph to show the content of the review comments here</div>");
 
   if (resetReviewersCounts(countsResults) != -1) {
+    console.log("&&&&&&&&&&&&&&& d=" + JSON.stringify(countsResults));
     calculateCountsReviewers(resultsNoPrefixes, reviewers, countsResults);
     drawGraph(countsResults);
   }
 
-
-  // var newResults = getDataForGraph();
-  // drawGraph(newResults);
+  // $.get(serverConnection, checkedDimensions)
+  // .done((dataVirtuoso, status) => {
+	//     console.log("data:" + dataVirtuoso);
+	//     console.log("status:" + status);
   //
-  // console.log("NEW RESULTS: " + newResults);
-  // // $.get(serverConnection, checkedDimensions)
-  // // .done((dataVirtuoso, status) => {
-	// //     console.log("data:" + dataVirtuoso);
-	// //     console.log("status:" + status);
-  // //
-	// // 	var results = preprocessVirtuosoResults(dataVirtuoso);
-  // //   drawGraph(results);
-  // // })
-  // // // jqXHR is a JS XMLHTTPRequest object
-  // // // textStatus is the error and
-  // // // error is Internal Server Error
-  // // .fail(function (jqXHR, textStatus, error) {
-  // //       console.log("Get error: " + error);
-  // //   });
-}
-
-function getDataForGraph() {
-  // var csvResultsVirtuoso = [];
-  // csvResultsVirtuoso = $.csv.toArrays(csvResultsVirtuoso);
-
-  // var reviewer = [];
-
-  // for graph generation data needs to be in the form of
-  // Reviewer,article,section,paragraph,syntax,style,content,negative,neutral,positive,I1,I2,I3,I4,I5,compulsory,suggestion,no_action
-  // for (var i = 1; i < csvResultsVirtuoso.length; i++) {
-  //   if (!reviewer.includes(csvResultsVirtuoso[i][0])) {
-  //     reviewer.push(csvResultsVirtuoso[i][0]);
-  //   }
-  // }
-
-  //var reviewersCounts = new Array(reviewer.length); // this declaration gives errors when setting values for keys
-
-  var reviewersCounts = [];
-
-  reviewer.forEach( (editor, i) => {
-    // var countsPerReviewer = { ["Reviewer " + (i+1)] : editor,
-    var countsPerReviewer = { "Reviewer": ["Reviewer " + (i+1)],
-    // var countsPerReviewer = { "Reviewer": editor,
-                  "article" : 0, "section": 0, "paragraph": 0,
-                  "syntax": 0, "style": 0, "content": 0,
-                  "negative": 0, "neutral": 0, "positive": 0,
-                  "I1": 0, "I2": 0, "I3": 0, "I4": 0, "I5": 0,
-                  "compulsory": 0, "suggestion": 0, "no_action": 0
-                  };
-    reviewersCounts.push(countsPerReviewer);
-  });
-
-  csvResultsVirtuosoNoPrefixes = noPrefixesInVirtuosoResults();
-      console.log("NO PREFIXES:" + csvResultsVirtuosoNoPrefixes);
-    console.log("ORIGINAL DATA:" + csvResultsVirtuoso);
-
-
-
-  // ordering in the current csvResultsVirtuoso: reviewer,reviewComment,part,aspect,posNeg,impact,actionNeeded
-  for (i = 1; i < csvResultsVirtuosoNoPrefixes.length; i++) {
-    // find reviewer in graphcsvResultsVirtuoso
-    var indexOfReviewer = reviewer.indexOf(csvResultsVirtuosoNoPrefixes[i][0]);
-
-    // if reviewer is found, then calculate counts for every dimension
-    if (indexOfReviewer > -1) {
-
-      if (checkedDimensions[csvResultsVirtuosoNoPrefixes[i][2]] &&
-          checkedDimensions[csvResultsVirtuosoNoPrefixes[i][3]] &&
-          checkedDimensions[csvResultsVirtuosoNoPrefixes[i][4]] &&
-          checkedDimensions["I" + csvResultsVirtuosoNoPrefixes[i][5]] &&
-          checkedDimensions[csvResultsVirtuosoNoPrefixes[i][6]])
-      {
-          console.log(i + " -> " + csvResultsVirtuosoNoPrefixes[i][2] + "=" + checkedDimensions[csvResultsVirtuosoNoPrefixes[i][2]] +
-          "; " + csvResultsVirtuosoNoPrefixes[i][3] + "=" + checkedDimensions[csvResultsVirtuosoNoPrefixes[i][3]] +
-          "; " + csvResultsVirtuosoNoPrefixes[i][4] + "=" + checkedDimensions[csvResultsVirtuosoNoPrefixes[i][4]] +
-          "; " + csvResultsVirtuosoNoPrefixes[i][5] + "=" + checkedDimensions["I" + csvResultsVirtuosoNoPrefixes[i][5]] +
-          "; " + csvResultsVirtuosoNoPrefixes[i][6] + "=" + checkedDimensions[csvResultsVirtuosoNoPrefixes[i][6]] );
-
-          // check whether the part is article, section or paragraph
-          if (csvResultsVirtuosoNoPrefixes[i][2] == "article" && checkedDimensions["article"]) {
-            reviewersCounts[indexOfReviewer].article =  reviewersCounts[indexOfReviewer].article + 1;
-          }
-          if (csvResultsVirtuosoNoPrefixes[i][2] == "section" && checkedDimensions["section"]) {
-            reviewersCounts[indexOfReviewer].section = reviewersCounts[indexOfReviewer].section + 1;
-          }
-          if (csvResultsVirtuosoNoPrefixes[i][2] == "paragraph" && checkedDimensions["paragraph"]) {
-            reviewersCounts[indexOfReviewer].paragraph = reviewersCounts[indexOfReviewer].paragraph + 1;
-          }
-
-          // check whether the aspect is syntax, style or content
-          if (csvResultsVirtuosoNoPrefixes[i][3] == "syntax" && checkedDimensions["syntax"]){
-            reviewersCounts[indexOfReviewer].syntax = reviewersCounts[indexOfReviewer].syntax + 1;
-          }
-          if (csvResultsVirtuosoNoPrefixes[i][3] == "style" && checkedDimensions["style"]) {
-            reviewersCounts[indexOfReviewer].style = reviewersCounts[indexOfReviewer].style + 1;
-          }
-          if (csvResultsVirtuosoNoPrefixes[i][3] == "content" && checkedDimensions["content"]) {
-            reviewersCounts[indexOfReviewer].content = reviewersCounts[indexOfReviewer].content + 1;
-          }
-
-          // check whether the positivity/negativity dimension is negative, neutral or positive
-          if (csvResultsVirtuosoNoPrefixes[i][4] == "negative" && checkedDimensions["negative"]) {
-            reviewersCounts[indexOfReviewer].negative = reviewersCounts[indexOfReviewer].negative + 1;
-          }
-          if (csvResultsVirtuosoNoPrefixes[i][4] == "neutral"  && checkedDimensions["neutral"]) {
-            reviewersCounts[indexOfReviewer].neutral = reviewersCounts[indexOfReviewer].neutral + 1;
-          }
-          if (csvResultsVirtuosoNoPrefixes[i][4] == "positive" && checkedDimensions["positive"]) {
-            reviewersCounts[indexOfReviewer].positive = reviewersCounts[indexOfReviewer].positive + 1;
-          }
-
-          // check whether the impact is 1, 2, 3, 4 or 5
-          if (0 < csvResultsVirtuosoNoPrefixes[i][5] < 6 && checkedDimensions["I"+ csvResultsVirtuosoNoPrefixes[i][5]]) {
-            reviewersCounts[indexOfReviewer]["I" + csvResultsVirtuosoNoPrefixes[i][5]] = reviewersCounts[indexOfReviewer]["I" + csvResultsVirtuosoNoPrefixes[i][5]] + 1;
-          }
-
-          // check whether the action needed is compulsory, suggestion or no_action
-          if (csvResultsVirtuosoNoPrefixes[i][6] == "compulsory" && checkedDimensions["compulsory"]) {
-            reviewersCounts[indexOfReviewer].compulsory = reviewersCounts[indexOfReviewer].compulsory + 1;
-          }
-          if (csvResultsVirtuosoNoPrefixes[i][6] == "suggestion" && checkedDimensions["suggestion"]) {
-            reviewersCounts[indexOfReviewer].suggestion = reviewersCounts[indexOfReviewer].suggestion + 1;
-          }
-          if (csvResultsVirtuosoNoPrefixes[i][6] == "no_action" && checkedDimensions["no_action"]) {
-            reviewersCounts[indexOfReviewer].no_action = reviewersCounts[indexOfReviewer].no_action + 1;
-          }
-      }
-    }
-  }
-
-  return JSON.stringify(reviewersCounts);
+	// 	var results = preprocessVirtuosoResults(dataVirtuoso);
+  //   drawGraph(results);
+  // })
+  // // jqXHR is a JS XMLHTTPRequest object
+  // // textStatus is the error and
+  // // error is Internal Server Error
+  // .fail(function (jqXHR, textStatus, error) {
+  //       console.log("Get error: " + error);
+  //   });
 }
