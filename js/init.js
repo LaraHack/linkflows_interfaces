@@ -36,6 +36,10 @@ var resultsVirtuoso = [];
 // array containing the results retrieved from Virtuoso, without the prefixes
 var resultsNoPrefixes = [];
 
+// array containing the results that are currently displayed based on the checked dimensions
+// all results are without the prefixes; this is a subset of resultsNoPrefixes
+var resultsToDisplay = [];
+
 // array containing all reviewers of the selected paper
 // one element in the form of {ORCiDk: Xk}, where
 // ORCiDk = ORCiD of reviewer k, Xk = total number of review comments of reviewer k
@@ -45,7 +49,7 @@ var reviewers = [];
 var maxNrComments = 0;
 
 // for graph generation data needs to be in the form
-// ORCid, reviewer,article,section,paragraph,syntax,style,content,negative,neutral,positive,I1,I2,I3,I4,I5,compulsory,suggestion,no_action
+// ORCiD, reviewer,article,section,paragraph,syntax,style,content,negative,neutral,positive,I1,I2,I3,I4,I5,compulsory,suggestion,no_action
 var countsResults = [];
 
 // END of variables for the Virtuoso retrieved data
@@ -161,7 +165,7 @@ $.get(serverConnection, checkedDimensions)
     if (countsResults != -1) {
 
       // calculate counts for all reviewers
-      calculateCountsReviewers(resultsNoPrefixes, reviewers, countsResults);
+      calculateCountsReviewers(resultsNoPrefixes, reviewers, countsResults, resultsToDisplay);
       // console.log("””””””””””””””””””””COUNTS:" + JSON.stringify(countsResults));
       //
       // for (var j = 0; j < countsResults.length; j++) {
@@ -375,7 +379,12 @@ function initReviewersCounts(reviewers) {
 
 // calculate the number of review comments for each dimension based on the retrieved results (no prefixes)
 // results contain the following fields: "reviewer","reviewComment","part","aspect","posNeg","impact","actionNeeded", "reviewCommentContent"
-function calculateCountsReviewers(results, reviewersList, reviewersCounts) {
+function calculateCountsReviewers(results, reviewersList, reviewersCounts, displayResults) {
+  // if the array with results ot display is not empty, then empty it
+  if (displayResults.length) {
+    displayResults.length = 0;
+  }
+
   console.log("results.length=" + results.length);
   for (var i = 0; i < results.length; i++) {
     var resultItem = results[i];
@@ -444,6 +453,8 @@ function calculateCountsReviewers(results, reviewersList, reviewersCounts) {
           if (resultItem[6] == "no_action" && checkedDimensions["no_action"]) {
             reviewersCounts[j].no_action = reviewersCounts[j].no_action + 1;
           }
+
+          displayResults.push(resultItem);
         }
       }
     }
@@ -632,38 +643,38 @@ function drawGraph(data) {
            // var reviewerId = ((d.reviewer).toString()).split(" ").pop(); // does this change d.reviewer data?!
            // var resultsNoPrefixes = noPrefixesInVirtuosoResults();
 
-           for (var i = 0; i < resultsNoPrefixes.length; i++) {
+           for (var i = 0; i < resultsToDisplay.length; i++) {
              // if (reviewer[reviewerId-1] == resultsNoPrefixes[i][0]) {
-             if (d.ORCiD == resultsNoPrefixes[i][0]) {
+             if (d.ORCiD == resultsToDisplay[i][0]) {
                switch (d.row) {
                  case "part":
                   // the rectangle checked referres to the part of article targeted by the review comment
-                  if (resultsNoPrefixes[i][2] == d.name) {
-                    dataToShow.push(resultsNoPrefixes[i].slice());
+                  if (resultsToDisplay[i][2] == d.name) {
+                    dataToShow.push(resultsToDisplay[i].slice());
                   }
                   break;
                 case "aspect":
                   // the rectangle checked referres to the aspect of the review comment
-                  if (resultsNoPrefixes[i][3] == d.name) {
-                    dataToShow.push(resultsNoPrefixes[i].slice());
+                  if (resultsToDisplay[i][3] == d.name) {
+                    dataToShow.push(resultsToDisplay[i].slice());
                   }
                   break;
                 case "positivity_negativity":
                   // the rectangle checked referres to the positivity_negativity of the review comment
-                  if (resultsNoPrefixes[i][4] == d.name) {
-                    dataToShow.push(resultsNoPrefixes[i].slice());
+                  if (resultsToDisplay[i][4] == d.name) {
+                    dataToShow.push(resultsToDisplay[i].slice());
                   }
                   break;
                 case "impact":
                   // the rectangle checked referres to the impact of the review comment
-                  if (("I" + resultsNoPrefixes[i][5]) == d.name) {
-                    dataToShow.push(resultsNoPrefixes[i].slice());
+                  if (("I" + resultsToDisplay[i][5]) == d.name) {
+                    dataToShow.push(resultsToDisplay[i].slice());
                   }
                   break;
                 case "action_needed":
                 // the rectangle checked referres to the impact of the review comment
-                  if (resultsNoPrefixes[i][6] == d.name) {
-                    dataToShow.push(resultsNoPrefixes[i].slice());
+                  if (resultsToDisplay[i][6] == d.name) {
+                    dataToShow.push(resultsToDisplay[i].slice());
                   }
                 }
               }
@@ -733,7 +744,7 @@ function getReviewComments() {
   countsResults = initReviewersCounts(reviewers);
   // if (resetReviewersCounts(countsResults) != -1) {
     console.log("&&&&&&&&&&&&&&& before calculate counts=" + JSON.stringify(countsResults));
-    calculateCountsReviewers(resultsNoPrefixes, reviewers, countsResults);
+    calculateCountsReviewers(resultsNoPrefixes, reviewers, countsResults, resultsToDisplay);
     console.log("&&&&&&&&&&&&&&& after calculate counts=" + JSON.stringify(countsResults));
     drawGraph(countsResults);
   // }
