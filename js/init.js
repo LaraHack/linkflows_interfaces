@@ -5,7 +5,7 @@
  */
 
 // server address of the Virtuoso triple store
-var serverConnection = "http://localhost:8081/sparql";
+var serverConnection = "http://localhost:8081/sparql"; // http://app:8081/
 
 // the dimensions and their checkbox-clicked status
 var checkedDimensions = new Map([
@@ -167,26 +167,43 @@ $.get(serverConnection, checkedDimensions)
 
       // calculate counts for all reviewers
       calculateCountsReviewers(resultsNoPrefixes, reviewers, countsResults);
-      // console.log("COUNTS:" + countsResults);
+      console.log("””””””””””””””””””””COUNTS:" + JSON.stringify(countsResults));
 
-      // for (var j = 0; j < reviewersCounts.length; j++) {
-      //   console.log("reviewersCounts[" + j + "].article=" + reviewersCounts[j].article +
-      //     "; reviewersCounts[" + j + "].section=" + reviewersCounts[j].section +
-      //     "; reviewersCounts[" + j + "].paragraph=" + reviewersCounts[j].paragraph +
-      //     "; reviewersCounts[" + j + "].syntax=" + reviewersCounts[j].syntax +
-      //     "; reviewersCounts[" + j + "].style=" + reviewersCounts[j].style +
-      //     "; reviewersCounts[" + j + "].content=" + reviewersCounts[j].content +
-      //     "; reviewersCounts[" + j + "].negative=" + reviewersCounts[j].negative +
-      //     "; reviewersCounts[" + j + "].neutral=" + reviewersCounts[j].neutral +
-      //     "; reviewersCounts[" + j + "].positive=" + reviewersCounts[j].positive +
-      //     "; reviewersCounts[" + j + "].compulsory=" + reviewersCounts[j].compulsory +
-      //     "; reviewersCounts[" + j + "].suggestion=" + reviewersCounts[j].suggestion +
-      //     "; reviewersCounts[" + j + "].no_action=" + reviewersCounts[j].no_action);
-      // }
+      for (var j = 0; j < countsResults.length; j++) {
+        console.log("countsResults[" + j + "].article=" + countsResults[j].article +
+          "; countsResults[" + j + "].section=" + countsResults[j].section +
+          "; countsResults[" + j + "].paragraph=" + countsResults[j].paragraph +
+          "; countsResults[" + j + "].syntax=" + countsResults[j].syntax +
+          "; countsResults[" + j + "].style=" + countsResults[j].style +
+          "; countsResults[" + j + "].content=" + countsResults[j].content +
+          "; countsResults[" + j + "].negative=" + countsResults[j].negative +
+          "; countsResults[" + j + "].neutral=" + countsResults[j].neutral +
+          "; countsResults[" + j + "].positive=" + countsResults[j].positive +
+          "; countsResults[" + j + "].compulsory=" + countsResults[j].compulsory +
+          "; countsResults[" + j + "].suggestion=" + countsResults[j].suggestion +
+          "; countsResults[" + j + "].no_action=" + countsResults[j].no_action);
+      }
 
       // draw the graph for the retrieved, preprocessed results
       // drawGraph(JSON.stringify(reviewersCounts));
       drawGraph(countsResults);
+
+      console.log("””””””””””””””””””””COUNTS AFTER GRAPH:" + JSON.stringify(countsResults));
+
+      for (var j = 0; j < countsResults.length; j++) {
+        console.log("countsResults[" + j + "].article=" + countsResults[j].article +
+          "; countsResults[" + j + "].section=" + countsResults[j].section +
+          "; countsResults[" + j + "].paragraph=" + countsResults[j].paragraph +
+          "; countsResults[" + j + "].syntax=" + countsResults[j].syntax +
+          "; countsResults[" + j + "].style=" + countsResults[j].style +
+          "; countsResults[" + j + "].content=" + countsResults[j].content +
+          "; countsResults[" + j + "].negative=" + countsResults[j].negative +
+          "; countsResults[" + j + "].neutral=" + countsResults[j].neutral +
+          "; countsResults[" + j + "].positive=" + countsResults[j].positive +
+          "; countsResults[" + j + "].compulsory=" + countsResults[j].compulsory +
+          "; countsResults[" + j + "].suggestion=" + countsResults[j].suggestion +
+          "; countsResults[" + j + "].no_action=" + countsResults[j].no_action);
+      }
       }
   }
 })
@@ -391,6 +408,21 @@ function resetReviewersCounts(reviewersCounts) {
       reviewer["suggestion"] = 0;
       reviewer["no_action"] = 0;
     });
+
+    for (var j = 0; j < reviewersCounts.length; j++) {
+      console.log("reviewersCounts[" + j + "].article=" + reviewersCounts[j].article +
+        "; reviewersCounts[" + j + "].section=" + reviewersCounts[j].section +
+        "; reviewersCounts[" + j + "].paragraph=" + reviewersCounts[j].paragraph +
+        "; reviewersCounts[" + j + "].syntax=" + reviewersCounts[j].syntax +
+        "; reviewersCounts[" + j + "].style=" + reviewersCounts[j].style +
+        "; reviewersCounts[" + j + "].content=" + reviewersCounts[j].content +
+        "; reviewersCounts[" + j + "].negative=" + reviewersCounts[j].negative +
+        "; reviewersCounts[" + j + "].neutral=" + reviewersCounts[j].neutral +
+        "; reviewersCounts[" + j + "].positive=" + reviewersCounts[j].positive +
+        "; reviewersCounts[" + j + "].compulsory=" + reviewersCounts[j].compulsory +
+        "; reviewersCounts[" + j + "].suggestion=" + reviewersCounts[j].suggestion +
+        "; reviewersCounts[" + j + "].no_action=" + reviewersCounts[j].no_action);
+    }
   return reviewersCounts;
   } else {
     initReviewersCounts(reviewersCounts);
@@ -752,11 +784,14 @@ function getReviewComments() {
   $("#divReviewCommentsContent").empty();
   $("#divReviewCommentsContent").append("<div id='divIntroContentReviewComments' style='text-align:center; color: #0275d8; font-size: large; border: #0275d8;'> <br/> Click on a rectangle in the graph to show the content of the review comments here</div>");
 
-  if (resetReviewersCounts(countsResults) != -1) {
-    console.log("&&&&&&&&&&&&&&& d=" + JSON.stringify(countsResults));
+  console.log(JSON.stringify(countsResults));
+
+  countsResults = initReviewersCounts(reviewers);
+  // if (resetReviewersCounts(countsResults) != -1) {
+  //   console.log("&&&&&&&&&&&&&&& d=" + JSON.stringify(countsResults));
     calculateCountsReviewers(resultsNoPrefixes, reviewers, countsResults);
     drawGraph(countsResults);
-  }
+  // }
 
   // $.get(serverConnection, checkedDimensions)
   // .done((dataVirtuoso, status) => {
