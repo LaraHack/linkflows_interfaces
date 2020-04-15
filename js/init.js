@@ -44,8 +44,8 @@ var reviewers = [];
 // maximum number of comments made by the reviewers, necessary for the x axis of the graph
 var maxNrComments = 0;
 
-// for graph generation data nee  ds to be in the form
-// Reviewer,article,section,paragraph,syntax,style,content,negative,neutral,positive,I1,I2,I3,I4,I5,compulsory,suggestion,no_action
+// for graph generation data needs to be in the form
+// ORCid, reviewer,article,section,paragraph,syntax,style,content,negative,neutral,positive,I1,I2,I3,I4,I5,compulsory,suggestion,no_action
 var countsResults = [];
 
 // END of variables for the Virtuoso retrieved data
@@ -156,9 +156,9 @@ $.get(serverConnection, checkedDimensions)
 
   if (Object.keys(reviewers).length) {
     // create initial empty count array for every reviewer
-    var reviewersCounts = initReviewersCounts(reviewers);
+    countsResults = initReviewersCounts(reviewers);
 
-    if (reviewersCounts != -1) {
+    if (countsResults != -1) {
       // console.log("initCounts.length=" + reviewersCounts.length);
       // for (var i = 0; i < reviewersCounts.length; i++) {
       //   console.log("initCounts[" + i + "] =" + reviewersCounts[i]);
@@ -166,7 +166,7 @@ $.get(serverConnection, checkedDimensions)
       //     console.log("key=" + key + "; value=" + (reviewersCounts[i])[key]);
 
       // calculate counts for all reviewers
-      calculateCountsReviewers(resultsNoPrefixes, reviewers, reviewersCounts);
+      calculateCountsReviewers(resultsNoPrefixes, reviewers, countsResults);
       // console.log("COUNTS:" + countsResults);
 
       // for (var j = 0; j < reviewersCounts.length; j++) {
@@ -186,7 +186,7 @@ $.get(serverConnection, checkedDimensions)
 
       // draw the graph for the retrieved, preprocessed results
       // drawGraph(JSON.stringify(reviewersCounts));
-      drawGraph(reviewersCounts);
+      drawGraph(countsResults);
       }
   }
 })
@@ -367,7 +367,7 @@ function resetReviewersCounts(reviewersCounts) {
 
   // if reviewerCounts exists and it is not empty
   if (Array.isArray(reviewersCounts) && reviewersCounts.length) {
-    console.log("&&&&&&&&&&&&&&& d=" + JSON.stringify(reviewerCounts));
+    console.log("&&&&&&&&&&&&&&& d=" + JSON.stringify(reviewersCounts));
 
     // for graph generation data needs to be in the form of
     // Reviewer,article,section,paragraph,syntax,style,content,negative,neutral,positive,I1,I2,I3,I4,I5,compulsory,suggestion,no_action
