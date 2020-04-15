@@ -159,51 +159,46 @@ $.get(serverConnection, checkedDimensions)
     countsResults = initReviewersCounts(reviewers);
 
     if (countsResults != -1) {
-      // console.log("initCounts.length=" + reviewersCounts.length);
-      // for (var i = 0; i < reviewersCounts.length; i++) {
-      //   console.log("initCounts[" + i + "] =" + reviewersCounts[i]);
-      //   for (key in reviewersCounts[i])
-      //     console.log("key=" + key + "; value=" + (reviewersCounts[i])[key]);
 
       // calculate counts for all reviewers
       calculateCountsReviewers(resultsNoPrefixes, reviewers, countsResults);
-      console.log("””””””””””””””””””””COUNTS:" + JSON.stringify(countsResults));
-
-      for (var j = 0; j < countsResults.length; j++) {
-        console.log("countsResults[" + j + "].article=" + countsResults[j].article +
-          "; countsResults[" + j + "].section=" + countsResults[j].section +
-          "; countsResults[" + j + "].paragraph=" + countsResults[j].paragraph +
-          "; countsResults[" + j + "].syntax=" + countsResults[j].syntax +
-          "; countsResults[" + j + "].style=" + countsResults[j].style +
-          "; countsResults[" + j + "].content=" + countsResults[j].content +
-          "; countsResults[" + j + "].negative=" + countsResults[j].negative +
-          "; countsResults[" + j + "].neutral=" + countsResults[j].neutral +
-          "; countsResults[" + j + "].positive=" + countsResults[j].positive +
-          "; countsResults[" + j + "].compulsory=" + countsResults[j].compulsory +
-          "; countsResults[" + j + "].suggestion=" + countsResults[j].suggestion +
-          "; countsResults[" + j + "].no_action=" + countsResults[j].no_action);
-      }
+      // console.log("””””””””””””””””””””COUNTS:" + JSON.stringify(countsResults));
+      //
+      // for (var j = 0; j < countsResults.length; j++) {
+      //   console.log("countsResults[" + j + "].article=" + countsResults[j].article +
+      //     "; countsResults[" + j + "].section=" + countsResults[j].section +
+      //     "; countsResults[" + j + "].paragraph=" + countsResults[j].paragraph +
+      //     "; countsResults[" + j + "].syntax=" + countsResults[j].syntax +
+      //     "; countsResults[" + j + "].style=" + countsResults[j].style +
+      //     "; countsResults[" + j + "].content=" + countsResults[j].content +
+      //     "; countsResults[" + j + "].negative=" + countsResults[j].negative +
+      //     "; countsResults[" + j + "].neutral=" + countsResults[j].neutral +
+      //     "; countsResults[" + j + "].positive=" + countsResults[j].positive +
+      //     "; countsResults[" + j + "].compulsory=" + countsResults[j].compulsory +
+      //     "; countsResults[" + j + "].suggestion=" + countsResults[j].suggestion +
+      //     "; countsResults[" + j + "].no_action=" + countsResults[j].no_action);
+      // }
 
       // draw the graph for the retrieved, preprocessed results
       // drawGraph(JSON.stringify(reviewersCounts));
       drawGraph(countsResults);
 
-      console.log("””””””””””””””””””””COUNTS AFTER GRAPH:" + JSON.stringify(countsResults));
-
-      for (var j = 0; j < countsResults.length; j++) {
-        console.log("countsResults[" + j + "].article=" + countsResults[j].article +
-          "; countsResults[" + j + "].section=" + countsResults[j].section +
-          "; countsResults[" + j + "].paragraph=" + countsResults[j].paragraph +
-          "; countsResults[" + j + "].syntax=" + countsResults[j].syntax +
-          "; countsResults[" + j + "].style=" + countsResults[j].style +
-          "; countsResults[" + j + "].content=" + countsResults[j].content +
-          "; countsResults[" + j + "].negative=" + countsResults[j].negative +
-          "; countsResults[" + j + "].neutral=" + countsResults[j].neutral +
-          "; countsResults[" + j + "].positive=" + countsResults[j].positive +
-          "; countsResults[" + j + "].compulsory=" + countsResults[j].compulsory +
-          "; countsResults[" + j + "].suggestion=" + countsResults[j].suggestion +
-          "; countsResults[" + j + "].no_action=" + countsResults[j].no_action);
-      }
+      // console.log("””””””””””””””””””””COUNTS AFTER GRAPH:" + JSON.stringify(countsResults));
+      //
+      // for (var j = 0; j < countsResults.length; j++) {
+      //   console.log("countsResults[" + j + "].article=" + countsResults[j].article +
+      //     "; countsResults[" + j + "].section=" + countsResults[j].section +
+      //     "; countsResults[" + j + "].paragraph=" + countsResults[j].paragraph +
+      //     "; countsResults[" + j + "].syntax=" + countsResults[j].syntax +
+      //     "; countsResults[" + j + "].style=" + countsResults[j].style +
+      //     "; countsResults[" + j + "].content=" + countsResults[j].content +
+      //     "; countsResults[" + j + "].negative=" + countsResults[j].negative +
+      //     "; countsResults[" + j + "].neutral=" + countsResults[j].neutral +
+      //     "; countsResults[" + j + "].positive=" + countsResults[j].positive +
+      //     "; countsResults[" + j + "].compulsory=" + countsResults[j].compulsory +
+      //     "; countsResults[" + j + "].suggestion=" + countsResults[j].suggestion +
+      //     "; countsResults[" + j + "].no_action=" + countsResults[j].no_action);
+      // }
       }
   }
 })
@@ -360,7 +355,7 @@ function initReviewersCounts(reviewers) {
     var reviewersCounts = [];
 
     // for graph generation data needs to be in the form of
-    // Reviewer,article,section,paragraph,syntax,style,content,negative,neutral,positive,I1,I2,I3,I4,I5,compulsory,suggestion,no_action
+    // ORCiD, reviewer,article,section,paragraph,syntax,style,content,negative,neutral,positive,I1,I2,I3,I4,I5,compulsory,suggestion,no_action
     Object.keys(reviewers).forEach( (ORCiD, index) => {
       // console.log("reviewer " + key + " = " + reviewers[key] + " -> " + index);
       var countsPerReviewer = { "ORCiD": ORCiD,
@@ -376,57 +371,6 @@ function initReviewersCounts(reviewers) {
     return reviewersCounts;
   }
   return -1;
-}
-
-// reset reviewer counts for every reviewer to 0 => helper function for drawing
-function resetReviewersCounts(reviewersCounts) {
-  console.log("&&&&&&&&&&&&&&& reviewersCounts.length" + Object.keys(reviewersCounts).length);
-
-  // if reviewerCounts exists and it is not empty
-  if (Array.isArray(reviewersCounts) && reviewersCounts.length) {
-    console.log("&&&&&&&&&&&&&&& d=" + JSON.stringify(reviewersCounts));
-
-    // for graph generation data needs to be in the form of
-    // Reviewer,article,section,paragraph,syntax,style,content,negative,neutral,positive,I1,I2,I3,I4,I5,compulsory,suggestion,no_action
-    reviewersCounts.forEach( (reviewer) => {
-      // console.log("reviewer " + key + " = " + reviewers[key] + " -> " + index);
-      reviewer["article"] = 0;
-      reviewer["section"] = 0;
-      reviewer["paragraph"] = 0;
-      reviewer["syntax"] = 0;
-      reviewer["style"] = 0;
-      reviewer["content"] = 0;
-      reviewer["negative"] = 0;
-      reviewer["neutral"] = 0;
-      reviewer["positive"] = 0;
-      reviewer["I1"] = 0;
-      reviewer["I2"] = 0;
-      reviewer["I3"] = 0;
-      reviewer["I4"] = 0;
-      reviewer["I5"] = 0;
-      reviewer["compulsory"] = 0;
-      reviewer["suggestion"] = 0;
-      reviewer["no_action"] = 0;
-    });
-
-    for (var j = 0; j < reviewersCounts.length; j++) {
-      console.log("reviewersCounts[" + j + "].article=" + reviewersCounts[j].article +
-        "; reviewersCounts[" + j + "].section=" + reviewersCounts[j].section +
-        "; reviewersCounts[" + j + "].paragraph=" + reviewersCounts[j].paragraph +
-        "; reviewersCounts[" + j + "].syntax=" + reviewersCounts[j].syntax +
-        "; reviewersCounts[" + j + "].style=" + reviewersCounts[j].style +
-        "; reviewersCounts[" + j + "].content=" + reviewersCounts[j].content +
-        "; reviewersCounts[" + j + "].negative=" + reviewersCounts[j].negative +
-        "; reviewersCounts[" + j + "].neutral=" + reviewersCounts[j].neutral +
-        "; reviewersCounts[" + j + "].positive=" + reviewersCounts[j].positive +
-        "; reviewersCounts[" + j + "].compulsory=" + reviewersCounts[j].compulsory +
-        "; reviewersCounts[" + j + "].suggestion=" + reviewersCounts[j].suggestion +
-        "; reviewersCounts[" + j + "].no_action=" + reviewersCounts[j].no_action);
-    }
-  return reviewersCounts;
-  } else {
-    initReviewersCounts(reviewersCounts);
-  }
 }
 
 // calculate the number of review comments for each dimension based on the retrieved results (no prefixes)
@@ -788,8 +732,9 @@ function getReviewComments() {
 
   countsResults = initReviewersCounts(reviewers);
   // if (resetReviewersCounts(countsResults) != -1) {
-  //   console.log("&&&&&&&&&&&&&&& d=" + JSON.stringify(countsResults));
+    console.log("&&&&&&&&&&&&&&& before calculate counts=" + JSON.stringify(countsResults));
     calculateCountsReviewers(resultsNoPrefixes, reviewers, countsResults);
+    console.log("&&&&&&&&&&&&&&& after calculate counts=" + JSON.stringify(countsResults));
     drawGraph(countsResults);
   // }
 
