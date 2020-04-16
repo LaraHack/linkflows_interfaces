@@ -100,3 +100,8 @@ td.selected
      -ms-writing-mode: tb-rl;
      transform: rotate(270deg);
 }
+
+.navbar-nav > .nav-item{
+    margin-left: 250px;
+    margin-right: 25px;
+}
