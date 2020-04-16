@@ -122,8 +122,8 @@ $("#divHeaderNavs").load("include/navs.html", function () {
 // all dimensions are selected
 checkAllCheckboxes();
 
-// add click function to get the review comments
-$("#btnShowReviewComments").click(getReviewComments);
+// // add click function to get the review comments
+// $("#btnShowReviewComments").click(getReviewComments);
 
 // coloring the separate span elements that act as legend for the graph
 // from the color palette above, for all dimensions
@@ -236,6 +236,7 @@ function setSpanColor(dimName) {
 
 // check all checkboxes for dimensions
 function checkAllCheckboxes() {
+  // $(":checkbox").prop("checked", true);
   $('input[type="checkbox"]').prop("checked", true);
 }
 
@@ -728,6 +729,11 @@ function drawGraph(data) {
   // })
 }
 
+$(":checkbox").change( () => {
+  console.log("CHECKBOX CHANGED STATE!!!");
+  getReviewComments();
+});
+
 // sends a request to the server to draw the graph
 function getReviewComments() {
   getDimensionsChecked();
@@ -742,25 +748,8 @@ function getReviewComments() {
   console.log(JSON.stringify(countsResults));
 
   countsResults = initReviewersCounts(reviewers);
-  // if (resetReviewersCounts(countsResults) != -1) {
-    console.log("&&&&&&&&&&&&&&& before calculate counts=" + JSON.stringify(countsResults));
-    calculateCountsReviewers(resultsNoPrefixes, reviewers, countsResults, resultsToDisplay);
-    console.log("&&&&&&&&&&&&&&& after calculate counts=" + JSON.stringify(countsResults));
-    drawGraph(countsResults);
-  // }
-
-  // $.get(serverConnection, checkedDimensions)
-  // .done((dataVirtuoso, status) => {
-	//     console.log("data:" + dataVirtuoso);
-	//     console.log("status:" + status);
-  //
-	// 	var results = preprocessVirtuosoResults(dataVirtuoso);
-  //   drawGraph(results);
-  // })
-  // // jqXHR is a JS XMLHTTPRequest object
-  // // textStatus is the error and
-  // // error is Internal Server Error
-  // .fail(function (jqXHR, textStatus, error) {
-  //       console.log("Get error: " + error);
-  //   });
+  console.log("&&&&&&&&&&&&&&& before calculate counts=" + JSON.stringify(countsResults));
+  calculateCountsReviewers(resultsNoPrefixes, reviewers, countsResults, resultsToDisplay);
+  console.log("&&&&&&&&&&&&&&& after calculate counts=" + JSON.stringify(countsResults));
+  drawGraph(countsResults);
 }
