@@ -5,8 +5,8 @@
  */
 
 // server address of the Virtuoso triple store
-// var serverConnection = "http://localhost:8081/sparql"; // http://app:8081/
-var serverConnection = "http://app:8081/";
+var serverConnection = "http://localhost:8081/sparql"; // http://app:8081/sparql
+// var serverConnection = "http://app:8081/sparql";
 
 // the dimensions and their checkbox-clicked status
 var checkedDimensions = new Map([
