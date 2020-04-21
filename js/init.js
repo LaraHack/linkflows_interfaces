@@ -139,50 +139,56 @@ getDimensionsChecked();
 // get data from Virtuoso for the selected article
 $.get(serverConnection, checkedDimensions)
 .done((csvResultsVirtuoso, status) => {
-  // TODO: add timeout error
+  try { // in case there is any arror retrieving the data
+    // create array with all results retrieved from the SPARQL endpoint
+    resultsVirtuoso = $.csv.toArrays(csvResultsVirtuoso);
 
-  // create array with all results retrieved from the SPARQL endpoint
-  resultsVirtuoso = $.csv.toArrays(csvResultsVirtuoso);
+    // check if the results are empty or not
+    if (resultsVirtuoso.length > 0) {
 
-  // TODO: extra check here if the results are empty or not
-  if (resultsVirtuoso.length > 0) {
+      // remove the prefixes for the results, easier to handle
+      resultsNoPrefixes = noPrefixesInVirtuosoResults(resultsVirtuoso);
 
-    // remove the prefixes for the results, easier to handle
-    resultsNoPrefixes = noPrefixesInVirtuosoResults(resultsVirtuoso);
+      // extract all reviewers of the selected paper and their total number of review comments
+      reviewers = getTotalReviewersAndNrComments(resultsNoPrefixes);
+      maxNrComments = setMaxNrComments(reviewers);
 
-    // extract all reviewers of the selected paper and their total number of review comments
-    reviewers = getTotalReviewersAndNrComments(resultsNoPrefixes);
-    maxNrComments = setMaxNrComments(reviewers);
+      if (Object.keys(reviewers).length) {
+        // create initial empty count array for every reviewer
+        countsResults = initReviewersCounts(reviewers);
 
-    if (Object.keys(reviewers).length) {
-      // create initial empty count array for every reviewer
-      countsResults = initReviewersCounts(reviewers);
+        if (countsResults != -1) {
 
-      if (countsResults != -1) {
+          // calculate counts for all reviewers
+          calculateCountsReviewers(resultsNoPrefixes, reviewers, countsResults, resultsToDisplay);
 
-        // calculate counts for all reviewers
-        calculateCountsReviewers(resultsNoPrefixes, reviewers, countsResults, resultsToDisplay);
-
-        // draw the graph for the retrieved, preprocessed results
-        // drawGraph(JSON.stringify(reviewersCounts));
-        drawGraph(countsResults);
-        }
+          // draw the graph for the retrieved, preprocessed results
+          // drawGraph(JSON.stringify(reviewersCounts));
+          drawGraph(countsResults);
+          }
+      }
+    } else { // no results retrieved
+      // remove the progress bar in case of error
+      $("#divProgressBar").remove();
+      $("#divIntroContentReviewComments").remove();
+      $("#divReviewCommentsContent").empty();
+      $("#divReviewCommentsContent").append("<div id='divError' style='text-align:center; color: red; font-size: large; border: #0275d8;'> <br/>No data was retrieved. If the problem persists, please write an email to c.i.bucur@vu.nl </div>");
     }
-  } else { //no results retrieved
-    // remove the progress bar in case of error
+  }
+  catch(error) { // in case of error retrieving the data
     $("#divProgressBar").remove();
+
     $("#divIntroContentReviewComments").remove();
-    $("#divReviewCommentsContent").append("<div id='divError' style='text-align:center; color: red; font-size: large; border: #0275d8;'> <br/>No data was retrieved. If the problem persists, please write an email to c.i.bucur@vu.nl </div>");
+    $("#divReviewCommentsContent").append("<div id='divError' style='text-align:center; color: red; font-size: large; border: #0275d8;'> <br/>Error retrieving the data. Please try again later and if the problem persists, please write an email to c.i.bucur@vu.nl <br/> <br/> Error: " + error + "</div>");
   }
 })
 // failure to retrieve Virtuoso results
 .fail(function (jqXHR, textStatus, error) {
-      console.log("Get error: " + error);
-      // remove the progress bar in case of error
-      $("#divProgressBar").remove();
+    // remove the progress bar in case of error
+    $("#divProgressBar").remove();
 
-      $("#divIntroContentReviewComments").remove();
-      $("#divReviewCommentsContent").append("<div id='divError' style='text-align:center; color: red; font-size: large; border: #0275d8;'> <br/>Error retrieving the data. Please try again later and if the problem persists, please write an email to c.i.bucur@vu.nl </div>");
+    $("#divIntroContentReviewComments").remove();
+    $("#divReviewCommentsContent").append("<div id='divError' style='text-align:center; color: red; font-size: large; border: #0275d8;'> <br/>Error retrieving the data. Please try again later and if the problem persists, please write an email to c.i.bucur@vu.nl <br/> <br/> Error: " + error + "</div>");
 });
 
 
@@ -707,6 +713,7 @@ function getReviewComments() {
     // remove the progress bar in case of error
     $("#divProgressBar").remove();
     $("#divIntroContentReviewComments").remove();
+    $("#divReviewCommentsContent").empty();
     $("#divReviewCommentsContent").append("<div id='divError' style='text-align:center; color: red; font-size: large; border: #0275d8;'> <br/>No data was retrieved. If the problem persists, please write an email to c.i.bucur@vu.nl </div>");
   }
 }
