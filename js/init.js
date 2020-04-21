@@ -123,9 +123,6 @@ $("#divHeaderNavs").load("include/navs.html", function () {
 // all dimensions are selected
 checkAllCheckboxes();
 
-// // add click function to get the review comments
-// $("#btnShowReviewComments").click(getReviewComments);
-
 // coloring the separate span elements that act as legend for the graph
 // from the color palette above, for all dimensions
 for (const [key, value] of Object.entries(colors)) {
@@ -142,69 +139,40 @@ getDimensionsChecked();
 // get data from Virtuoso for the selected article
 $.get(serverConnection, checkedDimensions)
 .done((csvResultsVirtuoso, status) => {
-  // console.log("data:" + csvResultsVirtuoso);
-  // console.log("status:" + status);
-
   // TODO: add timeout error
 
-  // TODO: extra check here if the results are empty or not
   // create array with all results retrieved from the SPARQL endpoint
   resultsVirtuoso = $.csv.toArrays(csvResultsVirtuoso);
 
-  // remove the prefixes for the results, easier to handle
-  resultsNoPrefixes = noPrefixesInVirtuosoResults(resultsVirtuoso);
-  console.log("NO PREFIXES:" + resultsNoPrefixes);
+  // TODO: extra check here if the results are empty or not
+  if (resultsVirtuoso.length > 0) {
 
-  // extract all reviewers of the selected paper and their total number of review comments
-  reviewers = getTotalReviewersAndNrComments(resultsNoPrefixes);
-  maxNrComments = setMaxNrComments(reviewers);
+    // remove the prefixes for the results, easier to handle
+    resultsNoPrefixes = noPrefixesInVirtuosoResults(resultsVirtuoso);
 
-  if (Object.keys(reviewers).length) {
-    // create initial empty count array for every reviewer
-    countsResults = initReviewersCounts(reviewers);
+    // extract all reviewers of the selected paper and their total number of review comments
+    reviewers = getTotalReviewersAndNrComments(resultsNoPrefixes);
+    maxNrComments = setMaxNrComments(reviewers);
 
-    if (countsResults != -1) {
+    if (Object.keys(reviewers).length) {
+      // create initial empty count array for every reviewer
+      countsResults = initReviewersCounts(reviewers);
 
-      // calculate counts for all reviewers
-      calculateCountsReviewers(resultsNoPrefixes, reviewers, countsResults, resultsToDisplay);
-      // console.log("””””””””””””””””””””COUNTS:" + JSON.stringify(countsResults));
-      //
-      // for (var j = 0; j < countsResults.length; j++) {
-      //   console.log("countsResults[" + j + "].article=" + countsResults[j].article +
-      //     "; countsResults[" + j + "].section=" + countsResults[j].section +
-      //     "; countsResults[" + j + "].paragraph=" + countsResults[j].paragraph +
-      //     "; countsResults[" + j + "].syntax=" + countsResults[j].syntax +
-      //     "; countsResults[" + j + "].style=" + countsResults[j].style +
-      //     "; countsResults[" + j + "].content=" + countsResults[j].content +
-      //     "; countsResults[" + j + "].negative=" + countsResults[j].negative +
-      //     "; countsResults[" + j + "].neutral=" + countsResults[j].neutral +
-      //     "; countsResults[" + j + "].positive=" + countsResults[j].positive +
-      //     "; countsResults[" + j + "].compulsory=" + countsResults[j].compulsory +
-      //     "; countsResults[" + j + "].suggestion=" + countsResults[j].suggestion +
-      //     "; countsResults[" + j + "].no_action=" + countsResults[j].no_action);
-      // }
+      if (countsResults != -1) {
 
-      // draw the graph for the retrieved, preprocessed results
-      // drawGraph(JSON.stringify(reviewersCounts));
-      drawGraph(countsResults);
+        // calculate counts for all reviewers
+        calculateCountsReviewers(resultsNoPrefixes, reviewers, countsResults, resultsToDisplay);
 
-      // console.log("””””””””””””””””””””COUNTS AFTER GRAPH:" + JSON.stringify(countsResults));
-      //
-      // for (var j = 0; j < countsResults.length; j++) {
-      //   console.log("countsResults[" + j + "].article=" + countsResults[j].article +
-      //     "; countsResults[" + j + "].section=" + countsResults[j].section +
-      //     "; countsResults[" + j + "].paragraph=" + countsResults[j].paragraph +
-      //     "; countsResults[" + j + "].syntax=" + countsResults[j].syntax +
-      //     "; countsResults[" + j + "].style=" + countsResults[j].style +
-      //     "; countsResults[" + j + "].content=" + countsResults[j].content +
-      //     "; countsResults[" + j + "].negative=" + countsResults[j].negative +
-      //     "; countsResults[" + j + "].neutral=" + countsResults[j].neutral +
-      //     "; countsResults[" + j + "].positive=" + countsResults[j].positive +
-      //     "; countsResults[" + j + "].compulsory=" + countsResults[j].compulsory +
-      //     "; countsResults[" + j + "].suggestion=" + countsResults[j].suggestion +
-      //     "; countsResults[" + j + "].no_action=" + countsResults[j].no_action);
-      // }
-      }
+        // draw the graph for the retrieved, preprocessed results
+        // drawGraph(JSON.stringify(reviewersCounts));
+        drawGraph(countsResults);
+        }
+    }
+  } else { //no results retrieved
+    // remove the progress bar in case of error
+    $("#divProgressBar").remove();
+    $("#divIntroContentReviewComments").remove();
+    $("#divReviewCommentsContent").append("<div id='divError' style='text-align:center; color: red; font-size: large; border: #0275d8;'> <br/>No data was retrieved. If the problem persists, please write an email to c.i.bucur@vu.nl </div>");
   }
 })
 // failure to retrieve Virtuoso results
@@ -246,8 +214,8 @@ function getDimensionsChecked() {
   checkedDimensions.forEach((checked, dimension) => {
     var dimensionCamelCase = String(dimension).charAt(0).toUpperCase() + String(dimension).substr(1).toLowerCase();
     var checkboxDimension = "checkbox".concat(dimensionCamelCase);
+
     checkedDimensions[dimension] = $("#".concat(checkboxDimension)).is(":checked");
-    console.log(dimension + ":" + checkedDimensions[dimension]);
     });
 }
 
@@ -294,11 +262,6 @@ function noPrefixesInVirtuosoResults(results) {
      if (patternPositive.test(results[i][4])) {
        resultItem[4] = "positive";
      }
-
-     // check whether the impact is 1, 2, 3, 4 or 5
-     // if (0 < results[i][5] < 6) {
-     //   impact = "I" + results[i][5];
-     // }
 
      // check whether the action needed is compulsory, suggestion or no_action
      if (patternCompulsory.test(results[i][6])) {
@@ -390,7 +353,6 @@ function calculateCountsReviewers(results, reviewersList, reviewersCounts, displ
   console.log("results.length=" + results.length);
   for (var i = 0; i < results.length; i++) {
     var resultItem = results[i];
-    // console.log("resultItem=[" + i + "]=" + resultItem);
 
     for (var j = 0; j < reviewersCounts.length; j++) {
       if (resultItem[0] == reviewersCounts[j].ORCiD) {
@@ -400,12 +362,6 @@ function calculateCountsReviewers(results, reviewersList, reviewersCounts, displ
             checkedDimensions[resultItem[4]] &&
             checkedDimensions["I" + resultItem[5]] &&
             checkedDimensions[resultItem[6]]) {
-
-          // console.log(i + " -> " + resultItem[2] + "=" + checkedDimensions[resultItem[2]] +
-          // "; " + resultItem[3] + "=" + checkedDimensions[resultItem[3]] +
-          // "; " + resultItem[4] + "=" + checkedDimensions[resultItem[4]] +
-          // "; " + resultItem[5] + "=" + checkedDimensions["I" + resultItem[5]] +
-          // "; " + resultItem[6] + "=" + checkedDimensions[resultItem[6]] );
 
           // check whether the part is article, section or paragraph
           if (resultItem[2] == "article" && checkedDimensions["article"]) {
@@ -515,7 +471,6 @@ function drawGraph(data) {
 
   var xBegin;
 
-  // console.log("DATA REVIEWERS:" + dataReviewers);
   // var data = JSON.parse(dataReviewers);
   // d3.csv(dataReviewers, (error, data) => {
     // d3.json(dataReviewers, (error, data) => {
@@ -540,14 +495,11 @@ function drawGraph(data) {
      // get data for each dimension of one reviewer at a time and
      // calculate the coordonates for the beginning and the end of each dimension for the x axis
      data.forEach((reviewerCounts) => {
-       // console.log("&&&&&&&&&&&&&&& d=" + JSON.stringify(reviewerCounts));
 
        var xRow = new Array();
        reviewerCounts.rowDetails = rowHeaders.map((nameDimension) => {
-         // console.log("!!!!!!!!!!NAME=" + nameDimension);
          for (dim in dimensions) {
            if($.inArray(nameDimension, dimensions[dim]) >= 0){
-             // console.log("!!!!!!!!!!NAME=" + nameDimension + "; dim=" + dim + "; dimensions[ic]=" + dimensions[dim]);
              if (!xRow[dim]){
                xRow[dim] = 0;
              }
@@ -731,7 +683,6 @@ function drawGraph(data) {
 }
 
 $(":checkbox").change( () => {
-  console.log("CHECKBOX CHANGED STATE!!!");
   getReviewComments();
 });
 
@@ -739,18 +690,23 @@ $(":checkbox").change( () => {
 function getReviewComments() {
   getDimensionsChecked();
 
-  for (let i = 0; i < resultsNoPrefixes.length; i++) {
-    console.log("@@@@@@@@@@@@@@@@@@results[" + i + "]=" + resultsNoPrefixes[i]);
+  if (resultsNoPrefixes.length > 0) {
+    $("#divReviewCommentsContent").empty();
+    $("#divReviewCommentsContent").append("<div id='divIntroContentReviewComments' style='text-align:center; color: #0275d8; font-size: large; border: #0275d8;'> <br/> Click on a rectangle in the graph to show the content of the review comments here</div>");
+
+    countsResults = initReviewersCounts(reviewers);
+    calculateCountsReviewers(resultsNoPrefixes, reviewers, countsResults, resultsToDisplay);
+    drawGraph(countsResults);
+
+    // no results to display according to the selected criteria
+    if (!resultsToDisplay.length) {
+      $("#divReviewCommentsContent").empty();
+      $("#divReviewCommentsContent").append("<div id='divError' style='text-align:center; color: red; font-size: large; border: #0275d8;'> <br/>No data to display. No entries match the chosen options. </div>");
+    }
+  } else { // no results retrieved from Virtuoso
+    // remove the progress bar in case of error
+    $("#divProgressBar").remove();
+    $("#divIntroContentReviewComments").remove();
+    $("#divReviewCommentsContent").append("<div id='divError' style='text-align:center; color: red; font-size: large; border: #0275d8;'> <br/>No data was retrieved. If the problem persists, please write an email to c.i.bucur@vu.nl </div>");
   }
-
-  $("#divReviewCommentsContent").empty();
-  $("#divReviewCommentsContent").append("<div id='divIntroContentReviewComments' style='text-align:center; color: #0275d8; font-size: large; border: #0275d8;'> <br/> Click on a rectangle in the graph to show the content of the review comments here</div>");
-
-  console.log(JSON.stringify(countsResults));
-
-  countsResults = initReviewersCounts(reviewers);
-  console.log("&&&&&&&&&&&&&&& before calculate counts=" + JSON.stringify(countsResults));
-  calculateCountsReviewers(resultsNoPrefixes, reviewers, countsResults, resultsToDisplay);
-  console.log("&&&&&&&&&&&&&&& after calculate counts=" + JSON.stringify(countsResults));
-  drawGraph(countsResults);
 }
