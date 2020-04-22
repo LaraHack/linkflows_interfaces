@@ -126,7 +126,7 @@ $.get(serverGetComments)
           // calculate counts for all reviewers
           calculateCountsSections(resultsNoPrefixes, sections, countsResults);
           console.log("countsResults:" + JSON.stringify(countsResults));
-
+          $("#imgWaiting").remove();
           fillTableWithCounts(countsResults);
         }
       }
