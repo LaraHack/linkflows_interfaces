@@ -5,30 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet" href="/css/styles.css">
-    <script src="https://d3js.org/d3.v3.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
     <title>Linkflows: Editor view</title>
   </head>
   <body>
-    <!-- <script src="d3.min.js?v=3.2.8"></script> -->
-
-    <script type="text/javascript"charset="utf-8">
-        d3.text("Q5.csv", function(data) {
-            var parsedCSV = d3.csv.parseRows(data);
-
-            var container = d3.select("tblStats")
-                .append("table")
-
-                .selectAll("tr")
-                    .data(parsedCSV).enter()
-                    .append("tr")
-
-                .selectAll("td")
-                    .data(function(d) { return d; }).enter()
-                    .append("td")
-                    .text(function(d) { return d; });
-        });
-    </script>
     <div id="divHeaderNavbar"></div>
     <div class="container">
       <div id="divHeaderNavs"></div> <br />
@@ -93,8 +73,6 @@
           <div class="float-center">
             <br />
           <table class="borders" id="tblCommentsPerMainSections" border="1">
-
-
           </table>
       </div>
     </div>
