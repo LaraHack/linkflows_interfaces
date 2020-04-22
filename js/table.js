@@ -1,5 +1,6 @@
 // server address of the Virtuoso triple store
-var serverConnection = "http://localhost:8081/sparql/commentsBySection";
+const serverGetComments = "http://localhost:8081/sparql/commentsBySection";
+const serverGetSections = "http://localhost:8081/sparql/mainSections";
 
 // array containing the results retrieved from Virtuoso
 var resultsVirtuoso = [];
@@ -34,7 +35,7 @@ function setSpanColor(dimName) {
 }
 
 // get data from Virtuoso for the selected article
-$.get(serverConnection)
+$.get(serverGetComments)
 .done((csvResultsVirtuoso, status) => {
   try { // in case there is any arror retrieving the data
     // create array with all results retrieved from the SPARQL endpoint
