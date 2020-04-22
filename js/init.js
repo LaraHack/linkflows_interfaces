@@ -188,7 +188,7 @@ $.get(serverConnection, checkedDimensions)
     $("#divProgressBar").remove();
 
     $("#divIntroContentReviewComments").remove();
-    $("#divReviewCommentsContent").append("<div id='divError' style='text-align:center; color: red; font-size: large; border: #0275d8;'> <br/>Error retrieving the data. Please try again later and if the problem persists, please write an email to c.i.bucur@vu.nl <br/> <br/> Error: " + error + "</div>");
+    $("#divReviewCommentsContent").append("<div id='divError' style='text-align:center; color: red; font-size: large; border: #0275d8;'> <br/>Error retrieving the data. Please try again later and if the problem persists, please write an email to c.i.bucur@vu.nl <br/> <br/> Error when connecting to the Virtuoso DB: " + error + ", text status:"+ textStatus + "</div>");
 });
 
 

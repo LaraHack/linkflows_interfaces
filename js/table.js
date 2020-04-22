@@ -57,9 +57,11 @@ $.get(serverGetSections)
 
     // check if the results are empty or not
     if (sections.length > 0) {
-      console.log("RESULTS:" + JSON.stringify(sections));
+      // creating the rows in the table for the main sections without any numbers in
+
+      // console.log("RESULTS:" + JSON.stringify(sections));
       for (let i = 0; i < sections.length; i++) {
-        console.log("sections[" + i + "][1]" + sections[i][1]);
+        // console.log("sections[" + i + "][1]" + sections[i][1]);
         $("#tblCommentsPerMainSections").append("<tr id='trSection_" + sections[i][0] + "'>" +
               "<td id='tdNr_" + sections[i][0] + "'>" + sections[i][0] + "</td>" +
               "<td align='left' id='tdTitle_" + sections[i][0] + "'>" + sections[i][1] + "</td>" +
@@ -79,9 +81,6 @@ $.get(serverGetSections)
               "<td align='center' id='tdNoAction_" + sections[i][0] + "'></td>" +
             "</tr>");
       }
-
-
-
     } else { // no results retrieved
       console.log("No results retrieved!!!");
     }
@@ -92,7 +91,11 @@ $.get(serverGetSections)
 })
 // failure to retrieve Virtuoso results
 .fail(function (jqXHR, textStatus, error) {
-    // remove the progress bar in case of error
+    // in case of error remove table header
+    $("#tblCommentsPerMainSections").remove();
+
+    $("#divContent").empty();
+    $("#divContent").append("<div id='divError' style='text-align:center; color: red; font-size: large; border: #0275d8;'> <br/>Error retrieving the data. Please try again later and if the problem persists, please write an email to c.i.bucur@vu.nl <br/> <br/> Error when connecting to the Virtuoso DB: " + error + ", text status:"+ textStatus + "</div>");
     console.log("Error when connecting to the Virtuoso DB: " + error);
 });
 
@@ -116,6 +119,10 @@ $.get(serverGetComments)
 })
 // failure to retrieve Virtuoso results
 .fail(function (jqXHR, textStatus, error) {
-    // remove the progress bar in case of error
+    // in case of error remove table header
+    $( "#tblCommentsPerMainSections").remove();
+
+    $("#divContent").empty();
+    $("#divContent").append("<div id='divError' style='text-align:center; color: red; font-size: large; border: #0275d8;'> <br/>Error retrieving the data. Please try again later and if the problem persists, please write an email to c.i.bucur@vu.nl <br/> <br/> Error when connecting to the Virtuoso DB: " + error + ", text status:"+ textStatus + "</div>");
     console.log("Error when connecting to the Virtuoso DB: " + error);
 });
