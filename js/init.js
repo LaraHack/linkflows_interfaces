@@ -425,7 +425,6 @@ function calculateCountsReviewers(results, reviewersList, reviewersCounts, displ
   }
 }
 
-
 // function that draws the graph
 // dataReviewers is the data in JSON format received after a GET request to the server
 // function drawGraph(dataReviewers) {

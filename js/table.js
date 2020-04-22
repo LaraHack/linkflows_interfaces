@@ -151,6 +151,9 @@ $.get(serverGetComments)
         if (countsResults != -1) {
           // calculate counts for all reviewers
           calculateCountsSections(resultsNoPrefixes, sections, countsResults);
+          console.log("countsResults:" + JSON.stringify(countsResults));
+
+          fillTableWithCounts(countsResults);
         }
       }
     } else { // no results retrieved
@@ -292,5 +295,64 @@ function calculateCountsSections(results, sectionsList, sectionCounts) {
         }
       }
     }
+  }
+}
+
+function fillTableWithCounts(counts) {
+  if (Array.isArray(counts) && counts.length) {
+
+    counts.forEach( (sectionCounts, index) => {
+      // console.log("sectionCounts=" + JSON.stringify(sectionCounts));
+      // aspect
+      if (sectionCounts.syntax) {
+        $("#tdSyntax_" + sectionCounts.section).text(sectionCounts.syntax);
+      }
+      if (sectionCounts.style) {
+        $("#tdStyle_" + sectionCounts.section).text(sectionCounts.style);
+      }
+      if (sectionCounts.content) {
+        $("#tdContent_" + sectionCounts.section).text(sectionCounts.content);
+      }
+
+      // positivity/negativity
+      if (sectionCounts.positive) {
+        $("#tdPositive_" + sectionCounts.section).text(sectionCounts.positive);
+      }
+      if (sectionCounts.neutral) {
+        $("#tdNeutral_" + sectionCounts.section).text(sectionCounts.neutral);
+      }
+      if (sectionCounts.negative) {
+        $("#tdNegative_" + sectionCounts.section).text(sectionCounts.negative);
+      }
+
+      // impact
+      if (sectionCounts.I1) {
+        $("#tdI1_" + sectionCounts.section).text(sectionCounts.I1);
+      }
+      if (sectionCounts.I2) {
+        $("#tdI2_" + sectionCounts.section).text(sectionCounts.I2);
+      }
+      if (sectionCounts.I3) {
+        $("#tdI3_" + sectionCounts.section).text(sectionCounts.I3);
+      }
+      if (sectionCounts.I4) {
+        $("#tdI4_" + sectionCounts.section).text(sectionCounts.I4);
+      }
+      if (sectionCounts.I5) {
+        $("#tdI5_" + sectionCounts.section).text(sectionCounts.I5);
+      }
+
+      // action_needed
+      if (sectionCounts.compulsory) {
+        $("#tdCompulsory_" + sectionCounts.section).text(sectionCounts.compulsory);
+      }
+      if (sectionCounts.suggestion) {
+        $("#tdSuggestion_" + sectionCounts.section).text(sectionCounts.suggestion);
+      }
+      if (sectionCounts.no_action) {
+        $("#tdNoAction_" + sectionCounts.section).text(sectionCounts.no_action);
+      }
+    });
+
   }
 }
