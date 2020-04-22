@@ -25,6 +25,34 @@ var colors = {article: "#cd853f", section: "#deb887", paragraph: "#ffe4c4",
   I1: "rgba(0, 0, 0, 0)", I2: "rgba(0, 0, 0, 0.25)", I3: "rgba(0, 0, 0, 0.5)", I4: "rgba(0, 0, 0, 0.75)", I5: "rgba(0, 0, 0, 1)",
   compulsory: "#ff6500", suggestion: "#ffa500", no_action: "#ffd700"};
 
+/*
+ ******************************************
+ * Patterns used for the Virtuoso results *
+ ******************************************
+ */
+
+// aspect
+var patternSyntax = /.*\#SyntaxComment$/;
+var patternStyle = /.*\#StyleComment$/;
+var patternContent = /.*\#ContentComment$/;
+var aspect = "";
+
+// positivity/negativity
+var patternNegative = /.*\#NegativeComment$/;
+var patternNeutral = /.*\#NeutralComment$/;
+var patternPositive = /.*\#PositiveComment$/;
+var pos_neg = "";
+
+// impact
+var impact = "";
+
+// action needed
+var patternCompulsory = /.*\#ActionNeededComment$/;
+var patternSuggestion = /.*\#SuggestionComment$/;
+var patternNoAction = /.*\#NoActionNeededComment$/;
+var actionNeeded = "";
+
+
 // coloring the separate span elements that act as legend for the graph
 // from the color palette above, for all dimensions
 for (const [key, value] of Object.entries(colors)) {
@@ -109,8 +137,24 @@ $.get(serverGetComments)
     // check if the results are empty or not
     if (resultsVirtuoso.length > 0) {
       console.log("RESULTS:" + JSON.stringify(resultsVirtuoso));
+
+      // remove the prefixes for the results, easier to handle
+      resultsNoPrefixes = noPrefixesInVirtuosoResults(resultsVirtuoso);
+      console.log("RESULTS resultsNoPrefixes:" + JSON.stringify(resultsNoPrefixes));
+
+      // check if the results are empty or not
+      if (sections.length > 0) {
+        // console.log("RESULTS:" + JSON.stringify(sections));
+        // create initial empty count array for every section
+        countsResults = initSectionsCounts(sections);
+
+        if (countsResults != -1) {
+          // calculate counts for all reviewers
+          calculateCountsSections(resultsNoPrefixes, sections, countsResults);
+        }
+      }
     } else { // no results retrieved
-      console.log("No results retrieved!!!");
+        console.log("No results retrieved!!!");
     }
   }
   catch(error) { // in case of error retrieving the data
@@ -126,3 +170,127 @@ $.get(serverGetComments)
     $("#divContent").append("<div id='divError' style='text-align:center; color: red; font-size: large; border: #0275d8;'> <br/>Error retrieving the data. Please try again later and if the problem persists, please write an email to c.i.bucur@vu.nl <br/> <br/> Error when connecting to the Virtuoso DB: " + error + ", text status:"+ textStatus + "</div>");
     console.log("Error when connecting to the Virtuoso DB: " + error);
 });
+
+// preprocessing the results got from Virtuoso
+function noPrefixesInVirtuosoResults(results) {
+  var noPrefixes = [];
+
+  for (let i = 1; i < results.length; i++) { // first line contains the headers, it will be omitted
+    var resultItem = results[i].slice();
+
+    // get the comment number without the sparql prefix
+    resultItem[2] = resultItem[2].split("#").pop();
+
+     // check whether the aspect is syntax, style or content
+     if (patternSyntax.test(results[i][3])){
+       resultItem[3] = "syntax";
+     }
+     if (patternStyle.test(results[i][3])) {
+       resultItem[3] = "style";
+     }
+     if (patternContent.test(results[i][3])) {
+       resultItem[3] = "content";
+     }
+
+     // check whether the positivity/negativity dimension is negative, neutral or positive
+     if (patternNegative.test(results[i][4])) {
+       resultItem[4] = "negative";
+     }
+     if (patternNeutral.test(results[i][4])) {
+       resultItem[4] = "neutral";
+     }
+     if (patternPositive.test(results[i][4])) {
+       resultItem[4] = "positive";
+     }
+
+     // check whether the action needed is compulsory, suggestion or no_action
+     if (patternCompulsory.test(results[i][6])) {
+       resultItem[6] = "compulsory";
+     }
+     if (patternSuggestion.test(results[i][6])) {
+       resultItem[6] = "suggestion";
+     }
+     if (patternNoAction.test(results[i][6])) {
+       resultItem[6] = "no_action";
+     }
+
+     noPrefixes.push(resultItem);
+
+   }
+
+   return noPrefixes;
+}
+
+// create empty section counts
+function initSectionsCounts(mainSections) {
+  // if array of reviewers exists and it is not empty
+  if (Array.isArray(sections) && sections.length) {
+    var sectionsCounts = [];
+
+    // sectionNo,sectionTitle,syntax,style,content,negative,neutral,positive,I1,I2,I3,I4,I5,compulsory,suggestion,no_action
+    for (let i = 0; i < sections.length; i++) {
+      var countsPerSection = { "section": sections[i][0],
+                    "title": sections[i][1],
+                    "syntax": 0, "style": 0, "content": 0,
+                    "negative": 0, "neutral": 0, "positive": 0,
+                    "I1": 0, "I2": 0, "I3": 0, "I4": 0, "I5": 0,
+                    "compulsory": 0, "suggestion": 0, "no_action": 0
+      };
+      sectionsCounts.push(countsPerSection);
+    }
+    return sectionsCounts;
+  }
+  return -1;
+}
+
+// calculate the number of review comments for each main section based on the retrieved results (no prefixes)
+// results contain the following fields: "section", "title", "reviewComment","part","aspect","posNeg","impact","actionNeeded", "commentText"
+function calculateCountsSections(results, sectionsList, sectionCounts) {
+  for (let i = 0; i < results.length; i++) {
+    var resultItem = results[i];
+
+    for (let j = 0; j < sectionCounts.length; j++) {
+      if (resultItem[0] == sectionCounts[j].section) {
+        // if section is found, then calculate counts for every dimension
+
+        // check whether the aspect is syntax, style or content
+        if (resultItem[3] == "syntax"){
+          sectionCounts[j].syntax = sectionCounts[j].syntax + 1;
+        }
+        if (resultItem[3] == "syntax") {
+          sectionCounts[j].style = sectionCounts[j].style + 1;
+        }
+        if (resultItem[3] == "content") {
+          sectionCounts[j].content = sectionCounts[j].content + 1;
+        }
+
+        // check whether the positivity/negativity dimension is negative, neutral or positive
+        if (resultItem[4] == "negative") {
+          sectionCounts[j].negative = sectionCounts[j].negative + 1;
+        }
+        if (resultItem[4] == "neutral") {
+          sectionCounts[j].neutral = sectionCounts[j].neutral + 1;
+        }
+        if (resultItem[4] == "positive") {
+          sectionCounts[j].positive = sectionCounts[j].positive + 1;
+        }
+
+        // check whether the impact is 1, 2, 3, 4 or 5
+        if (0 < resultItem[5] < 6) {
+          sectionCounts[j]["I" + resultItem[5]] = sectionCounts[j]["I" + resultItem[5]] + 1;
+        }
+
+        // check whether the action needed is compulsory, suggestion or no_action
+        if (resultItem[6] == "compulsory") {
+          sectionCounts[j].compulsory = sectionCounts[j].compulsory + 1;
+        }
+        if (resultItem[6] == "suggestion") {
+          sectionCounts[j].suggestion = sectionCounts[j].suggestion + 1;
+        }
+        if (resultItem[6] == "no_action") {
+          sectionCounts[j].no_action = sectionCounts[j].no_action + 1;
+        }
+      }
+    }
+  }
+}
