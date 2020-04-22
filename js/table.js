@@ -85,29 +85,59 @@ $.get(serverGetSections)
 
     // check if the results are empty or not
     if (sections.length > 0) {
-      // creating the rows in the table for the main sections without any numbers in
+      // creating the header for the table
+      $("#tblCommentsPerMainSections").append(
+      "<col class='outlined'>" +
+      "<col class='outlined'>" +
+      "<colgroup span='3' class='outlined'></colgroup>" +
+      "<colgroup span='3' class='outlined'></colgroup>" +
+      "<colgroup span='5' class='outlined'></colgroup>" +
+      "<colgroup span='3' class='outlined'></colgroup>" +
+      "<tr>" +
+        "<th class='borders' rowspan='2' style='text-align:center;'>Section</th>" +
+        "<th class='borders' rowspan='2' style='text-align:center;'>Title</th>" +
+        "<th class='borders' colspan='3' scope='colgroup' style='text-align:center;'>Aspect</th>" +
+        "<th class='borders' colspan='3' scope='colgroup' style='text-align:center;'>Positivity/Negativity</th>" +
+        "<th class='borders' colspan='5' scope='colgroup' style='text-align:center;'>Impact</th>" +
+        "<th class='borders' colspan='3' scope='colgroup' style='text-align:center;'>Action needed</th>" +
+      "</tr>" +
+      "<tr>" +
+        "<th class='borders' style='text-align:center; background-color: #c6deff;'>syntax</th>" +
+        "<th class='borders' style='text-align:center; background-color: #82cafa;'>style</th>" +
+        "<th class='borders' style='text-align:center; background-color: #9e7bff;'>content</th>" +
+        "<th class='borders' style='text-align:center; background-color: #ff0000;'>negative</th>" +
+        "<th class='borders' style='text-align:center; background-color: #ffff00;'>neutral</th>" +
+        "<th class='borders' style='text-align:center; background-color: #008000;'>positive</th>" +
+        "<th class='borders' style='text-align:center; background-color: rgba(0, 0, 0, 0);'>I1</th>" +
+        "<th class='borders' style='text-align:center; background-color: rgba(0, 0, 0, 0.25);'>I2</th>" +
+        "<th class='borders' style='text-align:center; background-color: rgba(0, 0, 0, 0.5); color:white;'>I3</th>" +
+        "<th class='borders' style='text-align:center; background-color: rgba(0, 0, 0, 0.75); color:white;'>I4</th>" +
+        "<th class='borders' style='text-align:center; background-color: rgba(0, 0, 0, 1); color:white;'>I5</th>" +
+        "<th class='borders' style='text-align:center; background-color: #ff6500;'>compulsory</th>" +
+        "<th class='borders' style='text-align:center; background-color: #ffa500;'>suggestion</th>" +
+        "<th class='borders' style='text-align:center; background-color: #ffd700;'>no action</th>" +
+    "</tr>");
 
-      // console.log("RESULTS:" + JSON.stringify(sections));
-      for (let i = 0; i < sections.length; i++) {
-        // console.log("sections[" + i + "][1]" + sections[i][1]);
-        $("#tblCommentsPerMainSections").append("<tr id='trSection_" + sections[i][0] + "'>" +
-              "<td id='tdNr_" + sections[i][0] + "'>" + sections[i][0] + "</td>" +
-              "<td align='left' id='tdTitle_" + sections[i][0] + "'>" + sections[i][1] + "</td>" +
-              "<td align='center' id='tdSyntax_" + sections[i][0] + "'></td>" +
-              "<td align='center' id='tdStyle_" + sections[i][0] + "'></td>" +
-              "<td align='center' id='tdContent_" + sections[i][0] + "'></td>" +
-              "<td align='center' id='tdNegative_" + sections[i][0] + "'></td>" +
-              "<td align='center' id='tdNeutral_" + sections[i][0] + "'></td>" +
-              "<td align='center' id='tdPositive_" + sections[i][0] + "'></td>" +
-              "<td align='center' id='tdI1_" + sections[i][0] + "'></td>" +
-              "<td align='center' id='tdI2_" + sections[i][0] + "'></td>" +
-              "<td align='center' id='tdI3_" + sections[i][0] + "'></td>" +
-              "<td align='center' id='tdI4_" + sections[i][0] + "'></td>" +
-              "<td align='center' id='tdI5_" + sections[i][0] + "'></td>" +
-              "<td align='center' id='tdCompulsory_" + sections[i][0] + "'></td>" +
-              "<td align='center' id='tdSuggestion_" + sections[i][0] + "'></td>" +
-              "<td align='center' id='tdNoAction_" + sections[i][0] + "'></td>" +
-            "</tr>");
+    // adding the empty rows for every section
+    for (let i = 0; i < sections.length; i++) {
+      $("#tblCommentsPerMainSections").append("<tr id='trSection_" + sections[i][0] + "'>" +
+            "<td id='tdNr_" + sections[i][0] + "'>" + sections[i][0] + "</td>" +
+            "<td align='left' id='tdTitle_" + sections[i][0] + "'>" + sections[i][1] + "</td>" +
+            "<td align='center' id='tdSyntax_" + sections[i][0] + "'></td>" +
+            "<td align='center' id='tdStyle_" + sections[i][0] + "'></td>" +
+            "<td align='center' id='tdContent_" + sections[i][0] + "'></td>" +
+            "<td align='center' id='tdNegative_" + sections[i][0] + "'></td>" +
+            "<td align='center' id='tdNeutral_" + sections[i][0] + "'></td>" +
+            "<td align='center' id='tdPositive_" + sections[i][0] + "'></td>" +
+            "<td align='center' id='tdI1_" + sections[i][0] + "'></td>" +
+            "<td align='center' id='tdI2_" + sections[i][0] + "'></td>" +
+            "<td align='center' id='tdI3_" + sections[i][0] + "'></td>" +
+            "<td align='center' id='tdI4_" + sections[i][0] + "'></td>" +
+            "<td align='center' id='tdI5_" + sections[i][0] + "'></td>" +
+            "<td align='center' id='tdCompulsory_" + sections[i][0] + "'></td>" +
+            "<td align='center' id='tdSuggestion_" + sections[i][0] + "'></td>" +
+            "<td align='center' id='tdNoAction_" + sections[i][0] + "'></td>" +
+          "</tr>");
       }
     } else { // no results retrieved
       console.log("No results retrieved!!!");
