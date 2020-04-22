@@ -671,18 +671,18 @@ function drawGraph(data) {
          })
          .text(function(d,i) {
            return (d.xEnd-d.xBegin) !== 0 ? (d.xEnd-d.xBegin) : "";
-         })
-         .on("mouseover", function(d) {
-             d3.select(this).style("fill", "white");
-             d3.select(this).style("font-weight", "bold");
-         })
-         .on("mouseout", function(d) {
-           d3.select(this).style("font-weight", "");
-           d3.select(this).style("fill", function(d) {
-             if (d.name == "I3" || d.name == "I4" || d.name == "I5")
-               return "white";
-             return "black";
-           });
+         // })
+         // .on("mouseover", function(d) {
+         //     d3.select(this).style("fill", "white");
+         //     d3.select(this).style("font-weight", "bold");
+         // })
+         // .on("mouseout", function(d) {
+         //   d3.select(this).style("font-weight", "");
+         //   d3.select(this).style("fill", function(d) {
+         //     if (d.name == "I3" || d.name == "I4" || d.name == "I5")
+         //       return "white";
+         //     return "black";
+         //   });
          });
   // })
 }
