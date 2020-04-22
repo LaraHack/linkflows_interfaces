@@ -166,15 +166,12 @@ $.get(serverGetComments)
 
     // check if the results are empty or not
     if (resultsVirtuoso.length > 0) {
-      console.log("RESULTS:" + JSON.stringify(resultsVirtuoso));
 
       // remove the prefixes for the results, easier to handle
       resultsNoPrefixes = noPrefixesInVirtuosoResults(resultsVirtuoso);
-      console.log("RESULTS resultsNoPrefixes:" + JSON.stringify(resultsNoPrefixes));
 
       // check if the results are empty or not
       if (sections.length > 0) {
-        // console.log("RESULTS:" + JSON.stringify(sections));
         // create initial empty count array for every section
         countsResults = initSectionsCounts(sections);
 
