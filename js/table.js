@@ -342,11 +342,34 @@ function addEmptyRows() {
       }
 }
 
+function displayReviewCommentContent(dimName) {
+  // dimName is in the form "aDimension_SectionNo" and "dimension" and
+  // "sectionNo" need to be extracted from the string which represents the id
+  // of the clicked anchor in the table
+
+  // get section number
+  var sectionNo = dimName.split('_').pop();
+
+  // get dimension name
+  var dimension = dimName.substring(0, dimName.lastIndexOf("_")).substring(1).toLowerCase();
+
+  // console.log("sectionNo=" + sectionNo);
+  // console.log("dimension=" + dimension);
+  // console.log("onclick, dimName=" + dimName);
+}
+
+// $(document).on('click', 'a', function () {
+//     alert(this.id);
+// });
+
 function addTdAndAnchor(sectionNumber, dimensionName, counts) {
   // capitalize first letter
   let dimName = dimensionName.charAt(0).toUpperCase() + dimensionName.substring(1);
 
-  $("#td" + dimName + "_" + sectionNumber).append("<a href='#' class='sectionsTable' id='a" + dimName + "_" + sectionNumber + "'>" + counts + "</a>");
+  // $("#td" + dimName + "_" + sectionNumber).append("<a href='#' class='sectionsTable' id='a" + dimName + "_" + sectionNumber + "' onclick='displayReviewCommentContent(" + dimName + ");'>" + counts + "</a>");
+  $("#td" + dimName + "_" + sectionNumber).append("<a href='#' class='sectionsTable' id='a" + dimName + "_" + sectionNumber + "' onclick='displayReviewCommentContent(this.id);'>" + counts + "</a>");
+    // $("#td" + dimName + "_" + sectionNumber).append("<a href='#' class='sectionsTable' id='a" + dimName + "_" + sectionNumber + "'>" + counts + "</a>");
+
 }
 
 function fillTableWithCounts(counts) {
@@ -374,7 +397,6 @@ function fillTableWithCounts(counts) {
           addTdAndAnchor(sectionNo, key, value);
           // console.log("sectionNo=" + sectionNo + "; key=" + key + "; value=" + value);
         }
-
       }
     });
   }
