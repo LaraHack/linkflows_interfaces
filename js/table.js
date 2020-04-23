@@ -131,20 +131,28 @@ $.get(serverGetComments)
         }
       }
     } else { // no results retrieved
+        $("#imgWaiting").remove();
+        $("#divContent").empty();
+        $("#divContent").append("<div id='divError' style='text-align:center; color: red; font-size: large; border: #0275d8;'> <br/>Error retrieving the data. Please try again later and if the problem persists, please write an email to c.i.bucur@vu.nl <br/> <br/> Error when connecting to the Virtuoso DB: " + error + "</div>");
         console.log("No results retrieved!!!");
     }
   }
   catch(error) { // in case of error retrieving the data
+    $("#imgWaiting").remove();
+    $("#divTableCommentsPerMainSection").empty();
+    $("#divTableCommentsPerMainSection").append("<div id='divError' style='text-align:center; color: red; font-size: large; border: #0275d8;'> <br/>Error retrieving the data. Please try again later and if the problem persists, please write an email to c.i.bucur@vu.nl <br/> <br/> Error when connecting to the Virtuoso DB: " + error + "</div>");
+    console.log("Error when connecting to the Virtuoso DB: " + error);
     console.log("Error retrieving data: " + error);
   }
 })
 // failure to retrieve Virtuoso results
 .fail(function (jqXHR, textStatus, error) {
+    $("#imgWaiting").remove();
     // in case of error remove table header
-    $( "#tblCommentsPerMainSections").remove();
+    // $( "#tblCommentsPerMainSections").remove();
 
-    $("#divContent").empty();
-    $("#divContent").append("<div id='divError' style='text-align:center; color: red; font-size: large; border: #0275d8;'> <br/>Error retrieving the data. Please try again later and if the problem persists, please write an email to c.i.bucur@vu.nl <br/> <br/> Error when connecting to the Virtuoso DB: " + error + ", text status:"+ textStatus + "</div>");
+    $("#divTableCommentsPerMainSection").empty();
+    $("#divTableCommentsPerMainSection").append("<div id='divError' style='text-align:center; color: red; font-size: large; border: #0275d8;'> <br/>Error retrieving the data. Please try again later and if the problem persists, please write an email to c.i.bucur@vu.nl <br/> <br/> Error when connecting to the Virtuoso DB: " + error + ", text status:"+ textStatus + "</div>");
     console.log("Error when connecting to the Virtuoso DB: " + error);
 });
 

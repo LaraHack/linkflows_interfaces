@@ -706,7 +706,7 @@ function getReviewComments() {
     // no results to display according to the selected criteria
     if (!resultsToDisplay.length) {
       $("#divReviewCommentsContent").empty();
-      $("#divReviewCommentsContent").append("<div id='divError' style='text-align:center; color: red; font-size: large; border: #0275d8;'> <br/>No data to display. No entries match the chosen options. </div>");
+      $("#divReviewCommentsContent").append("<div id='divError' style='text-align:center; color: red; font-size: large; border: #0275d8;'> <br/>Empty selection: no entries match the chosen options. </div>");
     }
   } else { // no results retrieved from Virtuoso
     // remove the progress bar in case of error
