@@ -109,7 +109,7 @@ $.get(serverGetComments)
 .done((csvResultsVirtuoso, status) => {
   try { // in case there is any arror retrieving the data
 
-    console.log("csvResultsVirtuoso:" + JSON.stringify(csvResultsVirtuoso));
+    // console.log("csvResultsVirtuoso:" + JSON.stringify(csvResultsVirtuoso));
     // create array with all results retrieved from the SPARQL endpoint
     resultsVirtuoso = $.csv.toArrays(csvResultsVirtuoso);
 
@@ -128,6 +128,7 @@ $.get(serverGetComments)
           // calculate counts for all reviewers
           calculateCountsSections(resultsNoPrefixes, sections, countsResults);
           console.log("countsResults:" + JSON.stringify(countsResults));
+
           $("#imgWaiting").remove();
           fillTableWithCounts(countsResults);
           $("#divReviewCommentsContent").append("<div id='divIntroContentReviewComments' style='text-align:center; color: #0275d8; font-size: large; border: #0275d8;''> <br/>Click on a cell in the table to show the content of the review comments here </div>");
@@ -336,7 +337,7 @@ function addEmptyRows() {
           "<td align='center' id='tdI5_" + sections[i][0] + "'></td>" +
           "<td align='center' id='tdCompulsory_" + sections[i][0] + "'></td>" +
           "<td align='center' id='tdSuggestion_" + sections[i][0] + "'></td>" +
-          "<td align='center' id='tdNoAction_" + sections[i][0] + "'></td>" +
+          "<td align='center' id='tdNo_action_" + sections[i][0] + "'></td>" +
         "</tr>");
       }
 }
@@ -356,60 +357,25 @@ function fillTableWithCounts(counts) {
     // add an empty row for each main section of the article
     addEmptyRows();
 
-    // add the counts for each dimension
+    // add the counts for each dimension if the counts are not zero
     counts.forEach( (sectionCounts, index) => {
       // console.log("sectionCounts=" + JSON.stringify(sectionCounts));
+      let sectionNo = 0;
 
-      // aspect
-      if (sectionCounts.syntax) {
-        addTdAndAnchor(sectionCounts.section, "syntax", sectionCounts.syntax);
-      }
-      if (sectionCounts.style) {
-        addTdAndAnchor(sectionCounts.section, "style", sectionCounts.style);
-      }
-      if (sectionCounts.content) {
-        addTdAndAnchor(sectionCounts.section, "content", sectionCounts.content);
-      }
+      for (const [key, value] of Object.entries(sectionCounts)) {
+        // get the number of the section
+        if (key == "section") {
+          sectionNo = value;
+        }
 
-      // positivity/negativity
-      if (sectionCounts.positive) {
-        addTdAndAnchor(sectionCounts.section, "positive", sectionCounts.positive);
-      }
-      if (sectionCounts.neutral) {
-        addTdAndAnchor(sectionCounts.section, "neutral", sectionCounts.neutral);
-      }
-      if (sectionCounts.negative) {
-        addTdAndAnchor(sectionCounts.section, "negative", sectionCounts.negative);
-      }
+        // if the value is not zero and the key is not section or title (thus it
+        // is a non-empty dimension), add its value to the corresponding cell in the table
+        if (value && (key != "section" && key != "title")) {
+          addTdAndAnchor(sectionNo, key, value);
+          // console.log("sectionNo=" + sectionNo + "; key=" + key + "; value=" + value);
+        }
 
-      // impact
-      if (sectionCounts.I1) {
-        addTdAndAnchor(sectionCounts.section, "I1", sectionCounts.I1);
-      }
-      if (sectionCounts.I2) {
-        addTdAndAnchor(sectionCounts.section, "I2", sectionCounts.I2);
-      }
-      if (sectionCounts.I3) {
-        addTdAndAnchor(sectionCounts.section, "I3", sectionCounts.I3);
-      }
-      if (sectionCounts.I4) {
-        addTdAndAnchor(sectionCounts.section, "I4", sectionCounts.I4);
-      }
-      if (sectionCounts.I5) {
-        addTdAndAnchor(sectionCounts.section, "I5", sectionCounts.I5);
-      }
-
-      // action_needed
-      if (sectionCounts.compulsory) {
-        addTdAndAnchor(sectionCounts.section, "compulsory", sectionCounts.compulsory);
-      }
-      if (sectionCounts.suggestion) {
-        addTdAndAnchor(sectionCounts.section, "suggestion", sectionCounts.suggestion);
-      }
-      if (sectionCounts.no_action) {
-        addTdAndAnchor(sectionCounts.section, "noAction", sectionCounts.no_action);
       }
     });
-
   }
 }
