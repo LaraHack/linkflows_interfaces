@@ -108,6 +108,8 @@ $.get(serverGetSections)
 $.get(serverGetComments)
 .done((csvResultsVirtuoso, status) => {
   try { // in case there is any arror retrieving the data
+
+    console.log("csvResultsVirtuoso:" + JSON.stringify(csvResultsVirtuoso));
     // create array with all results retrieved from the SPARQL endpoint
     resultsVirtuoso = $.csv.toArrays(csvResultsVirtuoso);
 
