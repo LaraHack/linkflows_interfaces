@@ -130,6 +130,7 @@ $.get(serverGetComments)
           console.log("countsResults:" + JSON.stringify(countsResults));
           $("#imgWaiting").remove();
           fillTableWithCounts(countsResults);
+          $("#divReviewCommentsContent").append("<div id='divIntroContentReviewComments' style='text-align:center; color: #0275d8; font-size: large; border: #0275d8;''> <br/>Click on a cell in the table to show the content of the review comments here </div>");
         }
       }
     } else { // no results retrieved
