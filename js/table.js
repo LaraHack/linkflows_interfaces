@@ -341,6 +341,13 @@ function addEmptyRows() {
       }
 }
 
+function addTdAndAnchor(sectionNumber, dimensionName, counts) {
+  // capitalize first letter
+  let dimName = dimensionName.charAt(0).toUpperCase() + dimensionName.substring(1);
+
+  $("#td" + dimName + "_" + sectionNumber).append("<a href='#' class='sectionsTable' id='a" + dimName + "_" + sectionNumber + "'>" + counts + "</a>");
+}
+
 function fillTableWithCounts(counts) {
   if (Array.isArray(counts) && counts.length) {
     // create table header
@@ -355,52 +362,52 @@ function fillTableWithCounts(counts) {
 
       // aspect
       if (sectionCounts.syntax) {
-        $("#tdSyntax_" + sectionCounts.section).append("<a href='#' class='sectionsTable' id='aSyntax_" + sectionCounts.section + "'>" + sectionCounts.syntax + "</a>");
+        addTdAndAnchor(sectionCounts.section, "syntax", sectionCounts.syntax);
       }
       if (sectionCounts.style) {
-        $("#tdStyle_" + sectionCounts.section).append("<a href='#' class='sectionsTable' id='aStyle_" + sectionCounts.section + "'>" + sectionCounts.style + "</a>");
+        addTdAndAnchor(sectionCounts.section, "style", sectionCounts.style);
       }
       if (sectionCounts.content) {
-        $("#tdContent_" + sectionCounts.section).append("<a href='#' class='sectionsTable' id='aContent_" + sectionCounts.section + "'>" + sectionCounts.content + "</a>");
+        addTdAndAnchor(sectionCounts.section, "content", sectionCounts.content);
       }
 
       // positivity/negativity
       if (sectionCounts.positive) {
-        $("#tdPositive_" + sectionCounts.section).append("<a href='#' class='sectionsTable' id='aPositive_" + sectionCounts.section + "'>" + sectionCounts.positive + "</a>");
+        addTdAndAnchor(sectionCounts.section, "positive", sectionCounts.positive);
       }
       if (sectionCounts.neutral) {
-        $("#tdNeutral_" + sectionCounts.section).append("<a href='#' class='sectionsTable' id='aNeutral_" + sectionCounts.section + "'>" + sectionCounts.neutral + "</a>");
+        addTdAndAnchor(sectionCounts.section, "neutral", sectionCounts.neutral);
       }
       if (sectionCounts.negative) {
-        $("#tdNegative_" + sectionCounts.section).append("<a href='#' class='sectionsTable' id='aNegative_" + sectionCounts.section + "'>" + sectionCounts.negative + "</a>");
+        addTdAndAnchor(sectionCounts.section, "negative", sectionCounts.negative);
       }
 
       // impact
       if (sectionCounts.I1) {
-        $("#tdI1_" + sectionCounts.section).append("<a href='#' class='sectionsTable' id='aI1_" + sectionCounts.section + "'>" + sectionCounts.I1 + "</a>");
+        addTdAndAnchor(sectionCounts.section, "I1", sectionCounts.I1);
       }
       if (sectionCounts.I2) {
-        $("#tdI2_" + sectionCounts.section).append("<a href='#' class='sectionsTable' id='aI2_" + sectionCounts.section + "'>" + sectionCounts.I2 + "</a>");
+        addTdAndAnchor(sectionCounts.section, "I2", sectionCounts.I2);
       }
       if (sectionCounts.I3) {
-        $("#tdI3_" + sectionCounts.section).append("<a href='#' class='sectionsTable' id='aI3_" + sectionCounts.section + "'>" + sectionCounts.I3 + "</a>");
+        addTdAndAnchor(sectionCounts.section, "I3", sectionCounts.I3);
       }
       if (sectionCounts.I4) {
-        $("#tdI4_" + sectionCounts.section).append("<a href='#' class='sectionsTable' id='aI4_" + sectionCounts.section + "'>" + sectionCounts.I4 + "</a>");
+        addTdAndAnchor(sectionCounts.section, "I4", sectionCounts.I4);
       }
       if (sectionCounts.I5) {
-        $("#tdI5_" + sectionCounts.section).append("<a href='#' class='sectionsTable' id='aI5_" + sectionCounts.section + "'>" + sectionCounts.I5 + "</a>");
+        addTdAndAnchor(sectionCounts.section, "I5", sectionCounts.I5);
       }
 
       // action_needed
       if (sectionCounts.compulsory) {
-        $("#tdCompulsory_" + sectionCounts.section).append("<a href='#' class='sectionsTable' id='aCompulsory_" + sectionCounts.section + "'>" + sectionCounts.compulsory + "</a>");
+        addTdAndAnchor(sectionCounts.section, "compulsory", sectionCounts.compulsory);
       }
       if (sectionCounts.suggestion) {
-        $("#tdSuggestion_" + sectionCounts.section).append("<a href='#' class='sectionsTable' id='aSuggestion_" + sectionCounts.section + "'>" + sectionCounts.suggestion + "</a>");
+        addTdAndAnchor(sectionCounts.section, "suggestion", sectionCounts.suggestion);
       }
       if (sectionCounts.no_action) {
-        $("#tdNoAction_" + sectionCounts.section).append("<a href='#' class='sectionsTable' id='aNoAction_" + sectionCounts.section + "'>" + sectionCounts.no_action + "</a>");
+        addTdAndAnchor(sectionCounts.section, "noAction", sectionCounts.no_action);
       }
     });
 
