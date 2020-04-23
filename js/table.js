@@ -356,6 +356,24 @@ function displayReviewCommentContent(dimName) {
   // console.log("sectionNo=" + sectionNo);
   // console.log("dimension=" + dimension);
   // console.log("onclick, dimName=" + dimName);
+  $("#divReviewCommentsContent").empty();
+
+  for (var i = 0; i < resultsNoPrefixes.length; i++) {
+    if (resultsNoPrefixes[i][0] == sectionNo &&
+      (resultsNoPrefixes[i][3] == dimension ||
+      resultsNoPrefixes[i][4] == dimension ||
+      ("I" + resultsNoPrefixes[i][5]) == dimension ||
+      resultsNoPrefixes[i][6] == dimension)) {
+      // console.log("dataToShow[" + i + "]=" + dataToShow[i]);
+      $("#divReviewCommentsContent").append("<div class='border border-dark rounded p-1'>" +
+        "<span class='legendSmall' style='background: " + colors[resultsNoPrefixes[i][3]] + ";'>" + resultsNoPrefixes[i][3] + "</span> " +
+        "<span class='legendSmall' style='background: " + colors[resultsNoPrefixes[i][4]] + ";'>" + resultsNoPrefixes[i][4] + "</span> " +
+        "<span class='legendImpactSmall' style='background: " + colors[("I" + resultsNoPrefixes[i][5])] + "; color:" + (resultsNoPrefixes[i][5] > 2 ? "white" : "black") + ";'>" + resultsNoPrefixes[i][5] + "</span> " +
+        "<span class='legendSmall' style='background: " + colors[resultsNoPrefixes[i][6]] + "; width:83px;'>" + resultsNoPrefixes[i][6] + "</span> <br/> " +
+        "<div style='text-align:left;'>" + resultsNoPrefixes[i][7] + "</div></div> <br/>");
+    }
+  }
+
 }
 
 // $(document).on('click', 'a', function () {
