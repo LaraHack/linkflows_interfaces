@@ -354,52 +354,52 @@ function fillTableWithCounts(counts) {
 
       // aspect
       if (sectionCounts.syntax) {
-        $("#tdSyntax_" + sectionCounts.section).text(sectionCounts.syntax);
+        $("#tdSyntax_" + sectionCounts.section).append("<a href='#' class='sectionsTable'>" + sectionCounts.syntax + "</a>");
       }
       if (sectionCounts.style) {
-        $("#tdStyle_" + sectionCounts.section).text(sectionCounts.style);
+        $("#tdStyle_" + sectionCounts.section).append("<a href='#' class='sectionsTable'>" + sectionCounts.style + "</a>");
       }
       if (sectionCounts.content) {
-        $("#tdContent_" + sectionCounts.section).text(sectionCounts.content);
+        $("#tdContent_" + sectionCounts.section).append("<a href='#' class='sectionsTable'>" + sectionCounts.content + "</a>");
       }
 
       // positivity/negativity
       if (sectionCounts.positive) {
-        $("#tdPositive_" + sectionCounts.section).text(sectionCounts.positive);
+        $("#tdPositive_" + sectionCounts.section).append("<a href='#' class='sectionsTable'>" + sectionCounts.positive + "</a>");
       }
       if (sectionCounts.neutral) {
-        $("#tdNeutral_" + sectionCounts.section).text(sectionCounts.neutral);
+        $("#tdNeutral_" + sectionCounts.section).append("<a href='#' class='sectionsTable'>" + sectionCounts.neutral + "</a>");
       }
       if (sectionCounts.negative) {
-        $("#tdNegative_" + sectionCounts.section).text(sectionCounts.negative);
+        $("#tdNegative_" + sectionCounts.section).append("<a href='#' class='sectionsTable'>" + sectionCounts.negative + "</a>");
       }
 
       // impact
       if (sectionCounts.I1) {
-        $("#tdI1_" + sectionCounts.section).text(sectionCounts.I1);
+        $("#tdI1_" + sectionCounts.section).append("<a href='#' class='sectionsTable'>" + sectionCounts.I1 + "</a>");
       }
       if (sectionCounts.I2) {
-        $("#tdI2_" + sectionCounts.section).text(sectionCounts.I2);
+        $("#tdI2_" + sectionCounts.section).append("<a href='#' class='sectionsTable'>" + sectionCounts.I2 + "</a>");
       }
       if (sectionCounts.I3) {
-        $("#tdI3_" + sectionCounts.section).text(sectionCounts.I3);
+        $("#tdI3_" + sectionCounts.section).append("<a href='#' class='sectionsTable'>" + sectionCounts.I3 + "</a>");
       }
       if (sectionCounts.I4) {
-        $("#tdI4_" + sectionCounts.section).text(sectionCounts.I4);
+        $("#tdI4_" + sectionCounts.section).append("<a href='#' class='sectionsTable'>" + sectionCounts.I4 + "</a>");
       }
       if (sectionCounts.I5) {
-        $("#tdI5_" + sectionCounts.section).text(sectionCounts.I5);
+        $("#tdI5_" + sectionCounts.section).append("<a href='#' class='sectionsTable'>" + sectionCounts.I5 + "</a>");
       }
 
       // action_needed
       if (sectionCounts.compulsory) {
-        $("#tdCompulsory_" + sectionCounts.section).text(sectionCounts.compulsory);
+        $("#tdCompulsory_" + sectionCounts.section).append("<a href='#' class='sectionsTable'>" + sectionCounts.compulsory + "</a>");
       }
       if (sectionCounts.suggestion) {
-        $("#tdSuggestion_" + sectionCounts.section).text(sectionCounts.suggestion);
+        $("#tdSuggestion_" + sectionCounts.section).append("<a href='#' class='sectionsTable'>" + sectionCounts.suggestion + "</a>");
       }
       if (sectionCounts.no_action) {
-        $("#tdNoAction_" + sectionCounts.section).text(sectionCounts.no_action);
+        $("#tdNoAction_" + sectionCounts.section).append("<a href='#' class='sectionsTable'>" + sectionCounts.no_action + "</a>");
       }
     });
 

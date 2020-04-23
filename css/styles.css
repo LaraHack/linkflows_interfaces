@@ -120,7 +120,7 @@ td a {
   width:100%;
 }
 
-table.sectionsTable td:hover {
+table.sectionsTable td:hover a:hover{
     background-color:#0275d8;
     color:white;
     font-weight: bold;
