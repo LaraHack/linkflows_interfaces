@@ -355,52 +355,52 @@ function fillTableWithCounts(counts) {
 
       // aspect
       if (sectionCounts.syntax) {
-        $("#tdSyntax_" + sectionCounts.section).append("<a href='#' class='sectionsTable'>" + sectionCounts.syntax + "</a>");
+        $("#tdSyntax_" + sectionCounts.section).append("<a href='#' class='sectionsTable' id='aSyntax_" + sectionCounts.section + "'>" + sectionCounts.syntax + "</a>");
       }
       if (sectionCounts.style) {
-        $("#tdStyle_" + sectionCounts.section).append("<a href='#' class='sectionsTable'>" + sectionCounts.style + "</a>");
+        $("#tdStyle_" + sectionCounts.section).append("<a href='#' class='sectionsTable' id='aStyle_" + sectionCounts.section + "'>" + sectionCounts.style + "</a>");
       }
       if (sectionCounts.content) {
-        $("#tdContent_" + sectionCounts.section).append("<a href='#' class='sectionsTable'>" + sectionCounts.content + "</a>");
+        $("#tdContent_" + sectionCounts.section).append("<a href='#' class='sectionsTable' id='aContent_" + sectionCounts.section + "'>" + sectionCounts.content + "</a>");
       }
 
       // positivity/negativity
       if (sectionCounts.positive) {
-        $("#tdPositive_" + sectionCounts.section).append("<a href='#' class='sectionsTable'>" + sectionCounts.positive + "</a>");
+        $("#tdPositive_" + sectionCounts.section).append("<a href='#' class='sectionsTable' id='aPositive_" + sectionCounts.section + "'>" + sectionCounts.positive + "</a>");
       }
       if (sectionCounts.neutral) {
-        $("#tdNeutral_" + sectionCounts.section).append("<a href='#' class='sectionsTable'>" + sectionCounts.neutral + "</a>");
+        $("#tdNeutral_" + sectionCounts.section).append("<a href='#' class='sectionsTable' id='aNeutral_" + sectionCounts.section + "'>" + sectionCounts.neutral + "</a>");
       }
       if (sectionCounts.negative) {
-        $("#tdNegative_" + sectionCounts.section).append("<a href='#' class='sectionsTable'>" + sectionCounts.negative + "</a>");
+        $("#tdNegative_" + sectionCounts.section).append("<a href='#' class='sectionsTable' id='aNegative_" + sectionCounts.section + "'>" + sectionCounts.negative + "</a>");
       }
 
       // impact
       if (sectionCounts.I1) {
-        $("#tdI1_" + sectionCounts.section).append("<a href='#' class='sectionsTable'>" + sectionCounts.I1 + "</a>");
+        $("#tdI1_" + sectionCounts.section).append("<a href='#' class='sectionsTable' id='aI1_" + sectionCounts.section + "'>" + sectionCounts.I1 + "</a>");
       }
       if (sectionCounts.I2) {
-        $("#tdI2_" + sectionCounts.section).append("<a href='#' class='sectionsTable'>" + sectionCounts.I2 + "</a>");
+        $("#tdI2_" + sectionCounts.section).append("<a href='#' class='sectionsTable' id='aI2_" + sectionCounts.section + "'>" + sectionCounts.I2 + "</a>");
       }
       if (sectionCounts.I3) {
-        $("#tdI3_" + sectionCounts.section).append("<a href='#' class='sectionsTable'>" + sectionCounts.I3 + "</a>");
+        $("#tdI3_" + sectionCounts.section).append("<a href='#' class='sectionsTable' id='aI3_" + sectionCounts.section + "'>" + sectionCounts.I3 + "</a>");
       }
       if (sectionCounts.I4) {
-        $("#tdI4_" + sectionCounts.section).append("<a href='#' class='sectionsTable'>" + sectionCounts.I4 + "</a>");
+        $("#tdI4_" + sectionCounts.section).append("<a href='#' class='sectionsTable' id='aI4_" + sectionCounts.section + "'>" + sectionCounts.I4 + "</a>");
       }
       if (sectionCounts.I5) {
-        $("#tdI5_" + sectionCounts.section).append("<a href='#' class='sectionsTable'>" + sectionCounts.I5 + "</a>");
+        $("#tdI5_" + sectionCounts.section).append("<a href='#' class='sectionsTable' id='aI5_" + sectionCounts.section + "'>" + sectionCounts.I5 + "</a>");
       }
 
       // action_needed
       if (sectionCounts.compulsory) {
-        $("#tdCompulsory_" + sectionCounts.section).append("<a href='#' class='sectionsTable'>" + sectionCounts.compulsory + "</a>");
+        $("#tdCompulsory_" + sectionCounts.section).append("<a href='#' class='sectionsTable' id='aCompulsory_" + sectionCounts.section + "'>" + sectionCounts.compulsory + "</a>");
       }
       if (sectionCounts.suggestion) {
-        $("#tdSuggestion_" + sectionCounts.section).append("<a href='#' class='sectionsTable'>" + sectionCounts.suggestion + "</a>");
+        $("#tdSuggestion_" + sectionCounts.section).append("<a href='#' class='sectionsTable' id='aSuggestion_" + sectionCounts.section + "'>" + sectionCounts.suggestion + "</a>");
       }
       if (sectionCounts.no_action) {
-        $("#tdNoAction_" + sectionCounts.section).append("<a href='#' class='sectionsTable'>" + sectionCounts.no_action + "</a>");
+        $("#tdNoAction_" + sectionCounts.section).append("<a href='#' class='sectionsTable' id='aNoAction_" + sectionCounts.section + "'>" + sectionCounts.no_action + "</a>");
       }
     });
 
