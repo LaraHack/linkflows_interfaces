@@ -352,13 +352,34 @@ function displayReviewCommentContent(dimName) {
 
   // get dimension name
   var dimension = dimName.substring(0, dimName.lastIndexOf("_")).substring(1).toLowerCase();
+  var dimToShow = dimension;
+
+  switch(dimension) {
+    case "i1":
+      dimToShow = "impact = 1";
+      break;
+    case "i2":
+      dimToShow = "impact = 2";
+      break;
+    case "i3":
+      dimToShow = "impact = 3";
+      break;
+    case "i4":
+      dimToShow = "impact = 4";
+      break;
+    case "i5":
+      dimToShow = "impact = 5";
+      break;
+    default:
+      dimToShow = dimension.replace("_", " ");
+  }
 
   // console.log("sectionNo=" + sectionNo);
   // console.log("dimension=" + dimension);
   // console.log("onclick, dimName=" + dimName);
   $("#divDescriptionContentReviewComments").empty();
   $("#divReviewCommentsContent").empty();
-  $("#divDescriptionContentReviewComments").append("<div id='divDescriptionContentReviewComments' style='text-align:center; color: #0275d8; font-size: large; border: #0275d8;'>Review comments content for '" + dimension.replace("_", " ") + "' dimension of Section " + sectionNo + ":</br> </div>");
+  $("#divDescriptionContentReviewComments").append("<div id='divDescriptionContentReviewComments' style='text-align:center; color: #0275d8; font-size: large; border: #0275d8;'>Review comments content for '" + dimToShow + "' dimension of Section " + sectionNo + ":</br> </div>");
 
   for (var i = 0; i < resultsNoPrefixes.length; i++) {
     if (resultsNoPrefixes[i][0] == sectionNo &&
