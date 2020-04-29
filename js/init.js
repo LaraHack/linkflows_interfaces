@@ -5,8 +5,9 @@
  */
 
 // server address of the Virtuoso triple store
-const serverConnection = "http://localhost:8081/sparql/commentsByReviewers"; // http://app:8081/sparql
+// const serverConnection = "http://localhost:8081/sparql/commentsByReviewers"; // http://app:8081/sparql
 // var serverConnection = "http://app:8081/sparql";
+const serverConnection = "http://linkflows-app.nanopubs.lod.labs.vu.nl/sparql/commentsByReviewers"; 
 
 // the dimensions and their checkbox-clicked status
 var checkedDimensions = new Map([
