@@ -560,7 +560,7 @@ function drawGraph(data) {
          .style("text-anchor", "end")
          .text(""); // .text("reviewers");
 
-   inner.select('.x').transition().duration(500).delay(1300).style("opacity","1");
+   // inner.select('.x').transition().duration(500).delay(1300).style("opacity","1");
 
    // add grouped stacked bar and add Reviewers
    var grouped_stackedbar = inner.selectAll(".grouped_stackedbar")
@@ -585,12 +585,12 @@ function drawGraph(data) {
            return x(d.xEnd) - x(d.xBegin);
          })
          .style("fill", function(d) { return color(d.name); })
-         .on("mouseover", function(d) {
-             d3.select(this).style("fill", d3.rgb(color(d.name)).darker(2));
-         })
-         .on("mouseout", function(d) {
-             d3.select(this).style("fill", color(d.name))
-         })
+         // .on("mouseover", function(d) {
+         //     d3.select(this).style("fill", d3.rgb(color(d.name)).darker(2));
+         // })
+         // .on("mouseout", function(d) {
+         //     d3.select(this).style("fill", color(d.name))
+         // })
          // when a rectangle is clicked, the content of the review comments of the respective rectangle are shown
          .on("click", function(d, i) {
           // empty contents of div where the content of the review comments is shown
@@ -673,19 +673,69 @@ function drawGraph(data) {
          })
          .text(function(d,i) {
            return (d.xEnd-d.xBegin) !== 0 ? (d.xEnd-d.xBegin) : "";
-         // })
-         // .on("mouseover", function(d) {
-         //     d3.select(this).style("fill", "white");
-         //     d3.select(this).style("font-weight", "bold");
-         // })
-         // .on("mouseout", function(d) {
-         //   d3.select(this).style("font-weight", "");
-         //   d3.select(this).style("fill", function(d) {
-         //     if (d.name == "I3" || d.name == "I4" || d.name == "I5")
-         //       return "white";
-         //     return "black";
-         //   });
-         });
+         })
+         // when a rectangle is clicked, the content of the review comments of the respective rectangle are shown
+         .on("click", function(d, i) {
+          // empty contents of div where the content of the review comments is shown
+           $("#divIntroContentReviewComments").remove();
+           $("#divReviewCommentsContent").empty();
+           $("#divDescriptionContentReviewComments").empty();
+           $("#divDescriptionContentReviewComments").append("<div id='divDescriptionContentReviewComments' style='text-align:center; color: #0275d8; font-size: large; border: #0275d8;'>Review comments content for '" + d.name + "' dimension of " + d.reviewer + ":</br> </div>");
+
+           var dataToShow = [];
+           // console.log("@@@@@@@@@@@@@@@@@@@@d.reviewer=" + d.reviewer + ", d.ORCiD=" + d.ORCiD);
+           // var reviewerId = ((d.reviewer).toString()).split(" ").pop(); // does this change d.reviewer data?!
+           // var resultsNoPrefixes = noPrefixesInVirtuosoResults();
+
+           for (var i = 0; i < resultsToDisplay.length; i++) {
+             // if (reviewer[reviewerId-1] == resultsNoPrefixes[i][0]) {
+             if (d.ORCiD == resultsToDisplay[i][0]) {
+               switch (d.row) {
+                 case "part":
+                  // the rectangle checked referres to the part of article targeted by the review comment
+                  if (resultsToDisplay[i][2] == d.name) {
+                    dataToShow.push(resultsToDisplay[i].slice());
+                  }
+                  break;
+                case "aspect":
+                  // the rectangle checked referres to the aspect of the review comment
+                  if (resultsToDisplay[i][3] == d.name) {
+                    dataToShow.push(resultsToDisplay[i].slice());
+                  }
+                  break;
+                case "positivity_negativity":
+                  // the rectangle checked referres to the positivity_negativity of the review comment
+                  if (resultsToDisplay[i][4] == d.name) {
+                    dataToShow.push(resultsToDisplay[i].slice());
+                  }
+                  break;
+                case "impact":
+                  // the rectangle checked referres to the impact of the review comment
+                  if (("I" + resultsToDisplay[i][5]) == d.name) {
+                    dataToShow.push(resultsToDisplay[i].slice());
+                  }
+                  break;
+                case "action_needed":
+                // the rectangle checked referres to the impact of the review comment
+                  if (resultsToDisplay[i][6] == d.name) {
+                    dataToShow.push(resultsToDisplay[i].slice());
+                  }
+                }
+              }
+            }
+
+            // "draw" the contents of the review comments selected annotated with the dimensions values
+            for (var i = 0; i < dataToShow.length; i++) {
+              console.log("dataToShow[" + i + "]=" + dataToShow[i]);
+              $("#divReviewCommentsContent").append("<div class='border border-dark rounded p-1'>" +
+                "<span class='legendSmall' style='background: " + colors[dataToShow[i][2]] + "; width:75px;'>" + dataToShow[i][2] + "</span> " +
+                "<span class='legendSmall' style='background: " + colors[dataToShow[i][3]] + ";'>" + dataToShow[i][3] + "</span> " +
+                "<span class='legendSmall' style='background: " + colors[dataToShow[i][4]] + ";'>" + dataToShow[i][4] + "</span> " +
+                "<span class='legendImpactSmall' style='background: " + colors[("I" + dataToShow[i][5])] + "; color:" + (dataToShow[i][5] > 2 ? "white" : "black") + ";'>" + dataToShow[i][5] + "</span> " +
+                "<span class='legendSmall' style='background: " + colors[dataToShow[i][6]] + "; width:83px;'>" + dataToShow[i][6] + "</span> <br/> " +
+                dataToShow[i][7] + "</div> <br/>");
+            }
+           });
   // })
 }
 
