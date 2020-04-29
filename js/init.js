@@ -749,7 +749,7 @@ function getReviewComments() {
 
   if (resultsNoPrefixes.length > 0) {
     $("#divReviewCommentsContent").empty();
-    $("#divReviewCommentsContent").append("<div id='divIntroContentReviewComments' style='text-align:center; color: #0275d8; font-size: large; border: #0275d8;'> <br/> Click on a rectangle in the graph to show the content of the review comments here</div>");
+    $("#divReviewCommentsContent").append("<div id='divIntroContentReviewComments' style='text-align:center; color: #0275d8; font-size: large; border: #0275d8;'> <br/> Click on a bar in the diagram on the left to show the content of the review comments here</div>");
 
     countsResults = initReviewersCounts(reviewers);
     calculateCountsReviewers(resultsNoPrefixes, reviewers, countsResults, resultsToDisplay);
