@@ -356,7 +356,9 @@ function displayReviewCommentContent(dimName) {
   // console.log("sectionNo=" + sectionNo);
   // console.log("dimension=" + dimension);
   // console.log("onclick, dimName=" + dimName);
+  $("#divDescriptionContentReviewComments").empty();
   $("#divReviewCommentsContent").empty();
+  $("#divDescriptionContentReviewComments").append("<div id='divDescriptionContentReviewComments' style='text-align:center; color: #0275d8; font-size: large; border: #0275d8;'>Review comments content for '" + dimension.replace("_", " ") + "' dimension of Section " + sectionNo + ":</br> </div>");
 
   for (var i = 0; i < resultsNoPrefixes.length; i++) {
     if (resultsNoPrefixes[i][0] == sectionNo &&
@@ -366,10 +368,10 @@ function displayReviewCommentContent(dimName) {
       resultsNoPrefixes[i][6] == dimension)) {
       // console.log("dataToShow[" + i + "]=" + dataToShow[i]);
       $("#divReviewCommentsContent").append("<div class='border border-dark rounded p-1'>" +
-        "<span class='legendSmall' style='background: " + colors[resultsNoPrefixes[i][3]] + ";'>" + resultsNoPrefixes[i][3] + "</span> " +
-        "<span class='legendSmall' style='background: " + colors[resultsNoPrefixes[i][4]] + ";'>" + resultsNoPrefixes[i][4] + "</span> " +
-        "<span class='legendImpactSmall' style='background: " + colors[("I" + resultsNoPrefixes[i][5])] + "; color:" + (resultsNoPrefixes[i][5] > 2 ? "white" : "black") + ";'>" + resultsNoPrefixes[i][5] + "</span> " +
-        "<span class='legendSmall' style='background: " + colors[resultsNoPrefixes[i][6]] + "; width:83px;'>" + resultsNoPrefixes[i][6] + "</span> <br/> " +
+        "<span class='legendSmall' style='background: " + colors[resultsNoPrefixes[i][3]] + "; width:100px;'>" + resultsNoPrefixes[i][3] + "</span> " +
+        "<span class='legendSmall' style='background: " + colors[resultsNoPrefixes[i][4]] + "; width:100px;'>" + resultsNoPrefixes[i][4] + "</span> " +
+        "<span class='legendImpactSmall' style='background: " + colors[("I" + resultsNoPrefixes[i][5])] + "; color:" + (resultsNoPrefixes[i][5] > 2 ? "white" : "black") + "; ; width:50px;'>" + resultsNoPrefixes[i][5] + "</span> " +
+        "<span class='legendSmall' style='background: " + colors[resultsNoPrefixes[i][6]] + "; width:100px;'>" + resultsNoPrefixes[i][6].replace("_", " ") + "</span> <br/> " +
         "<div style='text-align:left;'>" + resultsNoPrefixes[i][7] + "</div></div> <br/>");
     }
   }
