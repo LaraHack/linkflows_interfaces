@@ -1,3 +1,7 @@
+@-moz-document url-prefix() {
+    .username {font-size:15pt;}
+}
+
 body {
   font: 14px sans-serif;
 }
@@ -120,8 +124,14 @@ td a {
   width:100%;
 }
 
-table.sectionsTable td:hover a:hover{
+table.sectionsTable td:hover a:hover {
     background-color:#0275d8;
     color:white;
     font-weight: bold;
 }
+
+/* a:active {
+   background-color:#0275d8;
+   color:white;
+   font-weight: bold;
+} */
