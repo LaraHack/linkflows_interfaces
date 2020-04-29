@@ -382,21 +382,29 @@ function displayReviewCommentContent(dimName) {
   $("#divDescriptionContentReviewComments").empty();
   $("#divReviewCommentsContent").empty();
   $("#divDescriptionContentReviewComments").append("<div id='divDescriptionContentReviewComments' style='text-align:center; color: #0275d8; font-size: large; border: #0275d8;'>Review comments content for '" + dimToShow + "' dimension of Section " + sectionNo + ":</br> </div>");
+  var dataToShow = [];
 
-  for (var i = 0; i < resultsNoPrefixes.length; i++) {
+  for (let i = 0; i < resultsNoPrefixes.length; i++) {
     if (resultsNoPrefixes[i][0] == sectionNo &&
       (resultsNoPrefixes[i][3] == dimension ||
       resultsNoPrefixes[i][4] == dimension ||
       ("I" + resultsNoPrefixes[i][5]) == dimension ||
       resultsNoPrefixes[i][6] == dimension)) {
-      // console.log("dataToShow[" + i + "]=" + dataToShow[i]);
-      $("#divReviewCommentsContent").append("<div class='border border-dark rounded p-1'>" +
-        "<span class='legendSmall' style='background: " + colors[resultsNoPrefixes[i][3]] + "; width:100px;'>" + resultsNoPrefixes[i][3] + "</span> " +
-        "<span class='legendSmall' style='background: " + colors[resultsNoPrefixes[i][4]] + "; width:100px;'>" + resultsNoPrefixes[i][4] + "</span> " +
-        "<span class='legendImpactSmall' style='background: " + colors[("I" + resultsNoPrefixes[i][5])] + "; color:" + (resultsNoPrefixes[i][5] > 2 ? "white" : "black") + "; ; width:50px;'>" + resultsNoPrefixes[i][5] + "</span> " +
-        "<span class='legendSmall' style='background: " + colors[resultsNoPrefixes[i][6]] + "; width:100px;'>" + resultsNoPrefixes[i][6].replace("_", " ") + "</span> <br/> " +
-        "<div style='text-align:left;'>" + resultsNoPrefixes[i][7] + "</div></div> <br/>");
+        dataToShow.push(resultsNoPrefixes[i].slice());
+        console.log("resultsNoPrefixes[" + i + "]=" + resultsNoPrefixes[i]);
     }
+  }
+
+  for (let i = 0; i < dataToShow.length; i++) {
+    console.log("dataToShow=" + dataToShow);
+    $("#divReviewCommentsContent").append("<div class='border border-dark rounded p-1'>" +
+      "<span class='legendSmall' style='background: " + colors[dataToShow[3]] + "; width:100px;'>" + dataToShow[3] + "</span> " +
+      "<span class='legendSmall' style='background: " + colors[dataToShow[4]] + "; width:100px;'>" + dataToShow[4] + "</span> " +
+      "<span class='legendImpactSmall' style='background: " + colors[("I" + dataToShow[5])] + "; color:" + (dataToShow[5] > 2 ? "white" : "black") + "; ; width:50px;'>" + dataToShow[5] + "</span> " +
+      // "<span class='legendSmall' style='background: " + colors[dataToShow[6]] + "; width:100px;'>" + dataToShow[6].replace("_", " ") + "</span> <br/> " +
+      "<span class='legendSmall' style='background: " + colors[dataToShow[6]] + "; width:100px;'>" +
+      dataToShow[6] + "</span> <br/> " +
+      "<div style='text-align:left;'>" + dataToShow[7] + "</div></div> <br/>");
   }
 
 }
