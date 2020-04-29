@@ -2,7 +2,7 @@
 // const serverGetComments = "http://localhost:8081/sparql/commentsBySection";
 // const serverGetSections = "http://localhost:8081/sparql/mainSections";
 const serverGetComments = "http://linkflows-virtuoso.nanopubs.lod.labs.vu.nl/sparql/commentsBySection";
-const serverGetComments = "http://linkflows-virtuoso.nanopubs.lod.labs.vu.nl/sparql/mainSections";
+const serverGetSections = "http://linkflows-virtuoso.nanopubs.lod.labs.vu.nl/sparql/mainSections";
 
 // array containing the results retrieved from Virtuoso
 var resultsVirtuoso = [];
