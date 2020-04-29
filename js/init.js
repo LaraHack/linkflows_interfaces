@@ -596,6 +596,8 @@ function drawGraph(data) {
           // empty contents of div where the content of the review comments is shown
            $("#divIntroContentReviewComments").remove();
            $("#divReviewCommentsContent").empty();
+           $("#divDescriptionContentReviewComments").empty();
+           $("#divDescriptionContentReviewComments").append("<div id='divDescriptionContentReviewComments' style='text-align:center; color: #0275d8; font-size: large; border: #0275d8;'>Review comments content for '" + d.name + "' dimension of " + d.reviewer + ":</br> </div>");
 
            var dataToShow = [];
            // console.log("@@@@@@@@@@@@@@@@@@@@d.reviewer=" + d.reviewer + ", d.ORCiD=" + d.ORCiD);
