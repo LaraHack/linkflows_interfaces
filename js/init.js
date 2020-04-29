@@ -436,7 +436,7 @@ function drawGraph(data) {
   d3.select("#divGraphArea").selectAll("svg").remove();
 
   // graph size
-  var margin = {top: 10, right: 10, bottom: 30, left: 78},
+  var margin = {top: 10, right: 8, bottom: 30, left: 85},
       // width = 960 - margin.left - margin.right,
       width = 716 - margin.left - margin.right,
       height = 500 - margin.top - margin.bottom;
