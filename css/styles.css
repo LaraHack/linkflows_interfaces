@@ -9,7 +9,7 @@ body {
 span.legend {
   display:inline-block;
   font-weight:bold;
-  width:101px;
+  width:111px;
   text-align:center;
   vertical-align: middle;
 }
@@ -17,7 +17,7 @@ span.legend {
 span.legendImpact {
   display:inline-block;
   font-weight:bold;
-  width:59px;
+  width:65px;
   text-align:center;
 }
 
