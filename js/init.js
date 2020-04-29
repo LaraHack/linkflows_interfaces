@@ -5,9 +5,10 @@
  */
 
 // server address of the Virtuoso triple store
-// const serverConnection = "http://localhost:8081/sparql/commentsByReviewers"; // http://app:8081/sparql
+//  var serverConnection = "http://app:8081/sparql";
 // var serverConnection = "http://app:8081/sparql";
-const serverConnection = "http://linkflows-app.nanopubs.lod.labs.vu.nl/sparql/commentsByReviewers"; 
+const serverConnection = "http://localhost:8081/sparql/commentsByReviewers";
+// const serverConnection = "http://linkflows-app.nanopubs.lod.labs.vu.nl/sparql/commentsByReviewers";
 
 // the dimensions and their checkbox-clicked status
 var checkedDimensions = new Map([
@@ -426,6 +427,31 @@ function calculateCountsReviewers(results, reviewersList, reviewersCounts, displ
   }
 }
 
+function getDimension(dimension) {
+  var dimToShow = dimension.toLowerCase();
+
+  switch(dimToShow) {
+    case "i1":
+      dimToShow = "impact = 1";
+      break;
+    case "i2":
+      dimToShow = "impact = 2";
+      break;
+    case "i3":
+      dimToShow = "impact = 3";
+      break;
+    case "i4":
+      dimToShow = "impact = 4";
+      break;
+    case "i5":
+      dimToShow = "impact = 5";
+      break;
+    default:
+      dimToShow = dimension.replace("_", " ");
+  }
+  return dimToShow;
+}
+
 // function that draws the graph
 // dataReviewers is the data in JSON format received after a GET request to the server
 // function drawGraph(dataReviewers) {
@@ -561,7 +587,8 @@ function drawGraph(data) {
          .style("text-anchor", "end")
          .text(""); // .text("reviewers");
 
-   // inner.select('.x').transition().duration(500).delay(1300).style("opacity","1");
+   // draw Ox axes
+   inner.select('.x').transition().duration(500).delay(150).style("opacity","1");
 
    // add grouped stacked bar and add Reviewers
    var grouped_stackedbar = inner.selectAll(".grouped_stackedbar")
@@ -598,7 +625,7 @@ function drawGraph(data) {
            $("#divIntroContentReviewComments").remove();
            $("#divReviewCommentsContent").empty();
            $("#divDescriptionContentReviewComments").empty();
-           $("#divDescriptionContentReviewComments").append("<div id='divDescriptionContentReviewComments' style='text-align:center; color: #0275d8; font-size: large; border: #0275d8;'>Review comments content for '" + d.name + "' dimension of " + d.reviewer + ":</br> </div>");
+           $("#divDescriptionContentReviewComments").append("<div id='divDescriptionContentReviewComments' style='text-align:center; color: #0275d8; font-size: large; border: #0275d8;'>Review comments content for '" + getDimension(d.name) + "' dimension of " + d.reviewer + ":</br> </div>");
 
            var dataToShow = [];
            // console.log("@@@@@@@@@@@@@@@@@@@@d.reviewer=" + d.reviewer + ", d.ORCiD=" + d.ORCiD);
@@ -650,7 +677,7 @@ function drawGraph(data) {
                 "<span class='legendSmall' style='background: " + colors[dataToShow[i][3]] + ";'>" + dataToShow[i][3] + "</span> " +
                 "<span class='legendSmall' style='background: " + colors[dataToShow[i][4]] + ";'>" + dataToShow[i][4] + "</span> " +
                 "<span class='legendImpactSmall' style='background: " + colors[("I" + dataToShow[i][5])] + "; color:" + (dataToShow[i][5] > 2 ? "white" : "black") + ";'>" + dataToShow[i][5] + "</span> " +
-                "<span class='legendSmall' style='background: " + colors[dataToShow[i][6]] + "; width:83px;'>" + dataToShow[i][6] + "</span> <br/> " +
+                "<span class='legendSmall' style='background: " + colors[dataToShow[i][6]] + "; width:83px;'>" + dataToShow[i][6].replace("_", " ") + "</span> <br/> " +
                 dataToShow[i][7] + "</div> <br/>");
             }
            });
@@ -681,7 +708,7 @@ function drawGraph(data) {
            $("#divIntroContentReviewComments").remove();
            $("#divReviewCommentsContent").empty();
            $("#divDescriptionContentReviewComments").empty();
-           $("#divDescriptionContentReviewComments").append("<div id='divDescriptionContentReviewComments' style='text-align:center; color: #0275d8; font-size: large; border: #0275d8;'>Review comments content for '" + d.name + "' dimension of " + d.reviewer + ":</br> </div>");
+           $("#divDescriptionContentReviewComments").append("<div id='divDescriptionContentReviewComments' style='text-align:center; color: #0275d8; font-size: large; border: #0275d8;'>Review comments content for '" + getDimension(d.name) + "' dimension of " + d.reviewer + ":</br> </div>");
 
            var dataToShow = [];
            // console.log("@@@@@@@@@@@@@@@@@@@@d.reviewer=" + d.reviewer + ", d.ORCiD=" + d.ORCiD);
@@ -733,7 +760,7 @@ function drawGraph(data) {
                 "<span class='legendSmall' style='background: " + colors[dataToShow[i][3]] + ";'>" + dataToShow[i][3] + "</span> " +
                 "<span class='legendSmall' style='background: " + colors[dataToShow[i][4]] + ";'>" + dataToShow[i][4] + "</span> " +
                 "<span class='legendImpactSmall' style='background: " + colors[("I" + dataToShow[i][5])] + "; color:" + (dataToShow[i][5] > 2 ? "white" : "black") + ";'>" + dataToShow[i][5] + "</span> " +
-                "<span class='legendSmall' style='background: " + colors[dataToShow[i][6]] + "; width:83px;'>" + dataToShow[i][6] + "</span> <br/> " +
+                "<span class='legendSmall' style='background: " + colors[dataToShow[i][6]] + "; width:83px;'>" + dataToShow[i][6].replace("_", " ") + "</span> <br/> " +
                 dataToShow[i][7] + "</div> <br/>");
             }
            });
@@ -741,6 +768,7 @@ function drawGraph(data) {
 }
 
 $(":checkbox").change( () => {
+  $("#divDescriptionContentReviewComments").empty();
   getReviewComments();
 });
 
