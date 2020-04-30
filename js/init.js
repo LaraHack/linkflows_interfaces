@@ -4,11 +4,6 @@
  ********************************************
  */
 
-// server address of the Virtuoso triple store
-//  var serverConnection = "http://app:8081/sparql";
-// var serverConnection = "http://app:8081/sparql";
-const serverConnection = "http://localhost:8081/sparql/commentsByReviewers";
-// const serverConnection = "http://linkflows-app.nanopubs.lod.labs.vu.nl/sparql/commentsByReviewers";
 
 // the dimensions and their checkbox-clicked status
 var checkedDimensions = new Map([
@@ -33,12 +28,6 @@ var checkedDimensions = new Map([
 
 // variables for the Virtuoso retrieved data
 
-// array containing the results retrieved from Virtuoso
-var resultsVirtuoso = [];
-
-// array containing the results retrieved from Virtuoso, without the prefixes
-var resultsNoPrefixes = [];
-
 // array containing the results that are currently displayed based on the checked dimensions
 // all results are without the prefixes; this is a subset of resultsNoPrefixes
 var resultsToDisplay = [];
@@ -54,58 +43,6 @@ var maxNrComments = 0;
 // for graph generation data needs to be in the form
 // ORCiD, reviewer,article,section,paragraph,syntax,style,content,negative,neutral,positive,I1,I2,I3,I4,I5,compulsory,suggestion,no_action
 var countsResults = [];
-
-// END of variables for the Virtuoso retrieved data
-
-// definition of dimensions used in the grouped stacked chart
-var dimensions = {
-  "part" : ["article","section","paragraph"],
-  "aspect" : ["syntax","style","content"],
-  "positivity_negativity" : ["negative", "neutral", "positive"],
-  "impact" : ["I1", "I2", "I3", "I4", "I5"],
-  "action_needed" : ["compulsory", "suggestion", "no_action"]
-}
-
-// palette of colors used for all dimensions
-var colors = {article: "#cd853f", section: "#deb887", paragraph: "#ffe4c4",
-  syntax: "#c6deff", style: "#82cafa", content:"#9e7bff",
-  negative: "#ff0000", neutral: "#ffff00", positive: "#008000",
-  I1: "rgba(0, 0, 0, 0)", I2: "rgba(0, 0, 0, 0.25)", I3: "rgba(0, 0, 0, 0.5)", I4: "rgba(0, 0, 0, 0.75)", I5: "rgba(0, 0, 0, 1)",
-  compulsory: "#ff6500", suggestion: "#ffa500", no_action: "#ffd700"};
-
-
-/*
- ******************************************
- * Patterns used for the Virtuoso results *
- ******************************************
- */
-
-// article level
-var patternArticle = /.*\#article/;
-var patternSection = /.*\#section$/;
-var patternParagraph = /.*\#paragraph$/;
-var articleLevel = "";
-
-// aspect
-var patternSyntax = /.*\#SyntaxComment$/;
-var patternStyle = /.*\#StyleComment$/;
-var patternContent = /.*\#ContentComment$/;
-var aspect = "";
-
-// positivity/negativity
-var patternNegative = /.*\#NegativeComment$/;
-var patternNeutral = /.*\#NeutralComment$/;
-var patternPositive = /.*\#PositiveComment$/;
-var pos_neg = "";
-
-// impact
-var impact = "";
-
-// action needed
-var patternCompulsory = /.*\#ActionNeededComment$/;
-var patternSuggestion = /.*\#SuggestionComment$/;
-var patternNoAction = /.*\#NoActionNeededComment$/;
-var actionNeeded = "";
 
 
 /*
@@ -139,7 +76,7 @@ $("#divReviewCommentsContent").append("<div id='divIntroContentReviewComments' s
 getDimensionsChecked();
 
 // get data from Virtuoso for the selected article
-$.get(serverConnection, checkedDimensions)
+$.get(serverGetCommentsReviewers, checkedDimensions)
 .done((csvResultsVirtuoso, status) => {
   try { // in case there is any arror retrieving the data
     // create array with all results retrieved from the SPARQL endpoint
@@ -711,9 +648,6 @@ function drawGraph(data) {
            $("#divDescriptionContentReviewComments").append("<div id='divDescriptionContentReviewComments' style='text-align:center; color: #0275d8; font-size: large; border: #0275d8;'>Review comments content for '" + getDimension(d.name) + "' dimension of " + d.reviewer + ":</br> </div>");
 
            var dataToShow = [];
-           // console.log("@@@@@@@@@@@@@@@@@@@@d.reviewer=" + d.reviewer + ", d.ORCiD=" + d.ORCiD);
-           // var reviewerId = ((d.reviewer).toString()).split(" ").pop(); // does this change d.reviewer data?!
-           // var resultsNoPrefixes = noPrefixesInVirtuosoResults();
 
            for (var i = 0; i < resultsToDisplay.length; i++) {
              // if (reviewer[reviewerId-1] == resultsNoPrefixes[i][0]) {

@@ -1,15 +1,3 @@
-// server address of the Virtuoso triple store
-const serverGetComments = "http://localhost:8081/sparql/commentsBySection";
-const serverGetSections = "http://localhost:8081/sparql/mainSections";
-// const serverGetComments = "http://linkflows-app.nanopubs.lod.labs.vu.nl/sparql/commentsBySection";
-// const serverGetSections = "http://linkflows-app.nanopubs.lod.labs.vu.nl/sparql/mainSections";
-
-// array containing the results retrieved from Virtuoso
-var resultsVirtuoso = [];
-
-// array containing the results retrieved from Virtuoso, without the prefixes
-var resultsNoPrefixes = [];
-
 // array containing all main sections of the selected paper
 // one element in the form of {Xi: SectionTitle}, where
 // Xi = number of main section, where i = section i
@@ -19,41 +7,6 @@ var sections = [];
 // counts of review comments for the table
 // syntax,style,content,negative,neutral,positive,I1,I2,I3,I4,I5,compulsory,suggestion,no_action
 var countsResults = [];
-
-// palette of colors used for all dimensions
-var colors = {article: "#cd853f", section: "#deb887", paragraph: "#ffe4c4",
-  syntax: "#c6deff", style: "#82cafa", content:"#9e7bff",
-  negative: "#ff0000", neutral: "#ffff00", positive: "#008000",
-  I1: "rgba(0, 0, 0, 0)", I2: "rgba(0, 0, 0, 0.25)", I3: "rgba(0, 0, 0, 0.5)", I4: "rgba(0, 0, 0, 0.75)", I5: "rgba(0, 0, 0, 1)",
-  compulsory: "#ff6500", suggestion: "#ffa500", no_action: "#ffd700"};
-
-/*
- ******************************************
- * Patterns used for the Virtuoso results *
- ******************************************
- */
-
-// aspect
-var patternSyntax = /.*\#SyntaxComment$/;
-var patternStyle = /.*\#StyleComment$/;
-var patternContent = /.*\#ContentComment$/;
-var aspect = "";
-
-// positivity/negativity
-var patternNegative = /.*\#NegativeComment$/;
-var patternNeutral = /.*\#NeutralComment$/;
-var patternPositive = /.*\#PositiveComment$/;
-var pos_neg = "";
-
-// impact
-var impact = "";
-
-// action needed
-var patternCompulsory = /.*\#ActionNeededComment$/;
-var patternSuggestion = /.*\#SuggestionComment$/;
-var patternNoAction = /.*\#NoActionNeededComment$/;
-var actionNeeded = "";
-
 
 // coloring the separate span elements that act as legend for the graph
 // from the color palette above, for all dimensions
@@ -107,7 +60,7 @@ $.get(serverGetSections)
 });
 
 // get data from Virtuoso for the selected article: number of comments per main section
-$.get(serverGetComments)
+$.get(serverGetCommentsSection)
 .done((csvResultsVirtuoso, status) => {
   try { // in case there is any arror retrieving the data
 
