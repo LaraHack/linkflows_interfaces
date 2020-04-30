@@ -248,7 +248,7 @@ function calculateCountsSections(results, sectionsList, sectionCounts) {
         if (resultItem[3] == "syntax"){
           sectionCounts[j].syntax = sectionCounts[j].syntax + 1;
         }
-        if (resultItem[3] == "syntax") {
+        if (resultItem[3] == "style") {
           sectionCounts[j].style = sectionCounts[j].style + 1;
         }
         if (resultItem[3] == "content") {
@@ -392,33 +392,33 @@ function displayReviewCommentContent(dimName) {
   //     resultsNoPrefixes[i][4] == dimension ||
   //     ("i" + resultsNoPrefixes[i][5]) == dimension ||
   //     resultsNoPrefixes[i][6] == dimension) {
-  //       console.log("resultsNoPrefixes[" + i + "]=" + resultsNoPrefixes[i]);
+  //       console.log("@@@@@@@@@@resultsNoPrefixes[" + i + "]=" + resultsNoPrefixes[i]);
   //     }
   //   }
-  //   if (resultsNoPrefixes[i][3] == "style") console.log("resultsNoPrefixes[" + i + "]=" + resultsNoPrefixes[i]);
+  //   // if (resultsNoPrefixes[i][3] == "style") console.log("resultsNoPrefixes[" + i + "]=" + resultsNoPrefixes[i]);
   // }
 
-  // for (let i = 0; i < resultsNoPrefixes.length; i++) {
-  //   if (resultsNoPrefixes[i][0] == sectionNo &&
-  //     (resultsNoPrefixes[i][3] == dimension ||
-  //     resultsNoPrefixes[i][4] == dimension ||
-  //     ("I" + resultsNoPrefixes[i][5]) == dimension ||
-  //     resultsNoPrefixes[i][6] == dimension)) {
-  //       dataToShow.push(resultsNoPrefixes[i].slice());
-  //       console.log("resultsNoPrefixes[" + i + "]=" + resultsNoPrefixes[i]);
-  //   }
-  // }
+  for (let i = 0; i < resultsNoPrefixes.length; i++) {
+    if (resultsNoPrefixes[i][0] == sectionNo &&
+      (resultsNoPrefixes[i][3] == dimension ||
+      resultsNoPrefixes[i][4] == dimension ||
+      ("I" + resultsNoPrefixes[i][5]) == dimension ||
+      resultsNoPrefixes[i][6] == dimension)) {
+        dataToShow.push(resultsNoPrefixes[i].slice());
+        console.log("resultsNoPrefixes[" + i + "]=" + resultsNoPrefixes[i]);
+    }
+  }
 
   for (let i = 0; i < dataToShow.length; i++) {
     console.log("dataToShow=" + dataToShow);
-    // $("#divReviewCommentsContent").append("<div class='border border-dark rounded p-1'>" +
-    //   "<span class='legendSmall' style='background: " + colors[dataToShow[3]] + "; width:100px;'>" + dataToShow[3] + "</span> " +
-    //   "<span class='legendSmall' style='background: " + colors[dataToShow[4]] + "; width:100px;'>" + dataToShow[4] + "</span> " +
-    //   "<span class='legendImpactSmall' style='background: " + colors[("I" + dataToShow[5])] + "; color:" + (dataToShow[5] > 2 ? "white" : "black") + "; ; width:50px;'>" + dataToShow[5] + "</span> " +
-    //   // "<span class='legendSmall' style='background: " + colors[dataToShow[6]] + "; width:100px;'>" + dataToShow[6].replace("_", " ") + "</span> <br/> " +
-    //   "<span class='legendSmall' style='background: " + colors[dataToShow[6]] + "; width:100px;'>" +
-    //   dataToShow[6] + "</span> <br/> " +
-    //   "<div style='text-align:left;'>" + dataToShow[7] + "</div></div> <br/>");
+    $("#divReviewCommentsContent").append("<div class='border border-dark rounded p-1'>" +
+      "<span class='legendSmall' style='background: " + colors[dataToShow[3]] + "; width:100px;'>" + dataToShow[3] + "</span> " +
+      "<span class='legendSmall' style='background: " + colors[dataToShow[4]] + "; width:100px;'>" + dataToShow[4] + "</span> " +
+      "<span class='legendImpactSmall' style='background: " + colors[("I" + dataToShow[5])] + "; color:" + (dataToShow[5] > 2 ? "white" : "black") + "; ; width:50px;'>" + dataToShow[5] + "</span> " +
+      // "<span class='legendSmall' style='background: " + colors[dataToShow[6]] + "; width:100px;'>" + dataToShow[6].replace("_", " ") + "</span> <br/> " +
+      "<span class='legendSmall' style='background: " + colors[dataToShow[6]] + "; width:100px;'>" +
+      dataToShow[6] + "</span> <br/> " +
+      "<div style='text-align:left;'>" + dataToShow[7] + "</div></div> <br/>");
   }
 
 }
