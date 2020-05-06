@@ -342,7 +342,7 @@ function displayReviewCommentContent(dimName) {
         $("#divReviewCommentsContent").append("<div class='border border-dark rounded p-1'>" +
           "<span class='legendSmall' style='background: " + colors[resultsNoPrefixes[i][3]] + "; width:100px;'>" + resultsNoPrefixes[i][3] + "</span> " +
           "<span class='legendSmall' style='background: " + colors[resultsNoPrefixes[i][4]] + "; width:100px;'>" + resultsNoPrefixes[i][4] + "</span> " +
-          "<span class='legendImpactSmall' style='background: " + colors[("I" + resultsNoPrefixes[i][5])] + "; color:" + (resultsNoPrefixes[i][5] > 2 ? "white" : "black") + "; ; width:50px;'>" + resultsNoPrefixes[i][5] + "</span> " +
+          "<span class='legendImpactSmall' style='background: " + colors[("I" + resultsNoPrefixes[i][5])] + "; color:" + (resultsNoPrefixes[i][5] > 2 ? "white" : "black") + "; width:50px;'>" + resultsNoPrefixes[i][5] + "</span> " +
           "<span class='legendSmall' style='background: " + colors[resultsNoPrefixes[i][6]] + "; width:100px;'>" +
           resultsNoPrefixes[i][6].replace("_", " ") + "</span> <br/> " +
           "<div style='text-align:left;'>" + resultsNoPrefixes[i][7] + "</div></div> <br/>");

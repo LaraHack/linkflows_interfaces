@@ -5,18 +5,18 @@
  */
 
 // server address of the Virtuoso triple store
-// const serverGetCommentsReviewers = "http://localhost:8081/sparql/commentsByReviewers";
-const serverGetCommentsReviewers = "http://linkflows-app.nanopubs.lod.labs.vu.nl/sparql/commentsByReviewers";
+const serverGetCommentsReviewers = "http://localhost:8081/sparql/commentsByReviewers";
+// const serverGetCommentsReviewers = "http://linkflows-app.nanopubs.lod.labs.vu.nl/sparql/commentsByReviewers";
 
-// const serverGetCommentsSection = "http://localhost:8081/sparql/commentsBySection";
-// const serverGetSections = "http://localhost:8081/sparql/mainSections";
-const serverGetCommentsSection = "http://linkflows-app.nanopubs.lod.labs.vu.nl/sparql/commentsBySection";
-const serverGetSections = "http://linkflows-app.nanopubs.lod.labs.vu.nl/sparql/mainSections";
+const serverGetCommentsSection = "http://localhost:8081/sparql/commentsBySection";
+const serverGetSections = "http://localhost:8081/sparql/mainSections";
+// const serverGetCommentsSection = "http://linkflows-app.nanopubs.lod.labs.vu.nl/sparql/commentsBySection";
+// const serverGetSections = "http://linkflows-app.nanopubs.lod.labs.vu.nl/sparql/mainSections";
 
 
 /*
  ***************************************
- * Dimsnsions and colors used for them *
+ * Dimensions and colors used for them *
  ***************************************
  */
 
