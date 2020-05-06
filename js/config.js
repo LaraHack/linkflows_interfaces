@@ -5,13 +5,13 @@
  */
 
 // server address of the Virtuoso triple store
-// const serverGetCommentsReviewers = "http://localhost:8081/sparql/commentsByReviewers";
-const serverGetCommentsReviewers = "http://linkflows-app.nanopubs.lod.labs.vu.nl/sparql/commentsByReviewers";
+const serverGetCommentsReviewers = "http://localhost:8081/sparql/commentsByReviewers";
+// const serverGetCommentsReviewers = "http://linkflows-app.nanopubs.lod.labs.vu.nl/sparql/commentsByReviewers";
 
-// const serverGetCommentsSection = "http://localhost:8081/sparql/commentsBySection";
-// const serverGetSections = "http://localhost:8081/sparql/mainSections";
-const serverGetCommentsSection = "http://linkflows-app.nanopubs.lod.labs.vu.nl/sparql/commentsBySection";
-const serverGetSections = "http://linkflows-app.nanopubs.lod.labs.vu.nl/sparql/mainSections";
+const serverGetCommentsSection = "http://localhost:8081/sparql/commentsBySection";
+const serverGetSections = "http://localhost:8081/sparql/mainSections";
+// const serverGetCommentsSection = "http://linkflows-app.nanopubs.lod.labs.vu.nl/sparql/commentsBySection";
+// const serverGetSections = "http://linkflows-app.nanopubs.lod.labs.vu.nl/sparql/mainSections";
 
 
 /*
@@ -32,7 +32,7 @@ var dimensions = {
 // palette of colors used for all dimensions
 var colors = {article: "#cd853f", section: "#deb887", paragraph: "#ffe4c4",
   syntax: "#c6deff", style: "#82cafa", content:"#9e7bff",
-  negative: "#ff0000", neutral: "#ffff00", positive: "#008000",
+  negative: "#990000", neutral: "#ffff00", positive: "#008000",
   I1: "rgba(0, 0, 0, 0)", I2: "rgba(0, 0, 0, 0.25)", I3: "rgba(0, 0, 0, 0.5)", I4: "rgba(0, 0, 0, 0.75)", I5: "rgba(0, 0, 0, 1)",
   compulsory: "#ff6500", suggestion: "#ffa500", no_action: "#ffd700"};
 

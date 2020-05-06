@@ -19,6 +19,7 @@ span.legendImpact {
   font-weight:bold;
   width:65px;
   text-align:center;
+  border: 1px solid black;
 }
 
 span.legendSmall {

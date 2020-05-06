@@ -62,8 +62,6 @@ $("#divHeaderNavs").load("include/navs.html", function () {
 // all dimensions are selected
 checkAllCheckboxes();
 
-console.dir("TEST");
-
 // From https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys
 if (!Object.keys) {
   Object.keys = (function() {
@@ -619,7 +617,7 @@ function drawGraph(data) {
            $("#divIntroContentReviewComments").remove();
            $("#divReviewCommentsContent").empty();
            $("#divDescriptionContentReviewComments").empty();
-           $("#divDescriptionContentReviewComments").append("<div id='divDescriptionContentReviewComments' style='text-align:center; color: #0275d8; font-size: large; border: #0275d8;'>Review comments content for '" + getDimension(d.name) + "' dimension of " + d.reviewer + ":</br> </div>");
+           $("#divDescriptionContentReviewComments").append("<div id='divDescriptionContentReviewComments' style='text-align:center; color: #0275d8; font-size: medium; border: #0275d8;'>Review comments content for '" + getDimension(d.name) + "' dimension of " + d.reviewer + ":</br> </div>");
 
            var dataToShow = [];
            // console.log("@@@@@@@@@@@@@@@@@@@@d.reviewer=" + d.reviewer + ", d.ORCiD=" + d.ORCiD);
@@ -667,11 +665,11 @@ function drawGraph(data) {
             for (var i = 0; i < dataToShow.length; i++) {
               console.log("dataToShow[" + i + "]=" + dataToShow[i]);
               $("#divReviewCommentsContent").append("<div class='border border-dark rounded p-1'>" +
-                "<span class='legendSmall' style='background: " + colors[dataToShow[i][2]] + "; width:75px;'>" + dataToShow[i][2] + "</span> " +
-                "<span class='legendSmall' style='background: " + colors[dataToShow[i][3]] + ";'>" + dataToShow[i][3] + "</span> " +
-                "<span class='legendSmall' style='background: " + colors[dataToShow[i][4]] + ";'>" + dataToShow[i][4] + "</span> " +
-                "<span class='legendImpactSmall' style='background: " + colors[("I" + dataToShow[i][5])] + "; color:" + (dataToShow[i][5] > 2 ? "white" : "black") + ";'>" + dataToShow[i][5] + "</span> " +
-                "<span class='legendSmall' style='background: " + colors[dataToShow[i][6]] + "; width:83px;'>" + dataToShow[i][6].replace("_", " ") + "</span> <br/> " +
+                "<span class='legendSmall' style='background: " + colors[dataToShow[i][2]]  + (dataToShow[i][2] == "article" ? "; color: white;" : ";") + "; width:75px;'>" + dataToShow[i][2] + "</span> " +
+                "<span class='legendSmall' style='background: " + colors[dataToShow[i][3]]  + (dataToShow[i][3] == "content" ? "; color: white;" : ";") + ";'>" + dataToShow[i][3] + "</span> " +
+                "<span class='legendSmall' style='background: " + colors[dataToShow[i][4]] + ((dataToShow[i][4] == "negative" || dataToShow[i][4] == "positive") ? "; color: white;" : ";") + "'>" + dataToShow[i][4] + "</span> " +
+                "<span class='legendImpactSmall' style='background: " + colors[("I" + dataToShow[i][5])] + "; color:" + (dataToShow[i][5] > 2 ? "white" : "black") + "; border: 1px solid black;'>" + dataToShow[i][5] + "</span> " +
+                "<span class='legendSmall' style='background: " + colors[dataToShow[i][6]] + (dataToShow[i][6] == "compulsory" ? "; color: white;" : ";") + "; width:83px;'>" + dataToShow[i][6].replace("_", " ") + "</span> <br/> " +
                 dataToShow[i][7] + "</div> <br/>");
             }
            });
@@ -689,7 +687,9 @@ function drawGraph(data) {
          .attr("dy", "1.2em")
          .style("font-size", "14px")
          .style("fill", function(d) {
-           if (d.name == "I3" || d.name == "I4" || d.name == "I5")
+           if (d.name == "article" || d.name == "content" || d.name == "negative" ||
+              d.name == "positive" || d.name == "I3" || d.name == "I4" ||
+              d.name == "I5" || d.name == "compulsory")
              return "white";
            return "black";
          })
@@ -702,7 +702,7 @@ function drawGraph(data) {
            $("#divIntroContentReviewComments").remove();
            $("#divReviewCommentsContent").empty();
            $("#divDescriptionContentReviewComments").empty();
-           $("#divDescriptionContentReviewComments").append("<div id='divDescriptionContentReviewComments' style='text-align:center; color: #0275d8; font-size: large; border: #0275d8;'>Review comments content for '" + getDimension(d.name) + "' dimension of " + d.reviewer + ":</br> </div>");
+           $("#divDescriptionContentReviewComments").append("<div id='divDescriptionContentReviewComments' style='text-align:center; color: #0275d8; font-size: medium; border: #0275d8;'>Review comments content for '" + getDimension(d.name) + "' dimension of " + d.reviewer + ":</br> </div>");
 
            var dataToShow = [];
 
@@ -747,11 +747,11 @@ function drawGraph(data) {
             for (var i = 0; i < dataToShow.length; i++) {
               console.log("dataToShow[" + i + "]=" + dataToShow[i]);
               $("#divReviewCommentsContent").append("<div class='border border-dark rounded p-1'>" +
-                "<span class='legendSmall' style='background: " + colors[dataToShow[i][2]] + "; width:75px;'>" + dataToShow[i][2] + "</span> " +
-                "<span class='legendSmall' style='background: " + colors[dataToShow[i][3]] + ";'>" + dataToShow[i][3] + "</span> " +
-                "<span class='legendSmall' style='background: " + colors[dataToShow[i][4]] + ";'>" + dataToShow[i][4] + "</span> " +
-                "<span class='legendImpactSmall' style='background: " + colors[("I" + dataToShow[i][5])] + "; color:" + (dataToShow[i][5] > 2 ? "white" : "black") + ";'>" + dataToShow[i][5] + "</span> " +
-                "<span class='legendSmall' style='background: " + colors[dataToShow[i][6]] + "; width:83px;'>" + dataToShow[i][6].replace("_", " ") + "</span> <br/> " +
+                "<span class='legendSmall' style='background: " + colors[dataToShow[i][2]]  + (dataToShow[i][2] == "article" ? "; color: white;" : ";") +"; width:75px;'>" + dataToShow[i][2] + "</span> " +
+                "<span class='legendSmall' style='background: " + colors[dataToShow[i][3]]  + (dataToShow[i][3] == "content" ? "; color: white;" : ";") +";'>" + dataToShow[i][3] + "</span> " +
+                "<span class='legendSmall' style='background: " + colors[dataToShow[i][4]] + ((dataToShow[i][4] == "negative" || dataToShow[i][4] == "positive") ? "; color: white;" : ";") + "'>" + dataToShow[i][4] + "</span> " +
+                "<span class='legendImpactSmall' style='background: " + colors[("I" + dataToShow[i][5])] + "; color:" + (dataToShow[i][5] > 2 ? "white" : "black") + "; border: 1px solid black;'>" + dataToShow[i][5] + "</span> " +
+                "<span class='legendSmall' style='background: " + colors[dataToShow[i][6]] + (dataToShow[i][6] == "compulsory" ? "; color: white;" : ";") + "; width:83px;'>" + dataToShow[i][6].replace("_", " ") + "</span> <br/> " +
                 dataToShow[i][7] + "</div> <br/>");
             }
            });

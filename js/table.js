@@ -257,20 +257,20 @@ function createTableHeader() {
     "<th class='borders' colspan='3' scope='colgroup' style='text-align:center;'>Action needed</th>" +
   "</tr>" +
   "<tr>" +
-    "<th class='borders' style='text-align:center; background-color: #c6deff;'>syntax</th>" +
-    "<th class='borders' style='text-align:center; background-color: #82cafa;'>style</th>" +
-    "<th class='borders' style='text-align:center; background-color: #9e7bff;'>content</th>" +
-    "<th class='borders' style='text-align:center; background-color: #ff0000;'>negative</th>" +
-    "<th class='borders' style='text-align:center; background-color: #ffff00;'>neutral</th>" +
-    "<th class='borders' style='text-align:center; background-color: #008000;'>positive</th>" +
-    "<th class='borders' style='text-align:center; background-color: rgba(0, 0, 0, 0);'>I1</th>" +
-    "<th class='borders' style='text-align:center; background-color: rgba(0, 0, 0, 0.25);'>I2</th>" +
-    "<th class='borders' style='text-align:center; background-color: rgba(0, 0, 0, 0.5); color:white;'>I3</th>" +
-    "<th class='borders' style='text-align:center; background-color: rgba(0, 0, 0, 0.75); color:white;'>I4</th>" +
-    "<th class='borders' style='text-align:center; background-color: rgba(0, 0, 0, 1); color:white;'>I5</th>" +
-    "<th class='borders' style='text-align:center; background-color: #ff6500;'>compulsory</th>" +
-    "<th class='borders' style='text-align:center; background-color: #ffa500;'>suggestion</th>" +
-    "<th class='borders' style='text-align:center; background-color: #ffd700;'>no action</th>" +
+    "<th class='borders' style='text-align:center; background-color: " + colors["syntax"] + ";'>syntax</th>" +
+    "<th class='borders' style='text-align:center; background-color: " + colors["style"] + ";'>style</th>" +
+    "<th class='borders' style='text-align:center; background-color: " + colors["content"] + "; color:white;'>content</th>" +
+    "<th class='borders' style='text-align:center; background-color: " + colors["negative"] + "; color:white;'>negative</th>" +
+    "<th class='borders' style='text-align:center; background-color: " + colors["neutral"] + ";'>neutral</th>" +
+    "<th class='borders' style='text-align:center; background-color: " + colors["positive"] + "; color:white;'>positive</th>" +
+    "<th class='borders' style='text-align:center; background-color: " + colors["I1"] + ";'>I1</th>" +
+    "<th class='borders' style='text-align:center; background-color: " + colors["I2"] + ";'>I2</th>" +
+    "<th class='borders' style='text-align:center; background-color: " + colors["I3"] + "; color:white;'>I3</th>" +
+    "<th class='borders' style='text-align:center; background-color: " + colors["I4"] + "; color:white;'>I4</th>" +
+    "<th class='borders' style='text-align:center; background-color: " + colors["I5"] + "; color:white;'>I5</th>" +
+    "<th class='borders' style='text-align:center; background-color: " + colors["compulsory"] + "; color:white;'>compulsory</th>" +
+    "<th class='borders' style='text-align:center; background-color: " + colors["suggestion"] + ";'>suggestion</th>" +
+    "<th class='borders' style='text-align:center; background-color: " + colors["no_action"] + ";'>no action</th>" +
   "</tr>");
 }
 
@@ -331,7 +331,7 @@ function displayReviewCommentContent(dimName) {
 
   $("#divDescriptionContentReviewComments").empty();
   $("#divReviewCommentsContent").empty();
-  $("#divDescriptionContentReviewComments").append("<div id='divDescriptionContentReviewComments' style='text-align:center; color: #0275d8; font-size: large; border: #0275d8;'>Review comments content for '" + dimToShow + "' dimension of Section " + sectionNo + ":</br> </div>");
+  $("#divDescriptionContentReviewComments").append("<div id='divDescriptionContentReviewComments' style='text-align:center; color: #0275d8; font-size: medium; border: #0275d8;'>Review comments content for '" + dimToShow + "' dimension of Section " + sectionNo + ":</br> </div>");
 
   for (let i = 0; i < resultsNoPrefixes.length; i++) {
     if (resultsNoPrefixes[i][0] == sectionNo &&
@@ -340,10 +340,10 @@ function displayReviewCommentContent(dimName) {
       ("i" + resultsNoPrefixes[i][5]) == dimension ||
       resultsNoPrefixes[i][6] == dimension)) {
         $("#divReviewCommentsContent").append("<div class='border border-dark rounded p-1'>" +
-          "<span class='legendSmall' style='background: " + colors[resultsNoPrefixes[i][3]] + "; width:100px;'>" + resultsNoPrefixes[i][3] + "</span> " +
-          "<span class='legendSmall' style='background: " + colors[resultsNoPrefixes[i][4]] + "; width:100px;'>" + resultsNoPrefixes[i][4] + "</span> " +
-          "<span class='legendImpactSmall' style='background: " + colors[("I" + resultsNoPrefixes[i][5])] + "; color:" + (resultsNoPrefixes[i][5] > 2 ? "white" : "black") + "; width:50px;'>" + resultsNoPrefixes[i][5] + "</span> " +
-          "<span class='legendSmall' style='background: " + colors[resultsNoPrefixes[i][6]] + "; width:100px;'>" +
+          "<span class='legendSmall' style='background: " + colors[resultsNoPrefixes[i][3]] + (resultsNoPrefixes[i][3] == "content" ? "; color: white;" : ";") + " width:100px;'>" + resultsNoPrefixes[i][3] + "</span> " +
+          "<span class='legendSmall' style='background: " + colors[resultsNoPrefixes[i][4]] + "; width:100px; color: white;'>" + resultsNoPrefixes[i][4] + "</span> " +
+          "<span class='legendImpactSmall' style='background: " + colors[("I" + resultsNoPrefixes[i][5])] + "; color:" + (resultsNoPrefixes[i][5] > 2 ? "white" : "black") + "; width:50px; border: 1px solid black;'>" + resultsNoPrefixes[i][5] + "</span> " +
+          "<span class='legendSmall' style='background: " + colors[resultsNoPrefixes[i][6]] + (resultsNoPrefixes[i][6] == "compulsory" ? "; color: white;" : ";") +  "width:100px;'>" +
           resultsNoPrefixes[i][6].replace("_", " ") + "</span> <br/> " +
           "<div style='text-align:left;'>" + resultsNoPrefixes[i][7] + "</div></div> <br/>");
     }
