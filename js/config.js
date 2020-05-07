@@ -10,7 +10,7 @@ const serverGetCommentsReviewers = "http://linkflows-app.nanopubs.lod.labs.vu.nl
 
 // const serverGetCommentsSection = "http://localhost:8081/sparql/commentsBySection";
 // const serverGetSections = "http://localhost:8081/sparql/mainSections";
-const serverGetCommentsSection = "http://linkflows-app.nanopubs.lod.labs.vu.nl/sparql/commentsBySection";
+// const serverGetCommentsSection = "http://linkflows-app.nanopubs.lod.labs.vu.nl/sparql/commentsBySection";
 const serverGetSections = "http://linkflows-app.nanopubs.lod.labs.vu.nl/sparql/mainSections";
 
 

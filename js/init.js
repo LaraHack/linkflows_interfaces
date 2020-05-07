@@ -222,7 +222,9 @@ function noPrefixesInVirtuosoResults(results) {
 
    }
 
-   return noPrefixes;
+   //remove duplicate review comments: when one review comment references more
+   // sections/paragraphs it should be counted once for every part
+   return noPrefixes.filter((t={},a=>!(t[a]=a in t)));
 }
 
 // get an array containing the reviewers (identified by their ORCiD) and their total number of review comments

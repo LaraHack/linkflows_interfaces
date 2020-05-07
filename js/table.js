@@ -74,6 +74,8 @@ $.get(serverGetCommentsSection)
       // remove the prefixes for the results, easier to handle
       resultsNoPrefixes = noPrefixesInVirtuosoResults(resultsVirtuoso);
 
+      console.log(resultsNoPrefixes);
+
       // check if the results are empty or not
       if (sections.length > 0) {
         // create initial empty count array for every section
